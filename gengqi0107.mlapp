@@ -1,0 +1,1737 @@
+classdef gengqi1125 < matlab.apps.AppBase
+
+    % Properties that correspond to app components
+    properties (Access = public)
+        UIFigure                        matlab.ui.Figure
+        ReceivePanel                    matlab.ui.container.Panel
+        ProcessTxButton                 matlab.ui.control.Button
+        ReceivedPreviewTextArea         matlab.ui.control.TextArea
+        TextArea2Label                  matlab.ui.control.Label
+        ShowReceivedFileButton          matlab.ui.control.Button
+        ShowSynchronizationButton       matlab.ui.control.Button
+        ShowChannelSymbolsButton        matlab.ui.control.Button
+        ShowRxSignalButton              matlab.ui.control.Button
+        BERValueLabel                   matlab.ui.control.Label
+        BERLabel                        matlab.ui.control.Label
+        BitErrorCountValueLabel         matlab.ui.control.Label
+        BitErrorCountLabel              matlab.ui.control.Label
+        StartProcessingButton           matlab.ui.control.Button
+        ReceivedFileAxes                matlab.ui.control.UIAxes
+        DataSelectionPanel              matlab.ui.container.Panel
+        DataPreviewTextArea             matlab.ui.control.TextArea
+        TextAreaLabel                   matlab.ui.control.Label
+        StartTransmissionButton         matlab.ui.control.Button
+        TransmissionStatusValueLabel    matlab.ui.control.Label
+        TransmissionStatusLabel         matlab.ui.control.Label
+        FileTypeTextValueLabel          matlab.ui.control.Label
+        FileTypeTextLabel               matlab.ui.control.Label
+        FilePathEditField               matlab.ui.control.EditField
+        FilePathEditFieldLabel          matlab.ui.control.Label
+        SelectFileButton                matlab.ui.control.Button
+        DataContentAxes                 matlab.ui.control.UIAxes
+        CodingMIMOPanel                 matlab.ui.container.Panel
+        EqualizerLabel                  matlab.ui.control.Label
+        ChannelEstimatorLabel           matlab.ui.control.Label
+        MIMOSchemeLabel                 matlab.ui.control.Label
+        EqualizerDropDown               matlab.ui.control.DropDown
+        EqualizerDropDownLabel          matlab.ui.control.Label
+        ChannelEstimatorDropDown        matlab.ui.control.DropDown
+        ChannelEstimatorDropDownLabel   matlab.ui.control.Label
+        MIMOSchemeDropDown              matlab.ui.control.DropDown
+        MIMOSchemeDropDownLabel         matlab.ui.control.Label
+        ChannelCodingDropDown           matlab.ui.control.DropDown
+        ChannelCodingDropDownLabel      matlab.ui.control.Label
+        ChannelCodingLabel              matlab.ui.control.Label
+        SystemParametersPanel           matlab.ui.container.Panel
+        BasebandFrequencyEditField      matlab.ui.control.NumericEditField
+        BasebandFrequencyEditFieldLabel  matlab.ui.control.Label
+        DauerderbertragungEditField     matlab.ui.control.NumericEditField
+        DauerderbertragungEditFieldLabel  matlab.ui.control.Label
+        AnzahlderSubBlckeEditField      matlab.ui.control.NumericEditField
+        AnzahlderSubBlckeEditFieldLabel  matlab.ui.control.Label
+        AnzahlderBlckeEditField         matlab.ui.control.NumericEditField
+        AnzahlderBlckeEditFieldLabel    matlab.ui.control.Label
+        DACSamplingRateLabel            matlab.ui.control.Label
+        CarrierFrequencyLabel           matlab.ui.control.Label
+        DACSamplingRateEditField        matlab.ui.control.NumericEditField
+        DACSamplingRateEditFieldLabel   matlab.ui.control.Label
+        ModulationOrderDropDown         matlab.ui.control.DropDown
+        ModulationOrderDropDownLabel    matlab.ui.control.Label
+        CarrierFrequencyEditField       matlab.ui.control.NumericEditField
+        CarrierFrequencyEditFieldLabel  matlab.ui.control.Label
+        ModulationOrderLabel            matlab.ui.control.Label
+        RxAntennasEditField             matlab.ui.control.NumericEditField
+        RxAntennasEditFieldLabel        matlab.ui.control.Label
+        RxAntennasLabel                 matlab.ui.control.Label
+        TxAntennasEditField             matlab.ui.control.NumericEditField
+        TxAntennasEditFieldLabel        matlab.ui.control.Label
+        TxAntennasLabel                 matlab.ui.control.Label
+        CPLengthEditField               matlab.ui.control.NumericEditField
+        CPLengthEditFieldLabel          matlab.ui.control.Label
+        CPLengthLabel                   matlab.ui.control.Label
+        FFTLengthDropDown               matlab.ui.control.DropDown
+        FFTLengthDropDownLabel          matlab.ui.control.Label
+        FFTLengthLabel                  matlab.ui.control.Label
+    end
+
+    
+    properties (Access = private)
+        iNfft            (1,1) double = 128      % FFT length
+        iNg              (1,1) double = 32       % CP length
+        iModOrd          (1,1) double = 1        % Bits per subcarrier (BPSK=1, 4QAM=2, 8QAM=3, 16QAM=4, 32QAM=5, 64QAM=6)
+        iNoTxAnt         (1,1) double = 4       % Number of Tx antennas
+        iNoRxAnt         (1,1) double = 8        % Number of Rx antennas
+        fCarrFreq        (1,1) double = 8000     % Carrier frequency
+        fBBFreq          (1,1) double = 8000     % Baseband frequency
+        fDACFreq         (1,1) double = 48000    % DAC sampling rate
+        mimoMode         char = 'EigenMode'      % MIMO mode
+        codingMode       char = 'Keine'          % Channel coding mode
+        chEstimator      char = 'Zero Forcing'   % Channel estimator
+        equalizerMode    char = 'MMSE'           % Equalizer mode
+        
+        % EigenMode-related data
+        V1               % Precoding matrix [Nt x Nt x Nfft]
+        U1               % Left singular vectors
+        S1               % Singular values
+        EigenMeta        % Debug meta, e.g., channel response etc.
+
+        % Tx/Rx related parameters
+        lenBitsData      (1,1) double = 0        % Payload bits (estimated from file bytes * 8)
+        iNoBlocks        (1,1) double = 1        % Recommended number of blocks
+        anzGesBits       (1,1) double = 0        % Total coded bits
+        iNoSubBlocks     (1,1) double = 4 
+
+        % Data buffers
+        SendeDatei                                % Original file content (text / image)
+        DatenTyp          char = ''               % 'Text' or 'Image'
+        TxSequence                                % Tx time-domain sequence
+        OriginalBits                              % Original bits for BER display
+        Filename           char = ''              % Selected file name
+        TxMeta                                     % Tx meta info (number of frames, duration, etc.)
+        RxSequence                                % Received signal [Nsamples x iNoRxAnt]
+        RxAnalysisData                            % Last processing result from Signalverarbeitung_app
+        TxLoopAnalysisData                        % Analysis result when processing Tx directly (ideal loopback)
+    end
+    
+    methods (Access = private)
+        % 1) Generic image preview
+        function showImagePreviewGeneric(~, targetAxes, targetTextArea, img, titleText)
+            if ~isempty(targetTextArea) && isvalid(targetTextArea)
+                targetTextArea.Visible = 'off';
+                targetTextArea.Value   = {''};
+            end
+            if ~isempty(targetAxes) && isvalid(targetAxes)
+                targetAxes.Visible = 'on';
+                uistack(targetAxes, 'top');
+                cla(targetAxes,'reset');
+                imshow(img,'Parent',targetAxes);
+                axis(targetAxes,'image');
+                if nargin>=5 && ~isempty(titleText)
+                    title(targetAxes,titleText);
+                else
+                    title(targetAxes,'');
+                end
+            end
+        end
+
+        % 2) Generic text preview
+        function showTextPreviewGeneric(~, targetAxes, targetTextArea, text_data, ~)
+            if ~isempty(targetAxes) && isvalid(targetAxes)
+                targetAxes.Visible = 'off';
+                cla(targetAxes,'reset');
+                title(targetAxes,'');
+            end
+            if ~isempty(targetTextArea) && isvalid(targetTextArea)
+                targetTextArea.Visible = 'on';
+                uistack(targetTextArea,'top');
+                targetTextArea.Value = splitlines(string(text_data));
+            end
+        end
+
+        % 3) Compute recommended number of blocks and total coded bits
+        function [optiNoBlock, anzGesBits] = calculateOptimalBlocks(app, lenBits_data)
+            % Coded bits (following old logic)
+            switch string(app.codingMode)
+                case "Keine"
+                    anzBits = lenBits_data;
+                case "Faltungscodes 2/3"
+                    if mod(lenBits_data,2)
+                        anzBits = ceil((lenBits_data+5)*3/2);
+                    else
+                        anzBits = ceil((lenBits_data+4)*3/2);
+                    end
+                case "Faltungscodes 1/2"
+                    anzBits = ceil((lenBits_data+32)*2);
+                otherwise
+                    anzBits = lenBits_data;
+            end
+            anzGesBits = anzBits;
+
+            % Legacy formula for recommended blocks (includes 136*iModOrd header overhead)
+            capacity_per_symbol = app.iModOrd * app.iNoTxAnt * app.iNfft;
+            optiNoBlock = ceil((anzGesBits + 136*app.iModOrd) / max(capacity_per_symbol,1));
+        end
+
+        % 4) Update recommended blocks after parameter changes
+        function updateRecommendedBlocks(app)
+            if app.lenBitsData<=0
+                app.TransmissionStatusValueLabel.Text = 'No file loaded';
+                return;
+            end
+            [app.iNoBlocks, app.anzGesBits] = app.calculateOptimalBlocks(app.lenBitsData);
+            app.TransmissionStatusValueLabel.Text = sprintf('Recommended blocks: %d', app.iNoBlocks);
+            if isvalid(app.AnzahlderBlckeEditField)
+                app.AnzahlderBlckeEditField.Value = app.iNoBlocks;
+            end
+
+            % Auto recommendation for number of sub-blocks
+            autoSub = app.suggestSubBlocks();
+        
+            % If user did not change it manually, use auto recommendation
+            persistent userForcedSubBlocks;
+        
+            if isempty(userForcedSubBlocks) || ~userForcedSubBlocks
+                app.iNoSubBlocks = autoSub;
+                if isvalid(app.AnzahlderSubBlckeEditField)
+                    app.AnzahlderSubBlckeEditField.Value = app.iNoSubBlocks;
+                end
+            end
+        end
+
+        function iSub = suggestSubBlocks(app)
+            % Auto suggestion of iNoSubBlocks based on pilot overhead
+            targetPilotOverhead = 0.12;   % target pilot overhead ~12%
+            
+            % Simple heuristic: derive from number of Tx antennas and desired overhead
+            ideal = app.iNoTxAnt * (1/targetPilotOverhead - 1);
+            
+            % Clamp to a reasonable range
+            iMin = 2;
+            iMax = 20;
+            
+            iSub = round(min(iMax, max(iMin, ideal)));
+            
+            % Ensure at least one subframe exists
+            if app.iNoBlocks < iSub
+                iSub = max(1, app.iNoBlocks);
+            end
+        end
+
+        % 5) Map modulation string to bits per symbol
+        function bits = mapModToBits(~, modStr)
+            s = lower(string(modStr));
+            switch s
+                case "bpsk",  bits = 1;
+                case {"4qam","qpsk"}, bits = 2;
+                case "8qam",  bits = 3;
+                case "16qam", bits = 4;
+                case "32qam", bits = 5;
+                case "64qam", bits = 6;
+                otherwise,    bits = 2; % default QPSK
+            end
+        end
+        
+        % Build parameter struct for Tx generation
+        function params = buildTxParams(app)
+            params = struct( ...
+                'iNoBlocks',    app.iNoBlocks, ...
+                'iNfft',        app.iNfft, ...
+                'iNg',          app.iNg, ...
+                'iNb',          app.iNfft + app.iNg, ...
+                'iModOrd',      app.iModOrd, ...
+                'iNoTxAnt',     app.iNoTxAnt, ...
+                'iNoRxAnt',     app.iNoRxAnt, ...
+                'iNoSubBlocks', app.iNoSubBlocks, ...
+                'fBBFreq',      app.fBBFreq, ...
+                'fDACFreq',     app.fDACFreq, ...
+                'fCarrFreq',    app.fCarrFreq, ...
+                'mimoMode',     app.mimoMode, ...
+                'codingMode',   app.codingMode ...
+            );
+        end
+
+        % Wrapper for EigenMode preamble generation (for channel sounding)
+        function [txPreCar, metaPre, paramsPre] = callGenerateEigenModePreamble(app)
+            % txPreCar : upconverted preamble signal [Nsamples x iNoTxAnt]
+            % metaPre  : meta returned by generateEigenModePreamble_app
+            % paramsPre: parameters used for preamble generation
+        
+            paramsPre = app.buildTxParams();
+        
+            % Optional: allow dedicated number of preambles Npre
+            if isprop(app, 'Npre') && ~isempty(app.Npre)
+                paramsPre.Npre = app.Npre;
+            else
+                paramsPre.Npre = 1;
+            end
+        
+            % Only a subset of fields is really used by generateEigenModePreamble_app,
+            % but using a unified struct keeps things consistent.
+            [txPreCar, metaPre] = generateEigenModePreamble_app(paramsPre);
+        end
+
+        % Wrapper for generic Tx sequence generation
+        function [mFrameTxCar, meta] = callGenerateTx(app)
+            params = app.buildTxParams();
+
+            % In EigenMode: if V1 is already measured, pass it to Tx generator
+            mimoModeStr = string(params.mimoMode);
+            if strcmpi(mimoModeStr, 'EigenMode')
+                if isprop(app, 'V1') && ~isempty(app.V1)
+                    params.V1 = app.V1;
+                else
+                    % Only warn here, let generateTxSequence_app decide how to handle
+                    warning('callGenerateTx: EigenMode mode but app.V1 is empty, please run channel sounding first.');
+                end
+            end
+            source = struct( ...
+                'DatenTyp',   app.DatenTyp, ...
+                'SendeDatei', app.SendeDatei ...
+            );
+        
+            [mFrameTxCar, meta] = generateTxSequence_app(params, source);
+        end  
+    end
+
+    % Callbacks that handle component events
+    methods (Access = private)
+
+        % Code that executes after component creation
+        function startupFcn(app)
+            clear userForcedSubBlocks
+            app.ModulationOrderDropDown.Items = {'BPSK','4QAM','8QAM','16QAM','32QAM','64QAM'};
+            fftList = [8 16 32 64 128 256 512 1024];
+            app.FFTLengthDropDown.Items = cellstr(string(fftList));
+            app.FFTLengthDropDown.Value = '128';
+
+            app.ChannelCodingDropDown.Items = {'Keine','Faltungscodes 2/3','Faltungscodes 1/2'};
+            app.MIMOSchemeDropDown.Items    = {'EigenMode','Spatial Multiplexing','Alamouti','V-BLAST'};
+            app.ChannelEstimatorDropDown.Items = {'Zero Forcing','MMSE'};
+            app.EqualizerDropDown.Items     = {'Zero Forcing','MMSE','Classical SVD'};
+
+            % UI -> internal properties
+            app.iNfft   = 128;
+            app.iNg     = 32;
+            app.iModOrd = 1;
+            app.iNoTxAnt= 4;
+            app.iNoRxAnt= 8;
+            app.fCarrFreq=8000;
+            app.fBBFreq=8000;
+            app.fDACFreq =48000;
+            app.codingMode='Keine';
+            app.mimoMode  ='EigenMode';
+            app.iNoSubBlocks = 8;
+            app.AnzahlderSubBlckeEditField.Value = app.iNoSubBlocks;
+
+            % Sync to widgets
+            app.CPLengthEditField.Value = app.iNg;
+            app.TxAntennasEditField.Value = app.iNoTxAnt;
+            app.RxAntennasEditField.Value = app.iNoRxAnt;
+            app.CarrierFrequencyEditField.Value = app.fCarrFreq;
+            app.BasebandFrequencyEditField.Value = app.fBBFreq;
+            app.DACSamplingRateEditField.Value = app.fDACFreq;
+            app.ModulationOrderDropDown.Value = 'BPSK';
+            app.FFTLengthDropDown.Value = '128';
+            app.ChannelCodingDropDown.Value = 'Keine';
+            app.MIMOSchemeDropDown.Value    = 'EigenMode';
+            app.ChannelEstimatorDropDown.Value = 'Zero Forcing';
+            app.EqualizerDropDown.Value     = 'MMSE';
+
+            % Preview areas: hide text by default
+            app.DataPreviewTextArea.Visible = 'off';
+            app.ReceivedPreviewTextArea.Visible = 'off';
+            axis(app.DataContentAxes,'off');
+            axis(app.ReceivedFileAxes,'off');
+
+            app.TransmissionStatusValueLabel.Text = 'No file loaded';
+        end
+
+        % Value changed function: ChannelCodingDropDown
+        function ChannelCodingDropDownValueChanged(app, event)
+            
+            app.codingMode = char(event.Value);
+            app.updateRecommendedBlocks();
+            
+        end
+
+        % Button pushed function: SelectFileButton
+        function SelectFileButtonPushed(app, event)
+            clear userForcedSubBlocks
+            [filename, pathname] = uigetfile({'*.txt;*.TXT';'*.jpg;*.JPG'}, 'Select file to transmit');
+            if isequal(filename,0), return; end
+            file = fullfile(pathname, filename);
+            app.FilePathEditField.Value = file;
+            app.Filename = filename;
+
+            % Clear display
+            app.DataPreviewTextArea.Value = {''};
+            cla(app.DataContentAxes,'reset');
+            title(app.DataContentAxes,'');
+            axis(app.DataContentAxes,'off');
+
+            if endsWith(filename,'.jpg','IgnoreCase',true)
+                img = imread(file);
+                app.SendeDatei = img;
+                app.DatenTyp   = 'Image';
+                app.FileTypeTextValueLabel.Text = 'Image (JPG)';
+                app.showImagePreviewGeneric(app.DataContentAxes, app.DataPreviewTextArea, img, 'Original image');
+            else
+                try
+                    text_data = fileread(file);
+                catch ME
+                    uialert(app.UIFigure, ['Unable to read file: ' ME.message], 'File error');
+                    return;
+                end
+                app.SendeDatei = text_data;
+                app.DatenTyp   = 'Text';
+                app.FileTypeTextValueLabel.Text = 'Text (TXT)';
+                app.showTextPreviewGeneric(app.DataContentAxes, app.DataPreviewTextArea, text_data, 'Original text');
+            end
+
+            % Estimate payload bits from file size
+            info = dir(file);
+            app.lenBitsData = info.bytes*8;
+            app.updateRecommendedBlocks();
+        end
+
+        % Button pushed function: StartTransmissionButton
+        function StartTransmissionButtonPushed(app, event)
+                % 1) Check if file is selected
+            if isempty(app.SendeDatei)
+                uialert(app.UIFigure,'Please select a file first!','File missing');
+                return;
+            end
+        
+            try
+                % B. EigenMode: send preamble to estimate channel first
+                if strcmpi(app.mimoMode, 'EigenMode')
+                    [txPreCar, metaPre, paramsPre] = app.callGenerateEigenModePreamble();
+
+                    % 3. Send and receive preamble via Scarlett / Focusrite device
+                    if ismac()
+                        deviceName = 'Scarlett 18i20 USB';
+                    else
+                        deviceName = 'Focusrite USB ASIO';
+                    end
+                    frameLen = 512;
+        
+                    [rxPre_raw, ~] = runScarlettMimoIO( ...
+                        txPreCar, ...          % [Nsamples x Nt]
+                        app.fDACFreq, ...      % sampling rate
+                        app.iNoTxAnt, ...      % Nt
+                        app.iNoRxAnt, ...      % Nr
+                        deviceName, ...        % device name
+                        frameLen ...           % frame size
+                    );
+                    % rxPre_raw: [Nsamples x Nr]
+        
+                    % 4. Channel estimation from EigenMode preamble
+                    % EigenMode_ChanEst_app expects [Nr x Nsamp]
+                    rxPre_forEst = rxPre_raw.';    % [Nr x Nsamp]
+        
+                    [U1, S1, V1, chanMeta] = EigenMode_ChanEst_app( ...
+                        rxPre_forEst, paramsPre, metaPre);
+        
+                    % 5. Store SVD results in app for later Tx/Rx
+                    app.V1        = V1;
+                    app.U1        = U1;
+                    app.S1        = S1;
+                    app.EigenMeta = chanMeta;
+                end  % EigenMode channel sounding end
+
+                % A. Generate clean Tx signal (no noise)
+                [txSig, meta] = app.callGenerateTx();
+        
+                % Save for later debug/plot
+                app.TxSequence = txSig.';    
+                app.TxMeta     = meta;          
+        
+                % B. Tx/Rx via Scarlett / Focusrite device
+                if ismac()
+                    deviceName = 'Scarlett 18i20 USB';
+                else
+                    deviceName = 'Focusrite USB ASIO';
+                end
+        
+                frameLen = 512;
+        
+                [rx_raw, usedRealDevice] = runScarlettMimoIO( ...
+                    txSig, ...           % [Nsamples x Nt]
+                    app.fDACFreq, ...    % sampling rate
+                    app.iNoTxAnt, ...    % Nt
+                    app.iNoRxAnt, ...    % Nr
+                    deviceName, ...      % device name
+                    frameLen ...         % frame size
+                );
+        
+                % Store received signal (layout [Rx x N])
+                app.RxSequence = rx_raw.';    
+        
+                % C. UI status message
+                if usedRealDevice
+                    app.TransmissionStatusValueLabel.Text = sprintf( ...
+                        'Tx/Rx done: Tx %d channels, Rx %d channels, %d samples.', ...
+                        app.iNoTxAnt, app.iNoRxAnt, size(rx_raw,1));
+                else
+                    app.TransmissionStatusValueLabel.Text = sprintf( ...
+                        'Audio device not open, ideal loopback: %d samples.', size(rx_raw,1));
+                end
+        
+            catch ME
+                % Print extended error report to command window
+                fprintf(1, '\n================ MATLAB ERROR REPORT ================\n');
+                fprintf(1, '%s\n', getReport(ME, 'extended', 'hyperlinks', 'off'));
+                fprintf(1, '=====================================================\n\n');
+
+                uialert(app.UIFigure, ['Signal generation or transmission failed: ' ME.message], 'Error');
+                app.TransmissionStatusValueLabel.Text = 'Generation/transmission failed';
+            end
+        end
+
+        % Button pushed function: StartProcessingButton
+        function StartProcessingButtonPushed(app, event)
+            % 1) Check if there is any received signal
+            if isempty(app.RxSequence)
+                uialert(app.UIFigure, 'No received signal yet, please run a transmission first!', 'No received signal');
+                return;
+            end
+        
+            app.TransmissionStatusValueLabel.Text = 'Processing received signal...';
+            drawnow;
+        
+            try
+                % A. Prepare procParam for Signalverarbeitung_app
+        
+                % rxSignal: [Nsamp x Nr]; app.RxSequence is [Nr x N], so transpose
+                rxSignal = app.RxSequence.';   
+        
+                % Basic frame parameters
+                iNb   = app.iNfft + app.iNg;
+        
+                % Number of sub-blocks: use property if available, otherwise fall back
+                if isprop(app,'iNoSubBlocks') && ~isempty(app.iNoSubBlocks)
+                    app.iNoSubBlocks = app.iNoSubBlocks;
+                else
+                    app.iNoSubBlocks = app.iNoBlocks;
+                end
+        
+                % iNewNoBlocks: effective number of blocks used at Tx
+                if isprop(app,'TxMeta') && isstruct(app.TxMeta) && isfield(app.TxMeta,'iNewNoBlocks')
+                    iNewNoBlocks = app.TxMeta.iNewNoBlocks;
+                else
+                    iNewNoBlocks = app.iNoBlocks;
+                end
+        
+                % len_cInfoBits: length of control information bits
+                if isprop(app,'TxMeta') && isstruct(app.TxMeta) && isfield(app.TxMeta,'len_cInfoBits')
+                    len_cInfoBits = app.TxMeta.len_cInfoBits;
+                else
+                    len_cInfoBits = 0;
+                end
+        
+                % Core parameter structure
+                procParam = struct( ...
+                    'rxSignal',         rxSignal, ...
+                    'fs',               app.fDACFreq, ...
+                    'iNfft',            app.iNfft, ...
+                    'iNg',              app.iNg, ...
+                    'iNb',              iNb, ...
+                    'iNoBlocks',        app.iNoBlocks, ...
+                    'iNoTxAnt',         app.iNoTxAnt, ...
+                    'iNoRxAnt',         app.iNoRxAnt, ...
+                    'iNoSubBlocks',     app.iNoSubBlocks, ...
+                    'iNewNoBlocks',     iNewNoBlocks, ...
+                    'iModOrd',          app.iModOrd, ...
+                    'fBBFreq',          app.fBBFreq, ...
+                    'fCarrFreq',        app.fCarrFreq, ...
+                    'mimoMode',         app.mimoMode, ...
+                    'codingMode',       app.codingMode, ...
+                    'channelEstimator', app.chEstimator, ...
+                    'equalizerMode',    app.equalizerMode, ...
+                    'len_cInfoBits',    len_cInfoBits, ...
+                    'DatenTyp',         app.DatenTyp, ...
+                    'SendeDatei',       app.SendeDatei ...
+                );
+        
+                % EigenMode: pass SVD results into procParam if available
+                if strcmpi(string(app.mimoMode), 'EigenMode')
+                    if isprop(app,'V1') && ~isempty(app.V1)
+                        procParam.V1 = app.V1;
+                    end
+                    if isprop(app,'U1') && ~isempty(app.U1)
+                        procParam.U1 = app.U1;
+                    end
+                    if isprop(app,'S1') && ~isempty(app.S1)
+                        procParam.S1 = app.S1;
+                    end
+                    if isprop(app,'EigenMeta') && ~isempty(app.EigenMeta)
+                        procParam.EigenMeta = app.EigenMeta;
+                    end
+                end
+        
+                % B. Call external processing function
+                data = Signalverarbeitung_app(procParam);
+        
+                % C. Store debug data
+                app.RxAnalysisData = data;
+        
+                try
+                    if ~exist('Rx-Signale','dir')
+                        mkdir('Rx-Signale');
+                    end
+                    save(fullfile('Rx-Signale','data.mat'), 'data');
+                catch
+                    % Ignore save errors
+                end
+        
+                % D. Show decoded result in UI (image / text)
+                cla(app.ReceivedFileAxes,'reset');
+                axis(app.ReceivedFileAxes,'off');
+                app.ReceivedPreviewTextArea.Value = {''};
+        
+                if isfield(data,'text') && ~isempty(data.text)
+                    app.showTextPreviewGeneric( ...
+                        app.ReceivedFileAxes, ...
+                        app.ReceivedPreviewTextArea, ...
+                        data.text, ...
+                        'Recovered text' ...
+                    );
+                elseif isfield(data,'bild') && ~isempty(data.bild)
+                    app.showImagePreviewGeneric( ...
+                        app.ReceivedFileAxes, ...
+                        app.ReceivedPreviewTextArea, ...
+                        data.bild, ...
+                        'Recovered image' ...
+                    );
+                else
+                    app.showTextPreviewGeneric( ...
+                        app.ReceivedFileAxes, ...
+                        app.ReceivedPreviewTextArea, ...
+                        '(No displayable text or image was detected)', ...
+                        '' ...
+                    );
+                end
+        
+                % E. Display BER
+                if isfield(data,'numBitError') && ~isempty(data.numBitError)
+                    app.BitErrorCountValueLabel.Text = num2str(data.numBitError);
+                else
+                    app.BitErrorCountValueLabel.Text = '-';
+                end
+        
+                if isfield(data,'bitErrorRate') && ~isempty(data.bitErrorRate)
+                    app.BERValueLabel.Text = sprintf('%.4e', data.bitErrorRate);
+                else
+                    app.BERValueLabel.Text = '-';
+                end
+        
+                app.TransmissionStatusValueLabel.Text = 'Receive processing finished.';
+        
+            catch ME
+                % Print extended error report
+                fprintf(1, '\n================ MATLAB ERROR REPORT ================\n');
+                fprintf(1, '%s\n', getReport(ME, 'extended', 'hyperlinks', 'off'));
+                fprintf(1, '=====================================================\n\n');
+        
+                uialert(app.UIFigure, ['Signal processing failed: ' ME.message], 'Processing error');
+                app.TransmissionStatusValueLabel.Text = 'Processing failed';
+            end
+        end
+
+        % Value changed function: ModulationOrderDropDown
+        function ModulationOrderDropDownValueChanged(app, event)
+            % Update bits per symbol and recompute recommended blocks
+            app.iModOrd = app.mapModToBits(event.Value);
+            app.updateRecommendedBlocks();
+
+        end
+
+        % Value changed function: CPLengthEditField
+        function CPLengthEditFieldValueChanged(app, event)
+            % Read user input for new CP length
+            newValue = event.Value;
+        
+            % Basic validity check
+            if isnan(newValue) || newValue < 0
+                uialert(app.UIFigure, 'CP length must be a non-negative number.', 'Input error');
+                % Restore old value
+                app.CPLengthEditField.Value = num2str(app.iNg);
+                return;
+            end
+        
+            % Update global parameter (integer number of samples)
+            app.iNg = round(newValue);
+            app.CPLengthEditField.Value = app.iNg;
+        end
+
+        % Value changed function: CarrierFrequencyEditField
+        function CarrierFrequencyEditFieldValueChanged(app, event)
+           % Read new carrier frequency
+            newValue = event.Value;
+        
+            % Basic validity check
+            if isnan(newValue) || newValue < 0
+                uialert(app.UIFigure, 'Carrier frequency must be a non-negative value (Hz).', 'Input error');
+                app.CarrierFrequencyEditField.Value = num2str(app.fCarrFreq);
+                return;
+            end
+        
+            % Update app property
+            app.fCarrFreq = newValue;
+        end
+
+        % Value changed function: DACSamplingRateEditField
+        function DACSamplingRateEditFieldValueChanged(app, event)
+             % Read new DAC sampling rate
+            newValue = event.Value;
+        
+            % Basic validity check
+            if isnan(newValue) || newValue <= 0
+                uialert(app.UIFigure, 'DAC sampling rate must be positive (Hz).', 'Input error');
+                app.DACSamplingRateEditField.Value = num2str(app.fDACFreq);
+                return;
+            end
+        
+            app.fDACFreq = newValue;
+        end
+
+        % Value changed function: BasebandFrequencyEditField
+        function BasebandFrequencyEditFieldValueChanged(app, event)
+            % Validate and update baseband frequency
+            newValue = event.Value;
+
+            if isnan(newValue) || newValue <= 0
+                uialert(app.UIFigure, 'Baseband frequency must be a positive value.', ...
+                    'Input Error');
+                return;
+            end
+
+            app.fBBFreq = newValue;
+        end
+
+        % Value changed function: MIMOSchemeDropDown
+        function MIMOSchemeDropDownValueChanged(app, event)
+            app.mimoMode = char(event.Value);
+            
+        end
+
+        % Value changed function: ChannelEstimatorDropDown
+        function ChannelEstimatorDropDownValueChanged(app, event)
+            app.chEstimator = char(event.Value);
+        end
+
+        % Value changed function: EqualizerDropDown
+        function EqualizerDropDownValueChanged(app, event)
+            app.equalizerMode = char(event.Value);
+            
+        end
+
+        % Value changed function: AnzahlderSubBlckeEditField
+        function AnzahlderSubBlckeEditFieldValueChanged(app, event)
+            newValue = app.AnzahlderSubBlckeEditField.Value;
+
+            if isnan(newValue) || newValue < 1
+                uialert(app.UIFigure, ...
+                    'Number of sub-blocks must be a positive integer.', ...
+                    'Input Error');
+                app.AnzahlderSubBlckeEditField.Value = app.iNoSubBlocks;
+                return;
+            end
+
+            app.iNoSubBlocks = round(newValue);
+        end
+
+        % Value changed function: FFTLengthDropDown
+        function FFTLengthDropDownValueChanged(app, event)
+            app.iNfft = str2double(event.Value);
+            app.updateRecommendedBlocks();
+        end
+
+        % Value changed function: AnzahlderBlckeEditField
+        function AnzahlderBlckeEditFieldValueChanged(app, event)
+            value = app.AnzahlderBlckeEditField.Value;
+            
+        end
+
+        % Button pushed function: ShowRxSignalButton
+        function ShowRxSignalButtonPushed(app, event)
+           % Show Rx (and optional Tx) signals in time/frequency/baseband domain
+            if isempty(app.RxSequence)
+                uialert(app.UIFigure, ...
+                    'No received signal available. Please run a transmission first.', ...
+                    'No Rx Signal');
+                return;
+            end
+
+            fs = app.fDACFreq;
+
+            % RxSequence: [Nr x Ns_rx]
+            rxMat = app.RxSequence;
+            [Nr, Ns_rx] = size(rxMat);
+            rx = rxMat.';              % [Ns_rx x Nr]
+
+            tx = [];
+            Nt = 0;
+            Ns_tx = 0;
+            if ~isempty(app.TxSequence)
+                % TxSequence: [Nt x Ns_tx]
+                txMat = app.TxSequence;
+                [Nt, Ns_tx] = size(txMat);
+                tx = txMat.';          % [Ns_tx x Nt]
+            end
+
+            % 1) Ask which domain to display
+            choice = uiconfirm(app.UIFigure, ...
+                'Select which type of signal representation to view:', ...
+                'View Received Signal', ...
+                'Options', {'Time Domain','Frequency Domain','Baseband Spectrum'}, ...
+                'DefaultOption', 'Time Domain', ...
+                'CancelOption',  'Time Domain');
+
+            if isempty(choice)
+                return;
+            end
+
+            % 2) Time-domain plots
+            if strcmp(choice,'Time Domain')
+
+                if Nt > 0
+                    t_tx = (0:Ns_tx-1)'/fs;
+                    figure('Name','Time-Domain Overview: Tx Signal');
+                    for ch = 1:Nt
+                        subplot(Nt,1,ch);
+                        plot(t_tx, tx(:,ch));
+                        xlabel('Time (s)');
+                        ylabel(sprintf('Tx ch%d', ch));
+                        title(sprintf('Tx channel %d waveform', ch));
+                        grid on;
+                    end
+                end
+
+                t_rx = (0:Ns_rx-1)'/fs;
+                figure('Name','Time-Domain Overview: Rx Signal');
+                for ch = 1:Nr
+                    subplot(Nr,1,ch);
+                    plot(t_rx, rx(:,ch));
+                    xlabel('Time (s)');
+                    ylabel(sprintf('Rx ch%d', ch));
+                    title(sprintf('Rx channel %d waveform', ch));
+                    grid on;
+                end
+
+                return;
+            end
+
+            % 3) Frequency-domain plots
+            Nfft_spec = 2^nextpow2(max([Ns_tx, Ns_rx]));   % at least max length
+            if Nfft_spec == 0
+                uialert(app.UIFigure, ...
+                    'Signal length is zero. Cannot compute frequency spectrum.', ...
+                    'Error');
+                return;
+            end
+            f_axis = (-Nfft_spec/2:Nfft_spec/2-1)'/Nfft_spec * fs;  % Hz
+
+            if strcmp(choice,'Frequency Domain')
+
+                if Nt > 0
+                    figure('Name','Tx Spectrum (all Tx channels)');
+                    for ch = 1:Nt
+                        X = fftshift(fft(tx(:,ch), Nfft_spec));
+                        mag = 20*log10(abs(X)+eps);
+                        subplot(Nt,1,ch);
+                        plot(f_axis/1e3, mag);
+                        grid on;
+                        xlabel('Frequency (kHz)');
+                        ylabel('Magnitude (dB)');
+                        title(sprintf('Tx channel %d spectrum', ch));
+                    end
+                end
+
+                figure('Name','Rx Spectrum (all Rx channels)');
+                for ch = 1:Nr
+                    X = fftshift(fft(rx(:,ch), Nfft_spec));
+                    mag = 20*log10(abs(X)+eps);
+                    subplot(Nr,1,ch);
+                    plot(f_axis/1e3, mag);
+                    grid on;
+                    xlabel('Frequency (kHz)');
+                    ylabel('Magnitude (dB)');
+                    title(sprintf('Rx channel %d spectrum', ch));
+                end
+
+                return;
+            end
+
+            % 4) Baseband spectrum around carrier with bandwidth fBBFreq
+            fCarr = app.fCarrFreq;
+            Bbb   = app.fBBFreq;
+
+            if isempty(fCarr) || ~isfinite(fCarr) || isempty(Bbb) || ~isfinite(Bbb) || Bbb <= 0
+                uialert(app.UIFigure, ...
+                    'fCarrFreq and fBBFreq must be set correctly to compute baseband spectrum.', ...
+                    'Parameter Error');
+                return;
+            end
+
+            halfB = Bbb/2;
+
+            figure('Name', sprintf('Rx baseband spectrum (bandwidth = %.0f Hz)', Bbb));
+
+            for ch = 1:Nr
+                xr = rx(:,ch);
+
+                % Full spectrum
+                X_full = fftshift(fft(xr, Nfft_spec));
+
+                % Frequency mask around carrier
+                mask = abs(f_axis - fCarr) <= halfB;
+
+                if ~any(mask)
+                    subplot(Nr,1,ch);
+                    text(0.1,0.5, sprintf( ...
+                        'Channel %d: no spectral points in f = %.1f Hz ± %.1f Hz', ...
+                        ch, fCarr, halfB), ...
+                        'Units','normalized');
+                    axis off;
+                    continue;
+                end
+
+                % Extract band around carrier and shift to baseband
+                f_seg   = f_axis(mask);
+                X_seg   = X_full(mask);
+                f_bb    = f_seg - fCarr;           % baseband frequency axis
+                mag_bb  = 20*log10(abs(X_seg) + eps);
+
+                subplot(Nr,1,ch);
+                plot(f_bb/1e3, mag_bb);
+                grid on;
+                xlabel('Baseband frequency (kHz)');
+                ylabel('Magnitude (dB)');
+                title(sprintf('Rx channel %d baseband spectrum (|f - f_c| ≤ %.0f Hz)', ...
+                    ch, halfB));
+            end
+        end
+
+        % Button pushed function: ShowSynchronizationButton
+        function ShowSynchronizationButtonPushed(app, event)
+             if isempty(app.RxAnalysisData) || ~isfield(app.RxAnalysisData,'MetricData')
+                uialert(app.UIFigure, ...
+                    'No synchronization analysis available. Please run Rx processing first.', ...
+                    'No Sync Data');
+                return;
+            end
+
+            MetricDataCell = app.RxAnalysisData.MetricData;
+            if isempty(MetricDataCell)
+                uialert(app.UIFigure, ...
+                    'MetricData is empty.', ...
+                    'No Sync Data');
+                return;
+            end
+
+            Nr = numel(MetricDataCell);
+
+            fig = figure('Name','Rahmensynchronisation pro Mikrofon','NumberTitle','off');
+            tl  = tiledlayout(fig, 3, Nr, 'TileSpacing','compact', 'Padding','compact');
+
+            for ch = 1:Nr
+                MD = MetricDataCell{ch};
+                if isempty(MD) || ~isfield(MD,'P') || ~isfield(MD,'R') || ~isfield(MD,'Metric')
+                    % Skip invalid entries
+                    continue;
+                end
+                P = MD.P;
+                R = MD.R;
+                M = MD.Metric;
+                if isfield(MD,'idxMax')
+                    idxMax = MD.idxMax;
+                else
+                    [~, idxMax] = max(M);
+                end
+
+                % Row 1: correlation |P(d)|
+                nexttile(tl, ch);
+                plot(abs(P));
+                xlabel('d');
+                ylabel('|P(d)|');
+                title(sprintf('Mic %d: Korrelationssumme', ch));
+                grid on;
+
+                % Row 2: energy / power R(d)
+                nexttile(tl, Nr + ch);
+                plot(R);
+                xlabel('d');
+                ylabel('R(d)');
+                title(sprintf('Mic %d: mittlere Leistung', ch));
+                grid on;
+
+                % Row 3: synchronization metric
+                nexttile(tl, 2*Nr + ch);
+                plot(M); hold on;
+                xline(idxMax, 'r--');
+                xlabel('d');
+                ylabel('M(d)');
+                title(sprintf('Mic %d: Rahmensync', ch));
+                grid on;
+            end
+        end
+
+        % Button pushed function: ShowChannelSymbolsButton
+        function ShowChannelSymbolsButtonPushed(app, event)
+             if isempty(app.RxAnalysisData)
+                uialert(app.UIFigure, ...
+                    'No Rx analysis data available. Please run processing first.', ...
+                    'No Data');
+                return;
+            end
+            d = app.RxAnalysisData;
+
+            % CIR / CTF per microphone
+            if isfield(d,'kanalimpuls') && ~isempty(d.kanalimpuls) && ...
+               isfield(d,'kanalUeb')    && ~isempty(d.kanalUeb)
+
+                % kanalimpuls: [Lh x SubFrames x Nr x Nt]
+                [Lh, ~, Nr, ~] = size(d.kanalimpuls);
+
+                fig1 = figure('Name','CIR & CTF pro Mikrofon','NumberTitle','off');
+                tl1  = tiledlayout(fig1, 2, Nr, 'TileSpacing','compact', 'Padding','compact');
+
+                for ch = 1:Nr
+                    % CIR: first subframe and first Tx
+                    h = squeeze(d.kanalimpuls(:,1,ch,1));
+
+                    nexttile(tl1, ch);
+                    stem(0:Lh-1, abs(h),'filled');
+                    xlabel('Tap');
+                    ylabel('|h[n]|');
+                    title(sprintf('Mic %d: CIR', ch));
+                    grid on;
+
+                    % CTF: same indices
+                    H = squeeze(d.kanalUeb(:,1,ch,1));
+                    nexttile(tl1, Nr + ch);
+                    plot(20*log10(abs(H)+eps));
+                    xlabel('Subcarrier');
+                    ylabel('|H[k]| [dB]');
+                    title(sprintf('Mic %d: CTF', ch));
+                    grid on;
+                end
+            else
+                uialert(app.UIFigure, ...
+                    'kanalimpuls / kanalUeb is empty. Cannot plot CIR/CTF.', ...
+                    'No Channel Data');
+            end
+
+            % Constellation diagrams per Tx antenna
+            if isfield(d,'mDataRxEq') && ~isempty(d.mDataRxEq)
+                % mDataRxEq: [iNoTxAnt x iNfft x iNoBlocks]
+                mEq = d.mDataRxEq;
+                app.iNoTxAnt = size(mEq,1);
+
+                fig2 = figure('Name','Empfangssymbole (Konstellation)','NumberTitle','off');
+                tl2  = tiledlayout(fig2, 1, app.iNoTxAnt, 'TileSpacing','compact', 'Padding','compact');
+
+                for tx = 1:app.iNoTxAnt
+                    s = squeeze(mEq(tx,:,:));  % [iNfft x iNoBlocks]
+                    s = s(:);
+
+                    nexttile(tl2, tx);
+                    plot(real(s), imag(s), '.');
+                    xlabel('Re');
+                    ylabel('Im');
+                    title(sprintf('Tx%d: Konstellation', tx));
+                    axis equal;
+                    grid on;
+                end
+            else
+                uialert(app.UIFigure, ...
+                    'mDataRxEq is empty. Cannot plot constellation.', ...
+                    'No Symbol Data');
+            end
+        end
+
+        % Button pushed function: ProcessTxButton
+        function ProcessTxButtonPushed(app, event)
+              % Offline processing of TxSequence via ideal loopback
+            % 0) Check that TxSequence exists
+            if isempty(app.TxSequence)
+                uialert(app.UIFigure, ...
+                    'TxSequence is empty. Please run a transmission first.', ...
+                    'No Tx Signal');
+                return;
+            end
+
+            try
+                % A. Build procParam for ideal loopback (Tx used as Rx)
+                rxSignal = app.TxSequence.';   % [Nsamp x Nt]
+                fs       = app.fDACFreq;
+
+                iNb = app.iNfft + app.iNg;
+
+                % Extra information from TxMeta
+                if ~isempty(app.TxMeta) && isfield(app.TxMeta,'iNewNoBlocks')
+                    iNewNoBlocks = app.TxMeta.iNewNoBlocks;
+                else
+                    iNewNoBlocks = app.iNoBlocks;
+                end
+
+                if ~isempty(app.TxMeta) && isfield(app.TxMeta,'len_cInfoBits')
+                    len_cInfoBits = app.TxMeta.len_cInfoBits;
+                else
+                    len_cInfoBits = 0;
+                end
+
+                procParam = struct( ...
+                    'rxSignal',         rxSignal, ...
+                    'fs',               fs, ...
+                    'iNfft',            app.iNfft, ...
+                    'iNg',              app.iNg, ...
+                    'iNb',              iNb, ...
+                    'iNoBlocks',        app.iNoBlocks, ...
+                    'iNoTxAnt',         app.iNoTxAnt, ...
+                    'iNoRxAnt',         app.iNoTxAnt, ...   % ideal case: Nr = Nt
+                    'iNoSubBlocks',     app.iNoSubBlocks, ...
+                    'iNewNoBlocks',     iNewNoBlocks, ...
+                    'iModOrd',          app.iModOrd, ...
+                    'fBBFreq',          app.fBBFreq, ...
+                    'fCarrFreq',        app.fCarrFreq, ...
+                    'mimoMode',         app.mimoMode, ...
+                    'codingMode',       app.codingMode, ...
+                    'channelEstimator', app.chEstimator, ...
+                    'equalizerMode',    app.equalizerMode, ...
+                    'len_cInfoBits',    len_cInfoBits, ...
+                    'DatenTyp',         app.DatenTyp, ...
+                    'SendeDatei',       app.SendeDatei ...
+                );
+
+                % B. Run full Rx processing on ideal loopback
+                dataTx = Signalverarbeitung_app(procParam);
+                app.TxLoopAnalysisData = dataTx;
+
+                % C. Show decoded result (text / image) in Rx preview area
+                cla(app.ReceivedFileAxes,'reset');
+                axis(app.ReceivedFileAxes,'off');
+                app.ReceivedPreviewTextArea.Value = {''};
+
+                if isfield(dataTx,'text') && ~isempty(dataTx.text)
+                    fprintf('\n==== Ideal loopback: decoded text ====\n%s\n', dataTx.text);
+                    app.showTextPreviewGeneric( ...
+                        app.ReceivedFileAxes, ...
+                        app.ReceivedPreviewTextArea, ...
+                        dataTx.text, ...
+                        'Ideal loopback: decoded text' ...
+                    );
+                elseif isfield(dataTx,'bild') && ~isempty(dataTx.bild)
+                    figure; imshow(dataTx.bild); title('Ideal loopback: decoded image');
+                    app.showImagePreviewGeneric( ...
+                        app.ReceivedFileAxes, ...
+                        app.ReceivedPreviewTextArea, ...
+                        dataTx.bild, ...
+                        'Ideal loopback: decoded image' ...
+                    );
+                else
+                    app.showTextPreviewGeneric( ...
+                        app.ReceivedFileAxes, ...
+                        app.ReceivedPreviewTextArea, ...
+                        'No displayable text or image detected.', ...
+                        '' ...
+                    );
+                end
+
+                % For ideal loopback, keep BER display as placeholder
+                app.BitErrorCountValueLabel.Text = '-';
+                app.BERValueLabel.Text           = '-';
+                app.TransmissionStatusValueLabel.Text = 'Tx ideal loopback processing finished.';
+
+                % D. Plot Tx signals in time/frequency/baseband for each Tx antenna
+                txMat = app.TxSequence;        % [Nt x Nsamp]
+                [Nt, Ns] = size(txMat);
+                t  = (0:Ns-1)/fs;
+                NfftPlot = min(4096, Ns);
+                f  = (0:NfftPlot-1)/NfftPlot * fs;
+
+                fig1 = figure('Name','Tx-Signale (Zeit/Frequenz/Basisband)','NumberTitle','off');
+                tl1  = tiledlayout(fig1, 3, Nt, 'TileSpacing','compact','Padding','compact');
+
+                for txIdx = 1:Nt
+                    sig = txMat(txIdx,:);
+
+                    % Time-domain
+                    nexttile(tl1, txIdx);
+                    plot(t, sig);
+                    xlabel('t [s]');
+                    ylabel('Amp');
+                    title(sprintf('Tx%d Zeit', txIdx));
+                    grid on;
+
+                    % Frequency-domain
+                    nexttile(tl1, Nt + txIdx);
+                    X = fft(sig(1:NfftPlot), NfftPlot);
+                    plot(f, 20*log10(abs(X)+eps));
+                    xlabel('f [Hz]');
+                    ylabel('|X(f)| [dB]');
+                    title(sprintf('Tx%d Frequenz', txIdx));
+                    grid on;
+
+                    % Baseband (time-domain downconversion)
+                    nexttile(tl1, 2*Nt + txIdx);
+                    try
+                        vBB = DeModulateSignal_app(sig, app.fBBFreq, app.fDACFreq, app.fCarrFreq);
+                        vBB = vBB(:).';
+                        tBB = (0:numel(vBB)-1)/app.fBBFreq;
+                        plot(tBB, real(vBB)); hold on;
+                        plot(tBB, imag(vBB));
+                        xlabel('t [s]');
+                        ylabel('Amp');
+                        legend('Re','Im');
+                        title(sprintf('Tx%d Basisband', txIdx));
+                        grid on;
+                    catch MEbb
+                        text(0.1,0.5,sprintf('Baseband error:\n%s',MEbb.message), ...
+                            'Units','normalized');
+                        axis off;
+                    end
+                end
+
+                % E. Constellation diagram for ideal loopback
+                if isfield(dataTx,'mDataRxEq') && ~isempty(dataTx.mDataRxEq)
+                    mEq   = dataTx.mDataRxEq;
+                    nTxEq = size(mEq,1);
+
+                    fig2 = figure('Name','Tx Ideal Loopback: Konstellation','NumberTitle','off');
+                    tl2  = tiledlayout(fig2, 1, nTxEq, 'TileSpacing','compact','Padding','compact');
+
+                    for txIdx = 1:nTxEq
+                        s = squeeze(mEq(txIdx,:,:));
+                        s = s(:);
+                        nexttile(tl2, txIdx);
+                        plot(real(s), imag(s), '.');
+                        xlabel('Re'); ylabel('Im');
+                        title(sprintf('Tx%d Konstellation', txIdx));
+                        axis equal;
+                        grid on;
+                    end
+                end
+
+            catch ME
+                fprintf(1, '\n================ MATLAB ERROR REPORT (ProcessTxButton) ================\n');
+                fprintf(1, '%s\n', getReport(ME, 'extended', 'hyperlinks', 'off'));
+                fprintf(1, '=====================================================================\n\n');
+
+                uialert(app.UIFigure, ...
+                    ['Failed to process Tx signal: ' ME.message], ...
+                    'Tx Processing Error');
+            end
+        end
+
+        % Value changed function: TxAntennasEditField
+        function TxAntennasEditFieldValueChanged(app, event)
+            value = app.TxAntennasEditField.Value;
+        
+            % Validate Tx antenna number: must be an integer in [1, 4]
+            if isempty(value) || ~isfinite(value) || mod(value,1) ~= 0 || value < 1 || value > 4
+                uialert(app.UIFigure, ...
+                    'Tx antenna number must be an integer between 1 and 4.', ...
+                    'Invalid Parameter');
+        
+                % Restore previous valid value
+                app.TxAntennasEditField.Value = app.iNoTxAnt;
+                return;
+            end
+        
+            % Apply (store as integer)
+            value = round(value);
+        
+            % If unchanged, do nothing
+            if value == app.iNoTxAnt
+                return;
+            end
+        
+            % Update internal parameter
+            app.iNoTxAnt = value;
+            app.TxAntennasEditField.Value = app.iNoTxAnt;
+        
+            % Changing antenna numbers invalidates EigenMode SVD results
+            app.V1 = [];
+            app.U1 = [];
+            app.S1 = [];
+            app.EigenMeta = [];
+        
+            % Update dependent recommendations (blocks/sub-blocks)
+            app.updateRecommendedBlocks();
+        
+            % Optional UI status message (uses existing label in your app)
+            if isvalid(app.TransmissionStatusValueLabel)
+                app.TransmissionStatusValueLabel.Text = sprintf('Tx antennas set to %d.', app.iNoTxAnt);
+            end
+        end
+
+        % Value changed function: RxAntennasEditField
+        function RxAntennasEditFieldValueChanged(app, event)
+            value = app.RxAntennasEditField.Value;
+        
+            % Validate Rx antenna number: must be an integer in [1, 8]
+            if isempty(value) || ~isfinite(value) || mod(value,1) ~= 0 || value < 1 || value > 8
+                uialert(app.UIFigure, ...
+                    'Rx antenna number must be an integer between 1 and 8.', ...
+                    'Invalid Parameter');
+        
+                % Restore previous valid value
+                app.RxAntennasEditField.Value = app.iNoRxAnt;
+                return;
+            end
+        
+            % Apply (store as integer)
+            value = round(value);
+        
+            % If unchanged, do nothing
+            if value == app.iNoRxAnt
+                return;
+            end
+        
+            % Update internal parameter
+            app.iNoRxAnt = value;
+            app.RxAntennasEditField.Value = app.iNoRxAnt;
+        
+            % Changing antenna numbers invalidates EigenMode SVD results
+            app.V1 = [];
+            app.U1 = [];
+            app.S1 = [];
+            app.EigenMeta = [];
+        
+            % Update dependent recommendations (blocks/sub-blocks)
+            app.updateRecommendedBlocks();
+        
+            % Optional UI status message
+            if isvalid(app.TransmissionStatusValueLabel)
+                app.TransmissionStatusValueLabel.Text = sprintf('Rx antennas set to %d.', app.iNoRxAnt);
+            end
+        end
+    end
+
+    % Component initialization
+    methods (Access = private)
+
+        % Create UIFigure and components
+        function createComponents(app)
+
+            % Create UIFigure and hide until all components are created
+            app.UIFigure = uifigure('Visible', 'off');
+            app.UIFigure.Position = [100 100 1167 755];
+            app.UIFigure.Name = 'MATLAB App';
+
+            % Create SystemParametersPanel
+            app.SystemParametersPanel = uipanel(app.UIFigure);
+            app.SystemParametersPanel.Title = 'SystemParametersPanel';
+            app.SystemParametersPanel.Position = [22 237 307 502];
+
+            % Create FFTLengthLabel
+            app.FFTLengthLabel = uilabel(app.SystemParametersPanel);
+            app.FFTLengthLabel.Position = [12 428 92 22];
+            app.FFTLengthLabel.Text = 'FFTLengthLabel';
+
+            % Create FFTLengthDropDownLabel
+            app.FFTLengthDropDownLabel = uilabel(app.SystemParametersPanel);
+            app.FFTLengthDropDownLabel.HorizontalAlignment = 'right';
+            app.FFTLengthDropDownLabel.Position = [14 407 120 22];
+            app.FFTLengthDropDownLabel.Text = 'FFTLengthDropDown';
+
+            % Create FFTLengthDropDown
+            app.FFTLengthDropDown = uidropdown(app.SystemParametersPanel);
+            app.FFTLengthDropDown.Items = {'8', '16', '32', '64', '128', '256', '512', '1024'};
+            app.FFTLengthDropDown.ValueChangedFcn = createCallbackFcn(app, @FFTLengthDropDownValueChanged, true);
+            app.FFTLengthDropDown.Position = [148 407 100 22];
+            app.FFTLengthDropDown.Value = '128';
+
+            % Create CPLengthLabel
+            app.CPLengthLabel = uilabel(app.SystemParametersPanel);
+            app.CPLengthLabel.Position = [12 386 88 22];
+            app.CPLengthLabel.Text = 'CPLengthLabel';
+
+            % Create CPLengthEditFieldLabel
+            app.CPLengthEditFieldLabel = uilabel(app.SystemParametersPanel);
+            app.CPLengthEditFieldLabel.HorizontalAlignment = 'right';
+            app.CPLengthEditFieldLabel.Position = [21 365 105 22];
+            app.CPLengthEditFieldLabel.Text = 'CPLengthEditField';
+
+            % Create CPLengthEditField
+            app.CPLengthEditField = uieditfield(app.SystemParametersPanel, 'numeric');
+            app.CPLengthEditField.ValueChangedFcn = createCallbackFcn(app, @CPLengthEditFieldValueChanged, true);
+            app.CPLengthEditField.Position = [140 365 100 22];
+
+            % Create TxAntennasLabel
+            app.TxAntennasLabel = uilabel(app.SystemParametersPanel);
+            app.TxAntennasLabel.Position = [14 344 98 22];
+            app.TxAntennasLabel.Text = 'TxAntennasLabel';
+
+            % Create TxAntennasEditFieldLabel
+            app.TxAntennasEditFieldLabel = uilabel(app.SystemParametersPanel);
+            app.TxAntennasEditFieldLabel.HorizontalAlignment = 'right';
+            app.TxAntennasEditFieldLabel.Position = [29 323 115 22];
+            app.TxAntennasEditFieldLabel.Text = 'TxAntennasEditField';
+
+            % Create TxAntennasEditField
+            app.TxAntennasEditField = uieditfield(app.SystemParametersPanel, 'numeric');
+            app.TxAntennasEditField.ValueChangedFcn = createCallbackFcn(app, @TxAntennasEditFieldValueChanged, true);
+            app.TxAntennasEditField.Position = [159 323 100 22];
+
+            % Create RxAntennasLabel
+            app.RxAntennasLabel = uilabel(app.SystemParametersPanel);
+            app.RxAntennasLabel.Position = [14 305 99 22];
+            app.RxAntennasLabel.Text = 'RxAntennasLabel';
+
+            % Create RxAntennasEditFieldLabel
+            app.RxAntennasEditFieldLabel = uilabel(app.SystemParametersPanel);
+            app.RxAntennasEditFieldLabel.HorizontalAlignment = 'right';
+            app.RxAntennasEditFieldLabel.Position = [19 284 117 22];
+            app.RxAntennasEditFieldLabel.Text = 'RxAntennasEditField';
+
+            % Create RxAntennasEditField
+            app.RxAntennasEditField = uieditfield(app.SystemParametersPanel, 'numeric');
+            app.RxAntennasEditField.ValueChangedFcn = createCallbackFcn(app, @RxAntennasEditFieldValueChanged, true);
+            app.RxAntennasEditField.Position = [151 284 100 22];
+
+            % Create ModulationOrderLabel
+            app.ModulationOrderLabel = uilabel(app.SystemParametersPanel);
+            app.ModulationOrderLabel.Position = [15 254 125 22];
+            app.ModulationOrderLabel.Text = 'ModulationOrderLabel';
+
+            % Create CarrierFrequencyEditFieldLabel
+            app.CarrierFrequencyEditFieldLabel = uilabel(app.SystemParametersPanel);
+            app.CarrierFrequencyEditFieldLabel.HorizontalAlignment = 'right';
+            app.CarrierFrequencyEditFieldLabel.Position = [19 181 144 22];
+            app.CarrierFrequencyEditFieldLabel.Text = 'CarrierFrequencyEditField';
+
+            % Create CarrierFrequencyEditField
+            app.CarrierFrequencyEditField = uieditfield(app.SystemParametersPanel, 'numeric');
+            app.CarrierFrequencyEditField.ValueChangedFcn = createCallbackFcn(app, @CarrierFrequencyEditFieldValueChanged, true);
+            app.CarrierFrequencyEditField.Position = [178 181 100 22];
+
+            % Create ModulationOrderDropDownLabel
+            app.ModulationOrderDropDownLabel = uilabel(app.SystemParametersPanel);
+            app.ModulationOrderDropDownLabel.HorizontalAlignment = 'right';
+            app.ModulationOrderDropDownLabel.Position = [21 233 153 22];
+            app.ModulationOrderDropDownLabel.Text = 'ModulationOrderDropDown';
+
+            % Create ModulationOrderDropDown
+            app.ModulationOrderDropDown = uidropdown(app.SystemParametersPanel);
+            app.ModulationOrderDropDown.Items = {'BPSK', '4QAM', '8QAM', '16QAM', '32QAM', '64QAM'};
+            app.ModulationOrderDropDown.ValueChangedFcn = createCallbackFcn(app, @ModulationOrderDropDownValueChanged, true);
+            app.ModulationOrderDropDown.Position = [189 233 100 22];
+            app.ModulationOrderDropDown.Value = 'BPSK';
+
+            % Create DACSamplingRateEditFieldLabel
+            app.DACSamplingRateEditFieldLabel = uilabel(app.SystemParametersPanel);
+            app.DACSamplingRateEditFieldLabel.HorizontalAlignment = 'right';
+            app.DACSamplingRateEditFieldLabel.Position = [15 137 152 22];
+            app.DACSamplingRateEditFieldLabel.Text = 'DACSamplingRateEditField';
+
+            % Create DACSamplingRateEditField
+            app.DACSamplingRateEditField = uieditfield(app.SystemParametersPanel, 'numeric');
+            app.DACSamplingRateEditField.ValueChangedFcn = createCallbackFcn(app, @DACSamplingRateEditFieldValueChanged, true);
+            app.DACSamplingRateEditField.Position = [170 137 100 22];
+
+            % Create CarrierFrequencyLabel
+            app.CarrierFrequencyLabel = uilabel(app.SystemParametersPanel);
+            app.CarrierFrequencyLabel.Position = [15 202 127 22];
+            app.CarrierFrequencyLabel.Text = 'CarrierFrequencyLabel';
+
+            % Create DACSamplingRateLabel
+            app.DACSamplingRateLabel = uilabel(app.SystemParametersPanel);
+            app.DACSamplingRateLabel.Position = [14 158 135 22];
+            app.DACSamplingRateLabel.Text = 'DACSamplingRateLabel';
+
+            % Create AnzahlderBlckeEditFieldLabel
+            app.AnzahlderBlckeEditFieldLabel = uilabel(app.SystemParametersPanel);
+            app.AnzahlderBlckeEditFieldLabel.HorizontalAlignment = 'right';
+            app.AnzahlderBlckeEditFieldLabel.Position = [20 449 102 22];
+            app.AnzahlderBlckeEditFieldLabel.Text = 'Anzahl der Blöcke';
+
+            % Create AnzahlderBlckeEditField
+            app.AnzahlderBlckeEditField = uieditfield(app.SystemParametersPanel, 'numeric');
+            app.AnzahlderBlckeEditField.ValueChangedFcn = createCallbackFcn(app, @AnzahlderBlckeEditFieldValueChanged, true);
+            app.AnzahlderBlckeEditField.Position = [131 449 100 22];
+
+            % Create AnzahlderSubBlckeEditFieldLabel
+            app.AnzahlderSubBlckeEditFieldLabel = uilabel(app.SystemParametersPanel);
+            app.AnzahlderSubBlckeEditFieldLabel.HorizontalAlignment = 'right';
+            app.AnzahlderSubBlckeEditFieldLabel.Position = [18 102 127 22];
+            app.AnzahlderSubBlckeEditFieldLabel.Text = 'Anzahl der Sub-Blöcke';
+
+            % Create AnzahlderSubBlckeEditField
+            app.AnzahlderSubBlckeEditField = uieditfield(app.SystemParametersPanel, 'numeric');
+            app.AnzahlderSubBlckeEditField.ValueChangedFcn = createCallbackFcn(app, @AnzahlderSubBlckeEditFieldValueChanged, true);
+            app.AnzahlderSubBlckeEditField.Position = [154 102 100 22];
+
+            % Create DauerderbertragungEditFieldLabel
+            app.DauerderbertragungEditFieldLabel = uilabel(app.SystemParametersPanel);
+            app.DauerderbertragungEditFieldLabel.HorizontalAlignment = 'right';
+            app.DauerderbertragungEditFieldLabel.Position = [19 70 128 22];
+            app.DauerderbertragungEditFieldLabel.Text = 'Dauer der Übertragung';
+
+            % Create DauerderbertragungEditField
+            app.DauerderbertragungEditField = uieditfield(app.SystemParametersPanel, 'numeric');
+            app.DauerderbertragungEditField.Position = [162 70 100 22];
+
+            % Create BasebandFrequencyEditFieldLabel
+            app.BasebandFrequencyEditFieldLabel = uilabel(app.SystemParametersPanel);
+            app.BasebandFrequencyEditFieldLabel.HorizontalAlignment = 'right';
+            app.BasebandFrequencyEditFieldLabel.Position = [16 29 119 22];
+            app.BasebandFrequencyEditFieldLabel.Text = 'Baseband Frequency';
+
+            % Create BasebandFrequencyEditField
+            app.BasebandFrequencyEditField = uieditfield(app.SystemParametersPanel, 'numeric');
+            app.BasebandFrequencyEditField.ValueChangedFcn = createCallbackFcn(app, @BasebandFrequencyEditFieldValueChanged, true);
+            app.BasebandFrequencyEditField.Position = [150 29 100 22];
+
+            % Create CodingMIMOPanel
+            app.CodingMIMOPanel = uipanel(app.UIFigure);
+            app.CodingMIMOPanel.Title = 'CodingMIMOPanel';
+            app.CodingMIMOPanel.Position = [23 37 307 201];
+
+            % Create ChannelCodingLabel
+            app.ChannelCodingLabel = uilabel(app.CodingMIMOPanel);
+            app.ChannelCodingLabel.Position = [10 112 117 22];
+            app.ChannelCodingLabel.Text = 'ChannelCodingLabel';
+
+            % Create ChannelCodingDropDownLabel
+            app.ChannelCodingDropDownLabel = uilabel(app.CodingMIMOPanel);
+            app.ChannelCodingDropDownLabel.HorizontalAlignment = 'right';
+            app.ChannelCodingDropDownLabel.Position = [12 91 145 22];
+            app.ChannelCodingDropDownLabel.Text = 'ChannelCodingDropDown';
+
+            % Create ChannelCodingDropDown
+            app.ChannelCodingDropDown = uidropdown(app.CodingMIMOPanel);
+            app.ChannelCodingDropDown.Items = {'Keine', 'Faltungscodes 2/3', 'Faltungscodes 1/2'};
+            app.ChannelCodingDropDown.ValueChangedFcn = createCallbackFcn(app, @ChannelCodingDropDownValueChanged, true);
+            app.ChannelCodingDropDown.Position = [172 91 100 22];
+            app.ChannelCodingDropDown.Value = 'Keine';
+
+            % Create MIMOSchemeDropDownLabel
+            app.MIMOSchemeDropDownLabel = uilabel(app.CodingMIMOPanel);
+            app.MIMOSchemeDropDownLabel.HorizontalAlignment = 'right';
+            app.MIMOSchemeDropDownLabel.Position = [21 132 139 22];
+            app.MIMOSchemeDropDownLabel.Text = 'MIMOSchemeDropDown';
+
+            % Create MIMOSchemeDropDown
+            app.MIMOSchemeDropDown = uidropdown(app.CodingMIMOPanel);
+            app.MIMOSchemeDropDown.Items = {'EigenMode', 'Spatial Multiplexing', 'Alamouti', 'V-BLAST'};
+            app.MIMOSchemeDropDown.ValueChangedFcn = createCallbackFcn(app, @MIMOSchemeDropDownValueChanged, true);
+            app.MIMOSchemeDropDown.Position = [175 132 100 22];
+            app.MIMOSchemeDropDown.Value = 'EigenMode';
+
+            % Create ChannelEstimatorDropDownLabel
+            app.ChannelEstimatorDropDownLabel = uilabel(app.CodingMIMOPanel);
+            app.ChannelEstimatorDropDownLabel.HorizontalAlignment = 'right';
+            app.ChannelEstimatorDropDownLabel.Position = [5 51 158 22];
+            app.ChannelEstimatorDropDownLabel.Text = 'ChannelEstimatorDropDown';
+
+            % Create ChannelEstimatorDropDown
+            app.ChannelEstimatorDropDown = uidropdown(app.CodingMIMOPanel);
+            app.ChannelEstimatorDropDown.Items = {'Zero Forcing', 'MMSE'};
+            app.ChannelEstimatorDropDown.ValueChangedFcn = createCallbackFcn(app, @ChannelEstimatorDropDownValueChanged, true);
+            app.ChannelEstimatorDropDown.Position = [162 51 126 22];
+            app.ChannelEstimatorDropDown.Value = 'Zero Forcing';
+
+            % Create EqualizerDropDownLabel
+            app.EqualizerDropDownLabel = uilabel(app.CodingMIMOPanel);
+            app.EqualizerDropDownLabel.HorizontalAlignment = 'right';
+            app.EqualizerDropDownLabel.Position = [5 13 111 22];
+            app.EqualizerDropDownLabel.Text = 'EqualizerDropDown';
+
+            % Create EqualizerDropDown
+            app.EqualizerDropDown = uidropdown(app.CodingMIMOPanel);
+            app.EqualizerDropDown.Items = {'Zero Forcing', 'MMSE', 'Classical SVD'};
+            app.EqualizerDropDown.ValueChangedFcn = createCallbackFcn(app, @EqualizerDropDownValueChanged, true);
+            app.EqualizerDropDown.Position = [141 15 136 22];
+            app.EqualizerDropDown.Value = 'MMSE';
+
+            % Create MIMOSchemeLabel
+            app.MIMOSchemeLabel = uilabel(app.CodingMIMOPanel);
+            app.MIMOSchemeLabel.Position = [9 146 111 22];
+            app.MIMOSchemeLabel.Text = 'MIMOSchemeLabel';
+
+            % Create ChannelEstimatorLabel
+            app.ChannelEstimatorLabel = uilabel(app.CodingMIMOPanel);
+            app.ChannelEstimatorLabel.Position = [12 72 130 22];
+            app.ChannelEstimatorLabel.Text = 'ChannelEstimatorLabel';
+
+            % Create EqualizerLabel
+            app.EqualizerLabel = uilabel(app.CodingMIMOPanel);
+            app.EqualizerLabel.Position = [9 34 117 28];
+            app.EqualizerLabel.Text = 'EqualizerLabel';
+
+            % Create DataSelectionPanel
+            app.DataSelectionPanel = uipanel(app.UIFigure);
+            app.DataSelectionPanel.Title = 'DataSelectionPanel';
+            app.DataSelectionPanel.Position = [329 37 381 702];
+
+            % Create DataContentAxes
+            app.DataContentAxes = uiaxes(app.DataSelectionPanel);
+            app.DataContentAxes.XColor = 'none';
+            app.DataContentAxes.YColor = 'none';
+            app.DataContentAxes.ZColor = 'none';
+            app.DataContentAxes.TitleFontWeight = 'bold';
+            app.DataContentAxes.Position = [14 13 293 545];
+
+            % Create SelectFileButton
+            app.SelectFileButton = uibutton(app.DataSelectionPanel, 'push');
+            app.SelectFileButton.ButtonPushedFcn = createCallbackFcn(app, @SelectFileButtonPushed, true);
+            app.SelectFileButton.Position = [25 649 103 23];
+            app.SelectFileButton.Text = 'SelectFileButton';
+
+            % Create FilePathEditFieldLabel
+            app.FilePathEditFieldLabel = uilabel(app.DataSelectionPanel);
+            app.FilePathEditFieldLabel.HorizontalAlignment = 'right';
+            app.FilePathEditFieldLabel.Position = [26 621 95 22];
+            app.FilePathEditFieldLabel.Text = 'FilePathEditField';
+
+            % Create FilePathEditField
+            app.FilePathEditField = uieditfield(app.DataSelectionPanel, 'text');
+            app.FilePathEditField.Position = [136 621 100 22];
+
+            % Create FileTypeTextLabel
+            app.FileTypeTextLabel = uilabel(app.DataSelectionPanel);
+            app.FileTypeTextLabel.Position = [27 587 100 22];
+            app.FileTypeTextLabel.Text = 'FileTypeTextLabel';
+
+            % Create FileTypeTextValueLabel
+            app.FileTypeTextValueLabel = uilabel(app.DataSelectionPanel);
+            app.FileTypeTextValueLabel.Position = [178 587 129 22];
+            app.FileTypeTextValueLabel.Text = 'FileTypeTextValueLabel';
+
+            % Create TransmissionStatusLabel
+            app.TransmissionStatusLabel = uilabel(app.DataSelectionPanel);
+            app.TransmissionStatusLabel.Position = [13 565 139 22];
+            app.TransmissionStatusLabel.Text = 'TransmissionStatusLabel';
+
+            % Create TransmissionStatusValueLabel
+            app.TransmissionStatusValueLabel = uilabel(app.DataSelectionPanel);
+            app.TransmissionStatusValueLabel.Position = [179 566 168 22];
+            app.TransmissionStatusValueLabel.Text = 'TransmissionStatusValueLabel';
+
+            % Create StartTransmissionButton
+            app.StartTransmissionButton = uibutton(app.DataSelectionPanel, 'push');
+            app.StartTransmissionButton.ButtonPushedFcn = createCallbackFcn(app, @StartTransmissionButtonPushed, true);
+            app.StartTransmissionButton.Position = [179 649 169 23];
+            app.StartTransmissionButton.Text = 'StartTransmissionButton';
+
+            % Create TextAreaLabel
+            app.TextAreaLabel = uilabel(app.DataSelectionPanel);
+            app.TextAreaLabel.HorizontalAlignment = 'right';
+            app.TextAreaLabel.Position = [14 541 55 22];
+            app.TextAreaLabel.Text = 'Text Area';
+
+            % Create DataPreviewTextArea
+            app.DataPreviewTextArea = uitextarea(app.DataSelectionPanel);
+            app.DataPreviewTextArea.Position = [26 13 339 552];
+
+            % Create ReceivePanel
+            app.ReceivePanel = uipanel(app.UIFigure);
+            app.ReceivePanel.Title = 'ReceivePanel';
+            app.ReceivePanel.Position = [710 37 406 702];
+
+            % Create ReceivedFileAxes
+            app.ReceivedFileAxes = uiaxes(app.ReceivePanel);
+            app.ReceivedFileAxes.TitleFontWeight = 'bold';
+            app.ReceivedFileAxes.Position = [10 93 278 497];
+
+            % Create StartProcessingButton
+            app.StartProcessingButton = uibutton(app.ReceivePanel, 'push');
+            app.StartProcessingButton.ButtonPushedFcn = createCallbackFcn(app, @StartProcessingButtonPushed, true);
+            app.StartProcessingButton.Position = [11 651 136 23];
+            app.StartProcessingButton.Text = 'StartProcessingButton';
+
+            % Create BitErrorCountLabel
+            app.BitErrorCountLabel = uilabel(app.ReceivePanel);
+            app.BitErrorCountLabel.Position = [11 609 108 22];
+            app.BitErrorCountLabel.Text = 'BitErrorCountLabel';
+
+            % Create BitErrorCountValueLabel
+            app.BitErrorCountValueLabel = uilabel(app.ReceivePanel);
+            app.BitErrorCountValueLabel.Position = [11 588 137 22];
+            app.BitErrorCountValueLabel.Text = 'BitErrorCountValueLabel';
+
+            % Create BERLabel
+            app.BERLabel = uilabel(app.ReceivePanel);
+            app.BERLabel.Position = [230 609 58 22];
+            app.BERLabel.Text = 'BERLabel';
+
+            % Create BERValueLabel
+            app.BERValueLabel = uilabel(app.ReceivePanel);
+            app.BERValueLabel.Position = [215 588 87 22];
+            app.BERValueLabel.Text = 'BERValueLabel';
+
+            % Create ShowRxSignalButton
+            app.ShowRxSignalButton = uibutton(app.ReceivePanel, 'push');
+            app.ShowRxSignalButton.ButtonPushedFcn = createCallbackFcn(app, @ShowRxSignalButtonPushed, true);
+            app.ShowRxSignalButton.Position = [31 53 129 23];
+            app.ShowRxSignalButton.Text = 'ShowRxSignalButton';
+
+            % Create ShowChannelSymbolsButton
+            app.ShowChannelSymbolsButton = uibutton(app.ReceivePanel, 'push');
+            app.ShowChannelSymbolsButton.ButtonPushedFcn = createCallbackFcn(app, @ShowChannelSymbolsButtonPushed, true);
+            app.ShowChannelSymbolsButton.Position = [188 53 172 23];
+            app.ShowChannelSymbolsButton.Text = 'ShowChannelSymbolsButton';
+
+            % Create ShowSynchronizationButton
+            app.ShowSynchronizationButton = uibutton(app.ReceivePanel, 'push');
+            app.ShowSynchronizationButton.ButtonPushedFcn = createCallbackFcn(app, @ShowSynchronizationButtonPushed, true);
+            app.ShowSynchronizationButton.Position = [11 15 167 23];
+            app.ShowSynchronizationButton.Text = 'ShowSynchronizationButton';
+
+            % Create ShowReceivedFileButton
+            app.ShowReceivedFileButton = uibutton(app.ReceivePanel, 'push');
+            app.ShowReceivedFileButton.Position = [201 23 150 23];
+            app.ShowReceivedFileButton.Text = 'ShowReceivedFileButton';
+
+            % Create TextArea2Label
+            app.TextArea2Label = uilabel(app.ReceivePanel);
+            app.TextArea2Label.HorizontalAlignment = 'right';
+            app.TextArea2Label.Position = [11 560 61 22];
+            app.TextArea2Label.Text = 'Text Area2';
+
+            % Create ReceivedPreviewTextArea
+            app.ReceivedPreviewTextArea = uitextarea(app.ReceivePanel);
+            app.ReceivedPreviewTextArea.Position = [24 95 364 489];
+
+            % Create ProcessTxButton
+            app.ProcessTxButton = uibutton(app.ReceivePanel, 'push');
+            app.ProcessTxButton.ButtonPushedFcn = createCallbackFcn(app, @ProcessTxButtonPushed, true);
+            app.ProcessTxButton.Position = [222 1 107 23];
+            app.ProcessTxButton.Text = 'ProcessTxButton';
+
+            % Show the figure after all components are created
+            app.UIFigure.Visible = 'on';
+        end
+    end
+
+    % App creation and deletion
+    methods (Access = public)
+
+        % Construct app
+        function app = gengqi1125
+
+            % Create UIFigure and components
+            createComponents(app)
+
+            % Register the app with App Designer
+            registerApp(app, app.UIFigure)
+
+            % Execute the startup function
+            runStartupFcn(app, @startupFcn)
+
+            if nargout == 0
+                clear app
+            end
+        end
+
+        % Code that executes before app deletion
+        function delete(app)
+
+            % Delete UIFigure when app is deleted
+            delete(app.UIFigure)
+        end
+    end
+end
