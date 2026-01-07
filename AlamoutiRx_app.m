@@ -77,8 +77,13 @@ function [mEmpfDataBits, data] = AlamoutiRx_app(mFrameRxNoCP, params, kanal, len
     end
 
     %% 3. Ideal preamble and SNR estimation
-    vPreambleTime = sqrt(iNoTxAnt) * ChuSeq(iNfft).';
-    vPreambleFreq = 1/sqrt(iNfft) * fft(vPreambleTime, iNfft);   % [Nfft x 1]
+    % Use the exact TX preamble frequency reference if provided
+    if isfield(params,'vPreambleFreq') && ~isempty(params.vPreambleFreq)
+        vPreambleFreq = params.vPreambleFreq(:);
+    else
+        vPreambleTime = sqrt(iNoTxAnt) * ChuSeq(iNfft).';
+        vPreambleFreq = (1/sqrt(iNfft)) * fft(vPreambleTime(:), iNfft);
+    end
 
     % RX preamble FFT: [Nfft x NoBlocks x Nr x Nt]
     mPreambleRxFreq = 1/sqrt(iNfft) * fft(mPreambleRx, iNfft, 1);
@@ -189,29 +194,34 @@ function [mEmpfDataBits, data] = AlamoutiRx_app(mFrameRxNoCP, params, kanal, len
     end
 
     %% 8. Alamouti linear detection
-    % Output: mDataRxEq [Tx x Nfft x NoBlocks]
     mDataRxEq = zeros(iNoTxAnt, iNfft, iNoBlocks);
-
+    
     for iCB = 1:iNoBlocks
         for k = 1:iNfft
             Heff   = squeeze(mCTFeff(k,iCB,:,:));      % [2*Nr x 2]
             yStack = squeeze(mDataNewRx(k,iCB,:));     % [2*Nr x 1]
-
-            Heff_H = Heff';
-            G      = Heff_H * Heff;                    % [2 x 2]
-            scale  = norm(G, 'fro');
-
-            if scale < 1e-8 || ~isfinite(scale)
-                scale = 1;
+    
+            % Extract h1 and h2 from the "upper" part of Heff
+            h1 = Heff(1:iNoRxAnt, 1);
+            h2 = Heff(1:iNoRxAnt, 2);
+    
+            alpha = sum(abs(h1).^2 + abs(h2).^2);
+            if ~isfinite(alpha) || alpha < 1e-12
+                alpha = 1e-12;
             end
-
-            xHat = sqrt(iNoTxAnt) * (1/scale) * Heff_H * yStack;  % [2 x 1]
+    
+            xHat = (sqrt(iNoTxAnt) / alpha) * (Heff' * yStack);   % [2 x 1]
             mDataRxEq(:,k,iCB) = xHat;
         end
     end
 
+
     %% 9. Symbols -> bits (header + payload)
-    vDataRxDet = reshape(mDataRxEq, 1, iNoTxAnt * iNfft * iNoBlocks);
+    % Serialize symbols in the same order as SM/VBLAST:
+    % [Nfft x NoBlocks x Tx] -> column-major vector
+    mDataRxDet = permute(mDataRxEq, [2 3 1]);   % [Nfft x NoBlocks x Tx]
+    vDataRxDet = reshape(mDataRxDet, 1, []);    % row vector
+    vDataRxDet(~isfinite(vDataRxDet)) = 0;
     vDataRxDet(~isfinite(vDataRxDet)) = 0;
 
     % header: BPSK

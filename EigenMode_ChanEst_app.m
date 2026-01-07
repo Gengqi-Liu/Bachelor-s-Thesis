@@ -2,7 +2,7 @@ function [U, S, V, chanMeta] = EigenMode_ChanEst_app(rxPreamble, params, metaPre
 % EigenMode_ChanEst_app
 %
 % Estimate frequency-domain MIMO channel from EigenMode preamble and compute
-% per-subcarrier SVD of (H^H H). V is used for Tx precoding.
+% per-subcarrier SVD of mean(H^H H). V is used for Tx precoding.
 %
 % Input:
 %   rxPreamble : [Nr x Nsamp] recorded HF signal (transpose of audio I/O)
@@ -52,38 +52,41 @@ function [U, S, V, chanMeta] = EigenMode_ChanEst_app(rxPreamble, params, metaPre
         end
     end
 
-    % ---- Legacy sync (Chu) via EstFrameStart ----
-    PglobalTmp = struct( ...
-        'iNoBlocks', iNoBlocks, ...
-        'iNfft',     iNfft, ...
-        'iNg',       iNg, ...
-        'iNb',       iNb, ...
-        'iNoTxAnt',  iNoTxAnt, ...
-        'iNoRxAnt',  iNoRxAnt, ...
-        'fBBFreq',   fBBFreq, ...
-        'fDACFreq',  fDACFreq, ...
-        'fCarrFreq', fCarrFreq );
+    % ---- Schmidl & Cox timing + coarse CFO (uses EstFrameStart_app) ----
+    if ~exist('EstFrameStart_app','file')
+        error('EigenMode_ChanEst_app: EstFrameStart_app.m not found on path.');
+    end
 
-    vFrStart   = [];
-    vCarOff    = [];
+    vFrStart   = zeros(1, iNoRxAnt);
+    vCarOff    = zeros(1, iNoRxAnt);
     MetricData = cell(1, iNoRxAnt);
 
     for iC = 1:iNoRxAnt
-        [vFrStartTp, fCarOffTp, MetricData{iC}] = EstFrameStart(mDataRxDem(iC,:), PglobalTmp);
-        vFrStart = [vFrStart, vFrStartTp]; %#ok<AGROW>
-        vCarOff  = [vCarOff,  fCarOffTp];  %#ok<AGROW>
+        [vFrStart(iC), vCarOff(iC), MetricData{iC}] = EstFrameStart_app( ...
+            mDataRxDem(iC,:), iNfft, iNg);
     end
 
-    iFrStart = max(1, min(vFrStart) - 4);
+    % Use earliest sync point across Rx channels
+    iFrSync  = min(vFrStart);
 
-    vCarOff = vCarOff(:).';
-    fCarOff = mean(vCarOff);
+    % Data/preamble blocks start AFTER the S&C sync symbol (length iNfft, no CP)
+    iFrStart = iFrSync + iNfft;
+    iFrStart = max(1, min(iFrStart, Lbb));
 
-    % ---- Per-Rx coarse CFO correction ----
-    Ns = size(mDataRxDem,2);
-    n  = 1:Ns;
-    for iC = 1:iNoRxAnt
-        mDataRxDem(iC,:) = mDataRxDem(iC,:) .* exp(-1j*2*pi/iNfft * vCarOff(iC) * n);
+    % Coarse CFO compensation (normalized cycles/sample)
+    cfoVals = vCarOff(~isnan(vCarOff) & isfinite(vCarOff));
+    if ~isempty(cfoVals)
+        fCfo = median(cfoVals);  % robust across channels
+    else
+        fCfo = 0;
+    end
+
+    if isfinite(fCfo) && abs(fCfo) > 0
+        n = 0:(Lbb-1);
+        rot = exp(-1j*2*pi*fCfo*n);
+        for iC = 1:iNoRxAnt
+            mDataRxDem(iC,:) = mDataRxDem(iC,:) .* rot;
+        end
     end
 
     % ---- Slice preamble blocks and remove CP ----
@@ -104,7 +107,8 @@ function [U, S, V, chanMeta] = EigenMode_ChanEst_app(rxPreamble, params, metaPre
         mPreambleRx(:,:,iC) = reshape(mPreambleRxTp(:,iC), iNb, iNewNoBlocksPre);
     end
 
-    mPreambleRx(1:iNg,:,:) = [];  % -> [iNfft x iNewNoBlocksPre x Nr]
+    % Remove CP: -> [iNfft x iNewNoBlocksPre x Nr]
+    mPreambleRx(1:iNg,:,:) = [];
 
     % ---- ZF channel estimation in frequency domain ----
     if exist('ChuSeq','file')
@@ -123,8 +127,10 @@ function [U, S, V, chanMeta] = EigenMode_ChanEst_app(rxPreamble, params, metaPre
               iNewNoBlocksPre, iNoTxAnt*N);
     end
 
+    % Reshape: [SC x (Nt*N) x Nr] -> [SC x Nt x N x Nr]
     mPreambleRxFreq1 = reshape(mPreambleRxFreq, iNfft, iNoTxAnt, N, iNoRxAnt);
 
+    % mCTF: [SC x Nt x Nr x N]
     mCTF = zeros(iNfft, iNoTxAnt, iNoRxAnt, N);
     mCIR = zeros(iNfft, iNoTxAnt, iNoRxAnt, N);
 
@@ -173,6 +179,8 @@ function [U, S, V, chanMeta] = EigenMode_ChanEst_app(rxPreamble, params, metaPre
     chanMeta.mPreambleRx     = mPreambleRx;
     chanMeta.mPreambleRxFreq = mPreambleRxFreq;
     chanMeta.MetricData      = MetricData;
+    chanMeta.vFrStart        = vFrStart;
+    chanMeta.vCarOff         = vCarOff;
     chanMeta.iFrStart        = iFrStart;
-    chanMeta.fCarOff         = fCarOff;
+    chanMeta.fCarOff         = fCfo;
 end

@@ -61,6 +61,25 @@ function data = Signalverarbeitung_app(procParam)
         'entzerrer',     procParam.equalizerMode ...
     );
 
+    % --- Pass-through EigenMode matrices if provided ---
+    if isfield(params,'mimoMode') && strcmpi(strtrim(lower(string(params.mimoMode))), 'eigenmode')
+        if isfield(params,'V1') && ~isempty(params.V1)
+            % already present, do nothing
+        elseif exist('procParam','var') && isstruct(procParam) && isfield(procParam,'V1') && ~isempty(procParam.V1)
+            params.V1 = procParam.V1;
+        end
+    
+        if ~isfield(params,'U1') && exist('procParam','var') && isstruct(procParam) && isfield(procParam,'U1') && ~isempty(procParam.U1)
+            params.U1 = procParam.U1;
+        end
+        if ~isfield(params,'S1') && exist('procParam','var') && isstruct(procParam) && isfield(procParam,'S1') && ~isempty(procParam.S1)
+            params.S1 = procParam.S1;
+        end
+        if ~isfield(params,'EigenMeta') && exist('procParam','var') && isstruct(procParam) && isfield(procParam,'EigenMeta') && ~isempty(procParam.EigenMeta)
+            params.EigenMeta = procParam.EigenMeta;
+        end
+    end
+
     %% 3) PHY processing: RF -> BB -> sync -> channel -> equalization -> bits
     % AnalyzeRxSig_app expects rxFrame as [Nr x Nsamp]
     [mEmpfDataBits, dataChan] = AnalyzeRxSig_app(rxSignal.', params, kanal);
@@ -75,7 +94,15 @@ function data = Signalverarbeitung_app(procParam)
             bild = bits2bild_app(mEmpfDataBits, kanal);
             data.bild = bild;
             data.text = '';
-
+        
+            % If image could not be reconstructed, skip BER computation
+            if isempty(bild)
+                warning('Signalverarbeitung_app: Image reconstruction failed (empty image). Skip BER.');
+                data.numBitError  = NaN;
+                data.bitErrorRate = NaN;
+                return;
+            end
+        
             if isfield(procParam,'SendeDatei') && ~isempty(procParam.SendeDatei)
                 [data.numBitError, data.bitErrorRate] = ...
                     bitFehlerRaten_app(bild, procParam.SendeDatei, procParam.DatenTyp);
@@ -83,7 +110,7 @@ function data = Signalverarbeitung_app(procParam)
                 data.numBitError  = NaN;
                 data.bitErrorRate = NaN;
             end
-
+            
         case "text"
             [textDecoded, ~] = bits2text_app(mEmpfDataBits, kanal);
             data.text = textDecoded;
@@ -96,7 +123,6 @@ function data = Signalverarbeitung_app(procParam)
                 data.numBitError  = NaN;
                 data.bitErrorRate = NaN;
             end
-
         otherwise
             data.text = '(Unknown DatenTyp: cannot reconstruct payload)';
             data.bild = [];

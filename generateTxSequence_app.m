@@ -1,10 +1,11 @@
 function [mFrameTxCar, meta] = generateTxSequence_app(params, source)
 %GENERATETXSEQUENCE_APP
 % Main Tx signal generation:
-%   1) Common pipeline: file -> bits -> coding -> QAM -> control header -> Chu preamble
-%   2) Per-MIMO-mode Tx mapping (EigenMode / SM / V-BLAST / Alamouti)
+%   1) file -> bits -> coding -> QAM
+%   2) (Text only) overwrite leading symbols with BPSK header
+%   3) Chu preamble
+%   4) Per-MIMO-mode Tx mapping
 
-    % Fixed random seed (for reproducibility)
     rng(0,'twister');
 
     % ==== 1. Unpack parameters ====
@@ -17,51 +18,34 @@ function [mFrameTxCar, meta] = generateTxSequence_app(params, source)
 
     mimoModeStr  = string(params.mimoMode);
     coding       = string(params.codingMode);
-    datenTyp     = string(source.DatenTyp);
+    datenTyp     = lower(string(source.DatenTyp));
 
-    metaBits = struct();   % bit-level meta information
+    metaBits = struct();
 
     % ==== 2. Max bits per frame ====
     anzMaxBits = iModOrd * iNoTxAnt * iNoBlocks * iNfft;
 
     % ==== 3. File -> bits (with channel coding) ====
-    switch lower(datenTyp)
-        case "bild"
-            if exist('bild2bits_app','file')
-                [vInfoBits, AnzUeb, metaBild, original_data_bits] = ...
-                    bild2bits_app(source.SendeDatei, coding, anzMaxBits, iModOrd);
-            else
-                error('bild2bits_app not found. Please add it to the path.');
-            end
-            len_cInfoBits = metaBild.len_cInfoBits;
-
-        case "image"
-            if exist('bild2bits_app','file')
-                [vInfoBits, AnzUeb, metaBild, original_data_bits] = ...
-                    bild2bits_app(source.SendeDatei, coding, anzMaxBits, iModOrd);
-            else
-                error('bild2bits_app not found. Please add it to the path.');
-            end
+    switch datenTyp
+        case {"bild","image"}
+            [vInfoBits, AnzUeb, metaBild, original_data_bits] = ...
+                bild2bits_app(source.SendeDatei, coding, anzMaxBits, iModOrd);
             len_cInfoBits = metaBild.len_cInfoBits;
 
         case "text"
-            if exist('text2bits_app','file')
-                [vInfoBits, AnzUeb, metaTxt, original_data_bits] = ...
-                    text2bits_app(string(source.SendeDatei), coding, anzMaxBits, iModOrd);
-            else
-                error('text2bits_app not found. Please add it to the path.');
-            end
+            [vInfoBits, AnzUeb, metaTxt, original_data_bits] = ...
+                text2bits_app(string(source.SendeDatei), coding, anzMaxBits, iModOrd);
             len_cInfoBits = metaTxt.len_cInfoBits;
 
         otherwise
             error('Unknown DatenTyp: %s (expected Text/Bild/Image).', datenTyp);
     end
 
-    % Common meta
     metaBits.AnzUeb           = AnzUeb;
     metaBits.len_cInfoBits    = len_cInfoBits;
     metaBits.originalDataBits = original_data_bits;
     metaBits.anzMaxBits       = anzMaxBits;
+    metaBits.DatenTyp         = char(datenTyp);
 
     % Use a single frame worth of bits
     if length(vInfoBits) < anzMaxBits
@@ -73,9 +57,19 @@ function [mFrameTxCar, meta] = generateTxSequence_app(params, source)
 
     % ==== 4. Serial-to-parallel and symbol indexing ====
     % vBits -> mBits: [iModOrd x (iNoBlocks*iNfft*iNoTxAnt)]
-    mBits         = reshape(vBits, iModOrd, iNoBlocks*iNfft*iNoTxAnt);
-    % Each column is one symbol (right-msb)
-    mSymb         = bi2de(mBits.', 'right-msb');   % column vector
+    mBits = reshape(vBits, iModOrd, iNoBlocks*iNfft*iNoTxAnt);
+
+    % IMPORTANT:
+    %   Image/Bild: left-msb to match bild2bits_app / bits2bild_app
+    %   Text: keep your legacy right-msb behavior to avoid breaking working path
+    if datenTyp=="bild" || datenTyp=="image"
+        msbOrder = 'left-msb';
+    else
+        msbOrder = 'right-msb';
+    end
+
+    mSymb = bi2de(mBits.', msbOrder);  % column vector indices
+
     % Frequency-domain symbol indices: [iNfft x iNoBlocks x iNoTxAnt]
     mDataTxFreqTp = reshape(mSymb, iNfft, iNoBlocks, iNoTxAnt);
 
@@ -87,31 +81,31 @@ function [mFrameTxCar, meta] = generateTxSequence_app(params, source)
                                         'UnitAveragePower', true);
     end
 
-    % ==== 6. Control information (header) in BPSK on leading symbols ====
-    vHeaderBits   = vInfoBits(1:len_cInfoBits);
-    vDataTxFreq_h = qammod(vHeaderBits, 2, 'UnitAveragePower', true);  % BPSK
+    % ==== 6. Control information (header) handling ====
+    % Text legacy: overwrite leading symbols with BPSK header (old design)
+    % Image/Bild: DO NOT overwrite (header is already embedded in vInfoBits as QAM bits)
+    if datenTyp=="text"
+        if len_cInfoBits > 0
+            vHeaderBits   = vInfoBits(1:len_cInfoBits);
+            vDataTxFreq_h = qammod(vHeaderBits, 2, 'UnitAveragePower', true);  % BPSK
 
-    len_einUeb     = iNfft * iNoBlocks * iNoTxAnt;           % symbols per frame
-    mDataTxFreqTp2 = reshape(mDataTxFreq, 1, len_einUeb);    % flatten
+            len_einUeb     = iNfft * iNoBlocks * iNoTxAnt;           % symbols per frame
+            mDataTxFreqTp2 = reshape(mDataTxFreq, 1, len_einUeb);    % flatten
 
-    if len_cInfoBits <= len_einUeb
-        % Header occupies first len_cInfoBits positions
-        mDataTxFreqTp2(1:len_cInfoBits) = vDataTxFreq_h;
-        anzMaxUeb_h = 1;
-    else
-        % Header longer than single frame, truncate
-        mDataTxFreqTp2 = vDataTxFreq_h(1:len_einUeb);
-        anzMaxUeb_h    = ceil(len_cInfoBits / len_einUeb);
+            if len_cInfoBits <= len_einUeb
+                mDataTxFreqTp2(1:len_cInfoBits) = vDataTxFreq_h;
+            else
+                mDataTxFreqTp2 = vDataTxFreq_h(1:len_einUeb);
+            end
+
+            mDataTxFreq = reshape(mDataTxFreqTp2, iNfft, iNoBlocks, iNoTxAnt);
+        end
     end
-
-    mDataTxFreq          = reshape(mDataTxFreqTp2, iNfft, iNoBlocks, iNoTxAnt);
-    metaBits.anzMaxUeb_h = anzMaxUeb_h;
 
     % ==== 7. Chu preamble in time domain ====
     if exist('ChuSeq','file')
         vPreambleTime = sqrt(iNoTxAnt) * ChuSeq(iNfft).';
     else
-        warning('ChuSeq not found. Using random preamble.');
         vPreambleTime = sqrt(iNoTxAnt) * (randn(iNfft,1) + 1j*randn(iNfft,1))/sqrt(2);
     end
 
@@ -129,21 +123,15 @@ function [mFrameTxCar, meta] = generateTxSequence_app(params, source)
             [mFrameTxCar, metaMode] = generateTx_SM_app(params, mDataTxFreq, vPreambleTime);
 
         otherwise
-            warning('Unknown MIMO mode "%s". Falling back to Spatial Multiplexing.', mimoModeStr);
             [mFrameTxCar, metaMode] = generateTx_SM_app(params, mDataTxFreq, vPreambleTime);
     end
 
-    % ==== 9. Merge meta and return ====
     meta = mergeMeta(metaBits, metaMode);
-
 end
 
-% Helper: merge meta structures
 function metaOut = mergeMeta(metaBase, metaMode)
     metaOut = metaBase;
-    if isempty(metaMode)
-        return;
-    end
+    if isempty(metaMode), return; end
     fns = fieldnames(metaMode);
     for k = 1:numel(fns)
         fn = fns{k};

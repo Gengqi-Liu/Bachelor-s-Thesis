@@ -4,16 +4,21 @@ function bild = bits2bild_app(empfBits, kanal)
 % Inputs:
 %   empfBits : column/row vector of bits (header + image data)
 %   kanal    : struct, expected fields
-%              .len_cInfoBits  – control info length in bits
-%              .bild_size      – [unused, height, width, channels] (optional)
+%              .len_cInfoBits  – control info length in bits (for ONE copy)
 %              .code           – 'Keine' | 'Faltungscodes 2/3' | 'Faltungscodes 1/2'
+%              .iModOrd        – optional, bits per QAM symbol (1..6)
 %
 % Output:
 %   bild     : uint8 image [H x W x C]
 
     % --- 0) Basic checks / sanitization ---
-    empfBits = empfBits(:);   % force column vector
+    empfBits = empfBits(:);   % force column
     nTotal   = numel(empfBits);
+
+    if nTotal == 0
+        bild = uint8([]);
+        return;
+    end
 
     if ~isfield(kanal, 'len_cInfoBits') || isempty(kanal.len_cInfoBits)
         len_cInfoBits = 0;
@@ -22,51 +27,102 @@ function bild = bits2bild_app(empfBits, kanal)
     end
     len_cInfoBits = max(0, min(len_cInfoBits, nTotal));
 
-    % --- 1) Split control info bits and payload bits ---
-    vInfoBits = empfBits(1:len_cInfoBits);
-    vEmpfBits = empfBits(len_cInfoBits+1:end);
+    % Optional: iModOrd (header repeated iModOrd times on TX)
+    if isfield(kanal,'iModOrd') && ~isempty(kanal.iModOrd) && isfinite(kanal.iModOrd)
+        iModOrd = round(double(kanal.iModOrd));
+        iModOrd = min(max(iModOrd,1),6);
+    else
+        iModOrd = 1; % safe default if not provided
+    end
 
-    % --- 2) Decode control info: image size etc. ---
-    bildInfo = [];
-
-    if ~isempty(vInfoBits)
+    % --- Helper: decode one header chunk (len_cInfoBits bits) -> [AnzUeb,H,W,C] ---
+    function info = decodeHeaderChunk(vInfoBitsChunk)
+        info = [];
+        if isempty(vInfoBitsChunk)
+            return;
+        end
         try
-            trel  = poly2trellis(3,[6 7]);   % same code as in bild2bits_app
-            tblen = 4;
-            decoded_vInfoBits = vitdec(vInfoBits, trel, tblen, 'cont', 'hard');
-            decoded_vInfoBits = decoded_vInfoBits(tblen+1:end);
+            trel  = poly2trellis(3,[6 7]);   % same as TX control code
+            tblen = 4;                       % same tail length as TX for control
 
-            % Expect 4 fields, each 16 bits
-            if numel(decoded_vInfoBits) >= 64
-                decoded_vInfoBits = decoded_vInfoBits(1:64);
-                bildInfoBits = reshape(decoded_vInfoBits, 16, 4).';
-                bildInfo     = bi2de(bildInfoBits).';
+            % Use truncation for a finite-length block
+            dec = vitdec(vInfoBitsChunk(:).', trel, tblen, 'trunc', 'hard');
+            dec = dec(:);
+
+            % Drop tail bits (TX appended 4 tail bits before coding)
+            if numel(dec) > tblen
+                dec = dec(tblen+1:end);
+            else
+                return;
             end
+
+            if numel(dec) < 64
+                return;
+            end
+
+            dec = dec(1:64);
+            m16 = reshape(dec, 16, 4).';                     % 4 words, 16 bits each
+            info = bi2de(m16, 'left-msb').';                 % IMPORTANT: left-msb matches TX
         catch
-            bildInfo = [];
+            info = [];
         end
     end
 
-    % Fallback: use kanal.bild_size if header decode failed
-    if (isempty(bildInfo) || numel(bildInfo) ~= 4) ...
-            && isfield(kanal,'bild_size') && numel(kanal.bild_size) == 4
-        bildInfo = kanal.bild_size(:);
-        disp('bits2bild_app: InfoData corrected using kanal.bild_size.');
+    % --- 1) Try to decode control info (handle possible repetitions) ---
+    bildInfo = [];
+    repUsed  = 1;
+
+    if len_cInfoBits >= 1 && nTotal >= len_cInfoBits
+        maxRepTry = min(iModOrd, floor(nTotal / len_cInfoBits));
+        maxRepTry = min(maxRepTry, 6);  % clamp search
+
+        for r = 1:maxRepTry
+            chunk = empfBits((r-1)*len_cInfoBits + (1:len_cInfoBits));
+            cand  = decodeHeaderChunk(chunk);
+
+            % Validate candidate header
+            if ~isempty(cand) && numel(cand) == 4
+                H = double(cand(2));
+                W = double(cand(3));
+                C = double(cand(4));
+
+                % Hard sanity limits (adjust if you transmit larger images)
+                if H >= 1 && H <= 2048 && W >= 1 && W <= 2048 && (C == 1 || C == 3)
+                    bildInfo = cand(:);
+                    repUsed  = r;
+                    break;
+                end
+            end
+        end
     end
 
-    % If still no valid size, abort with empty image
-    if isempty(bildInfo) || numel(bildInfo) ~= 4 ...
-            || any(bildInfo(2:4) <= 0)
-        warning('bits2bild_app: unable to recover valid image size, returning empty image.');
+    % If header still not recovered, try kanal.bild_size as fallback
+    if (isempty(bildInfo) || numel(bildInfo) ~= 4) && isfield(kanal,'bild_size') && numel(kanal.bild_size) == 4
+        bildInfo = kanal.bild_size(:);
+        repUsed  = iModOrd; % best effort: assume TX repeated it iModOrd times
+    end
+
+    if isempty(bildInfo) || numel(bildInfo) ~= 4
+        warning('bits2bild_app: Unable to recover a valid image header.');
         bild = uint8([]);
         return;
     end
 
-    % Number of pixels = H * W * C
-    height  = double(bildInfo(2));
-    width   = double(bildInfo(3));
-    chans   = double(bildInfo(4));
-    lgBild  = height * width * chans;
+    height = double(bildInfo(2));
+    width  = double(bildInfo(3));
+    chans  = double(bildInfo(4));
+
+    if ~(height >= 1 && height <= 2048 && width >= 1 && width <= 2048 && (chans == 1 || chans == 3))
+        warning('bits2bild_app: Invalid image size decoded: %dx%dx%d.', height, width, chans);
+        bild = uint8([]);
+        return;
+    end
+
+    % --- 2) Split payload bits (skip ALL header copies used) ---
+    hdrTotalBits = repUsed * len_cInfoBits;
+    hdrTotalBits = min(hdrTotalBits, nTotal);
+
+    vEmpfBits = empfBits(hdrTotalBits+1:end);
 
     % --- 3) Channel decoding for image payload bits ---
     if ~isfield(kanal,'code') || isempty(kanal.code)
@@ -92,6 +148,7 @@ function bild = bits2bild_app(empfBits, kanal)
             trel  = poly2trellis([4 3],[4 5 17;7 4 2]);
             tblen = 32;
             decoded_vEmpfBits = vitdec(vEmpfBits, trel, tblen, 'trunc', 'hard');
+            decoded_vEmpfBits = decoded_vEmpfBits(:);
         end
 
     elseif strcmpi('Faltungscodes 1/2', codeStr)
@@ -105,38 +162,47 @@ function bild = bits2bild_app(empfBits, kanal)
             end
             trel  = poly2trellis(3,[6 7]);
             tblen = 16;
-            decodedTemp      = vitdec(vEmpfBits, trel, tblen, 'cont', 'hard');
-            decoded_vEmpfBits = decodedTemp(tblen+1:end);
+            decodedTemp       = vitdec(vEmpfBits, trel, tblen, 'trunc', 'hard');
+            decoded_vEmpfBits = decodedTemp(:);
+            if numel(decoded_vEmpfBits) > tblen
+                decoded_vEmpfBits = decoded_vEmpfBits(tblen+1:end);
+            end
         end
 
     else
-        error('bits2bild_app: unknown kanal.code = %s', codeStr);
+        error('bits2bild_app: Unknown kanal.code = %s', codeStr);
     end
 
     % --- 4) Extract image data bits: 8 bits per pixel ---
+    lgBild     = height * width * chans;
     neededBits = lgBild * 8;
 
+    % Absolute safety guard to prevent huge allocations
+    maxBitsAllowed = 50e6; % 50 Mbits
+    if neededBits > maxBitsAllowed
+        error('bits2bild_app: neededBits=%g is too large. Header is likely corrupted.', neededBits);
+    end
+
     if numel(decoded_vEmpfBits) < neededBits
-        warning('bits2bild_app: data bits are not enough (%d < %d), zero-padding.', ...
-                numel(decoded_vEmpfBits), neededBits);
-        vBildBits = [decoded_vEmpfBits(:); zeros(neededBits - numel(decoded_vEmpfBits), 1)];
+        % Pad only to a reasonable size
+        missing = neededBits - numel(decoded_vEmpfBits);
+        if missing > maxBitsAllowed
+            error('bits2bild_app: Padding length=%g is too large. Header is likely corrupted.', missing);
+        end
+        vBildBits = [decoded_vEmpfBits(:); zeros(missing, 1)];
     else
         vBildBits = decoded_vEmpfBits(1:neededBits);
     end
 
-    % Defensive: ensure multiple of 8
-    vBildBits = vBildBits(1:floor(length(vBildBits)/8)*8);
+    % Ensure multiple of 8
+    vBildBits = vBildBits(1:floor(numel(vBildBits)/8)*8);
     if isempty(vBildBits)
         bild = uint8([]);
         return;
     end
 
-    % --- 5) 8 bits -> uint8 pixels -> reshape to image ---
+    % --- 5) 8 bits -> uint8 pixels -> reshape ---
     mBildBits = reshape(vBildBits, 8, []).';
-    mSymbBild = bi2de(mBildBits);   % [Npix x 1]
-
-    bild = uint8(reshape(mSymbBild, ...
-                         height, ...
-                         width, ...
-                         chans));
+    mSymbBild = bi2de(mBildBits, 'left-msb');  % IMPORTANT: left-msb matches TX de2bi
+    bild      = uint8(reshape(mSymbBild, height, width, chans));
 end

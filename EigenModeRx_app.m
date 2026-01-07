@@ -1,4 +1,11 @@
 function [mEmpfDataBits, data] = EigenModeRx_app(mFrameRxNoCP, params, kanal, len_cInfoBits)
+if isfield(params,'V1') && ~isempty(params.V1)
+    disp(size(params.V1));
+else
+    disp('V1 is missing in params.');
+end
+
+
 % EigenModeRx_app
 %
 % EigenMode receiver (channel estimation + equalization + demapping).
@@ -154,14 +161,20 @@ function [mEmpfDataBits, data] = EigenModeRx_app(mFrameRxNoCP, params, kanal, le
 
     %% 5) Per-subcarrier SVD (for debug / Classical SVD fallback)
     CTF = permute(mCTF,[1,4,3,2]);   % [SC x Tx x Rx x SubFrame]
-
+    
+    % Use FULL SVD so that U is [Rx x Rx] and fits the preallocation.
     U = zeros(iNoRxAnt, iNoRxAnt, iNfft, AnzSubFrames);
-    S = zeros(min(iNoRxAnt,iNoTxAnt), min(iNoRxAnt,iNoTxAnt), iNfft, AnzSubFrames);
-
+    
+    % In full SVD: S is [Rx x Tx] (rectangular). Keep it that way to avoid size mismatch later.
+    S = zeros(iNoRxAnt, iNoTxAnt, iNfft, AnzSubFrames);
+    
     for j = 1:AnzSubFrames
         for iSc = 1:iNfft
             Htmp = squeeze(CTF(iSc,1:iNoTxAnt,:,j)).';  % [Rx x Tx]
-            [u,s,~] = svd(Htmp,'econ');
+    
+            % Full SVD: u is [Rx x Rx], s is [Rx x Tx]
+            [u,s,~] = svd(Htmp);
+    
             U(:,:,iSc,j) = u;
             S(:,:,iSc,j) = s;
         end

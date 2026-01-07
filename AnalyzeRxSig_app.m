@@ -19,15 +19,12 @@ function [mEmpfDataBits, data] = AnalyzeRxSig_app(rxFrame, params, kanal)
 %   data          : debug struct (channels, equalized symbols, ...)
 
     %% 1. Unpack parameters
-    iNoBlocks     = params.iNoBlocks;
     iNfft         = params.iNfft;
     iNg           = params.iNg;
     iNb           = params.iNb;
     iModOrd       = params.iModOrd;
-    iNoTxAnt      = params.iNoTxAnt;
     iNoRxAnt      = params.iNoRxAnt;
     iNewNoBlocks  = params.iNewNoBlocks;
-    iNoSubBlocks  = params.iNoSubBlocks;
 
     fBBFreq       = params.fBBFreq;
     fDACFreq      = params.fDACFreq;
@@ -35,10 +32,27 @@ function [mEmpfDataBits, data] = AnalyzeRxSig_app(rxFrame, params, kanal)
 
     mimoModeStr   = string(params.mimoMode);
 
-    len_cInfoBits = kanal.len_cInfoBits;
+    if isfield(kanal,'len_cInfoBits') && ~isempty(kanal.len_cInfoBits)
+        len_cInfoBits = kanal.len_cInfoBits;
+    else
+        len_cInfoBits = 0;
+    end
 
     mEmpfDataBits = [];
     data          = struct();
+
+    %% 1.5 透传数据类型（关键：图像模式需要在RX端分支）
+    % 优先 kanal.DatenTyp，其次 params.DatenTyp（如果你有）
+    if ~isfield(kanal,'DatenTyp') || isempty(kanal.DatenTyp)
+        if isfield(params,'DatenTyp') && ~isempty(params.DatenTyp)
+            kanal.DatenTyp = params.DatenTyp;
+        end
+    end
+
+    % 也把 iModOrd 放进 kanal，给 bits2bild_app/图像header重复解析用
+    if ~isfield(kanal,'iModOrd') || isempty(kanal.iModOrd)
+        kanal.iModOrd = iModOrd;
+    end
 
     %% 2. Downconvert to baseband
     % rxFrame: [Nr x Nsamp] at fDACFreq
@@ -81,9 +95,23 @@ function [mEmpfDataBits, data] = AnalyzeRxSig_app(rxFrame, params, kanal)
     end
 
     % S&C training symbol length = iNfft, no CP
-    % data block CP start = iFrSync + iNfft
     iFrStart = iFrSync + iNfft;
     iFrStart = max(1, min(iFrStart, Lbb));
+
+    % --- CFO compensation (fCarOffset is normalized cycles/sample) ---
+    if ~isempty(vCarOff)
+        cfoVals = vCarOff(~isnan(vCarOff) & isfinite(vCarOff));
+        if ~isempty(cfoVals)
+            fCfo = median(cfoVals);  % robust across Rx channels
+            if isfinite(fCfo) && abs(fCfo) > 0
+                n = 0:(Lbb-1);
+                rot = exp(-1j*2*pi*fCfo*n);  % cycles/sample -> rad/sample
+                for iC = 1:iNoRxAnt
+                    mDataRxDem(iC,:) = mDataRxDem(iC,:) .* rot;
+                end
+            end
+        end
+    end
 
     %% 4. Cut OFDM blocks and remove CP
     maxSamplesAvail = Lbb - iFrStart + 1;
@@ -95,8 +123,6 @@ function [mEmpfDataBits, data] = AnalyzeRxSig_app(rxFrame, params, kanal)
     end
 
     if maxBlocksAvail < iNewNoBlocks
-        warning(['AnalyzeRxSig_app: baseband length too short, expected %d blocks, ' ...
-                 'only %d available.'], iNewNoBlocks, maxBlocksAvail);
         iNewNoBlocks = maxBlocksAvail;
     end
 
@@ -121,7 +147,7 @@ function [mEmpfDataBits, data] = AnalyzeRxSig_app(rxFrame, params, kanal)
             [mEmpfDataBits, dataMode] = AlamoutiRx_app( ...
                 mFrameRxNoCP, params, kanal, len_cInfoBits);
 
-        case {'spatail multiplexing','v-blast','vblast'}
+        case {'spatial multiplexing','v-blast','vblast'}
             [mEmpfDataBits, dataMode] = SM_VBLAST_Rx_app( ...
                 mFrameRxNoCP, params, kanal, len_cInfoBits);
 
@@ -146,6 +172,7 @@ function [mEmpfDataBits, data] = AnalyzeRxSig_app(rxFrame, params, kanal)
     data.iNewNoBlocks = iNewNoBlocks;
 end
 
+
 %% ========================================================================
 %% Subfunction: SM / V-BLAST RX (preamble extraction + channel est + EQ)
 %% ========================================================================
@@ -154,12 +181,9 @@ function [mEmpfDataBits, data] = SM_VBLAST_Rx_app(mFrameRxNoCP, params, kanal, l
 
     iNoBlocks     = params.iNoBlocks;
     iNfft         = params.iNfft;
-    iNg           = params.iNg;    %#ok<NASGU>
-    iNb           = params.iNb;    %#ok<NASGU>
     iModOrd       = params.iModOrd;
     iNoTxAnt      = params.iNoTxAnt;
     iNoRxAnt      = params.iNoRxAnt;
-    iNewNoBlocks  = params.iNewNoBlocks;
     iNoSubBlocks  = params.iNoSubBlocks;
 
     mimoModeStr   = string(params.mimoMode);
@@ -224,7 +248,6 @@ function [mEmpfDataBits, data] = SM_VBLAST_Rx_app(mFrameRxNoCP, params, kanal, l
         end
     end
 
-    % Numerical protection
     badMask = ~isfinite(mSNR) | (mSNR <= 0);
     mSNR(badMask) = 1e6;
 
@@ -242,19 +265,16 @@ function [mEmpfDataBits, data] = SM_VBLAST_Rx_app(mFrameRxNoCP, params, kanal, l
     vPreambleFreqCol = vPreambleFreq(:);
 
     if strcmpi(kanal.schaetzer,'Zero Forcing')
-        % LS (ZF)
         for iCTxAnt = 1:iNoTxAnt
             for iCRxAnt = 1:iNoRxAnt
                 for iCB = 1:AnzSubFrames
                     rxCol = mPreambleRxFreq(:,iCB,iCRxAnt,iCTxAnt);
                     mCTF(:,iCB,iCRxAnt,iCTxAnt) = rxCol ./ vPreambleFreqCol;
-                    mCIR(:,iCB,iCRxAnt,iCTxAnt) = ...
-                        sqrt(iNfft) * ifft(mCTF(:,iCB,iCRxAnt,iCTxAnt));
+                    mCIR(:,iCB,iCRxAnt,iCTxAnt) = sqrt(iNfft) * ifft(mCTF(:,iCB,iCRxAnt,iCTxAnt));
                 end
             end
         end
     elseif strcmpi(kanal.schaetzer,'MMSE')
-        % MMSE
         for iCTxAnt = 1:iNoTxAnt
             for iCRxAnt = 1:iNoRxAnt
                 snrCol = mSNR(:,iCRxAnt,iCTxAnt);
@@ -263,8 +283,7 @@ function [mEmpfDataBits, data] = SM_VBLAST_Rx_app(mFrameRxNoCP, params, kanal, l
                 for iCB = 1:AnzSubFrames
                     rxCol = mPreambleRxFreq(:,iCB,iCRxAnt,iCTxAnt);
                     mCTF(:,iCB,iCRxAnt,iCTxAnt) = w .* rxCol;
-                    mCIR(:,iCB,iCRxAnt,iCTxAnt) = ...
-                        sqrt(iNfft) * ifft(mCTF(:,iCB,iCRxAnt,iCTxAnt));
+                    mCIR(:,iCB,iCRxAnt,iCTxAnt) = sqrt(iNfft) * ifft(mCTF(:,iCB,iCRxAnt,iCTxAnt));
                 end
             end
         end
@@ -273,13 +292,9 @@ function [mEmpfDataBits, data] = SM_VBLAST_Rx_app(mFrameRxNoCP, params, kanal, l
     end
 
     %% MIMO equalization
-    % Data freq: [SC x Block x Rx] -> [Rx x SC x Block]
-    mDataRxFreq = 1/sqrt(iNfft) * fft(mDataRx, iNfft, 1);
-    mDataRxFreq = permute(mDataRxFreq, [3,1,2]);
     mDataRxEq   = zeros(iNoTxAnt, iNfft, iNoBlocks);
 
     if strcmpi(mimoModeStr,'v-blast') || strcmpi(mimoModeStr,'vblast')
-        % V-BLAST detector
         mDataRxEq = VBlastRx_app( ...
             mDataRx, ...
             mCTF, ...
@@ -288,13 +303,17 @@ function [mEmpfDataBits, data] = SM_VBLAST_Rx_app(mFrameRxNoCP, params, kanal, l
                 'iNfft',        iNfft, ...
                 'iNoTxAnt',     iNoTxAnt, ...
                 'iNoRxAnt',     iNoRxAnt, ...
-                'iNoSubBlocks', iNoSubBlocks ...
+                'iNoSubBlocks', iNoSubBlocks, ...
+                'iModOrd',      iModOrd ...
             ), ...
             iSNR, ...
             kanal ...
         );
     else
-        % Linear ZF / MMSE for spatial multiplexing
+        % 线性ZF/MMSE（保留你原实现）
+        mDataRxFreq = 1/sqrt(iNfft) * fft(mDataRx, iNfft, 1);
+        mDataRxFreq = permute(mDataRxFreq, [3,1,2]); % [Rx x SC x Block]
+
         if strcmpi(kanal.entzerrer,'Zero Forcing')
             for iSF = 1:AnzSubFrames
                 if iSF == AnzSubFrames
@@ -309,7 +328,6 @@ function [mEmpfDataBits, data] = SM_VBLAST_Rx_app(mFrameRxNoCP, params, kanal, l
                     end
                 end
             end
-
         elseif strcmpi(kanal.entzerrer,'MMSE')
             for iSF = 1:AnzSubFrames
                 if iSF == AnzSubFrames
@@ -324,8 +342,7 @@ function [mEmpfDataBits, data] = SM_VBLAST_Rx_app(mFrameRxNoCP, params, kanal, l
                         if any(~isfinite(A(:))) || rcond(A) < 1e-10
                             A = mH' * mH + eye(iNoTxAnt) * 1e-3;
                         end
-                        mDataRxEq(:,k,iCB) = ...
-                            sqrt(iNoTxAnt) * ( A \ (mH' * mDataRxFreq(:,k,iCB)) );
+                        mDataRxEq(:,k,iCB) = sqrt(iNoTxAnt) * ( A \ (mH' * mDataRxFreq(:,k,iCB)) );
                     end
                 end
             end
@@ -334,61 +351,48 @@ function [mEmpfDataBits, data] = SM_VBLAST_Rx_app(mFrameRxNoCP, params, kanal, l
         end
     end
 
-    % Maximal ratio combining for single TX antenna (kept from legacy code)
-    if iNoTxAnt == 1
-        mDataRxEqTp    = mDataRxEq;
-        mWeightFactors = zeros(iNfft, iNoBlocks);
-        for iCB = 1:AnzSubFrames
-            for k = 1:iNfft
-                mWeightFactors(k,iCB) = norm(squeeze(mCTF(k,iCB,:,:)));
-            end
-            mWeightFactors(:,iCB) = mWeightFactors(:,iCB) / max(sum(mWeightFactors(:,iCB)),eps);
-        end
-        for iCB = 1:iNoBlocks
-            for k = 1:iNfft
-                mDataRxEqTp(:,k,iCB) = mDataRxEq(:,k,iCB) * mWeightFactors(k,iCB);
-            end
-        end
-        mDataRxEq = mDataRxEqTp;
-    end
-
-    %% Symbol -> bits
+    %% Symbol -> bits  （这里是关键改动：图像模式全QAM）
     for iCTxAnt = 1:iNoTxAnt
         mDataRxDet(:,:,iCTxAnt) = squeeze(mDataRxEq(iCTxAnt,:,:));
     end
     vDataRxDet = reshape(mDataRxDet, 1, iNfft*iNoBlocks*iNoTxAnt);
-
     vDataRxDet(~isfinite(vDataRxDet)) = 0;
 
-    if len_cInfoBits > 0
-        vInfoRxDetTp = qamdemod(vDataRxDet(1:len_cInfoBits), 2, 'UnitAveragePower', true);
-    else
-        vInfoRxDetTp = [];
+    isImage = false;
+    if isfield(kanal,'DatenTyp') && ~isempty(kanal.DatenTyp)
+        dt = lower(string(kanal.DatenTyp));
+        isImage = (dt=="bild" || dt=="image");
     end
 
-    if len_cInfoBits < numel(vDataRxDet)
-        vDataRxDetTp = qamdemod(vDataRxDet(len_cInfoBits+1:end), 2^iModOrd, 'UnitAveragePower', true);
-        mBitsRxDet   = de2bi(vDataRxDetTp, iModOrd, 'right-msb').';
-        vBitsRxDet   = mBitsRxDet(:);
+    if isImage
+        % 图像：整段符号统一按 2^iModOrd 解调成 bit（header也在里面）
+        symIdx  = qamdemod(vDataRxDet, 2^iModOrd, 'UnitAveragePower', true);
+        bitsMat = de2bi(symIdx, iModOrd, 'left-msb').';
+        mEmpfDataBits = bitsMat(:).';   % row bits
     else
-        vBitsRxDet = [];
-    end
+        % 文本：保留原来的"BPSK header + QAM payload"
+        if len_cInfoBits > 0
+            vInfoRxDetTp = qamdemod(vDataRxDet(1:len_cInfoBits), 2, 'UnitAveragePower', true);
+        else
+            vInfoRxDetTp = [];
+        end
 
-    vBitsRxDetTp  = [vInfoRxDetTp(:); vBitsRxDet];
-    mEmpfDataBits = vBitsRxDetTp.';
+        if len_cInfoBits < numel(vDataRxDet)
+            vDataRxDetTp = qamdemod(vDataRxDet(len_cInfoBits+1:end), 2^iModOrd, 'UnitAveragePower', true);
+            mBitsRxDet   = de2bi(vDataRxDetTp, iModOrd, 'right-msb').';
+            vBitsRxDet   = mBitsRxDet(:);
+        else
+            vBitsRxDet = [];
+        end
+
+        vBitsRxDetTp  = [vInfoRxDetTp(:); vBitsRxDet];
+        mEmpfDataBits = vBitsRxDetTp.';
+    end
 
     %% Pack debug data
-    data             = struct();
-    if exist('mCTF','var')
-        data.kanalUeb = mCTF;
-    else
-        data.kanalUeb = [];
-    end
-    if exist('mCIR','var')
-        data.kanalimpuls = mCIR;
-    else
-        data.kanalimpuls = [];
-    end
+    data = struct();
+    data.kanalUeb     = mCTF;
+    data.kanalimpuls  = mCIR;
     data.mDataRxEq    = mDataRxEq;
     data.AnzSubFrames = AnzSubFrames;
 end
