@@ -1,0 +1,12 @@
+{
+    "latex-workshop.latex.autoBuild.run": "onSave",
+    "latex-workshop.view.pdf.viewer": "tab",
+    "latex-workshop.synctex.afterBuild.enabled": true,
+    "ltex.enabled": true,
+    "ltex.language": "en-US",
+    "ltex.checkFrequency": "edit",
+    "ltex.diagnosticSeverity": "information"
+      
+      
+}
+  
