@@ -13,7 +13,7 @@ function [frameStart, fCarOffset, MetricData] = EstFrameStart_app(mDataRx, iNfft
 %   fCarOffset : coarse CFO (normalized frequency, cycles/sample)
 %   MetricData : struct with P, R, Metric, idxMax
 
-    %#ok<INUSD>
+    
     r = mDataRx(:).';
     Nsig = numel(r);
 

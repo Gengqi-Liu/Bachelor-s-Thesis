@@ -92,6 +92,13 @@ function [mEmpfDataBits, data] = AnalyzeRxSig_app(rxFrame, params, kanal)
         iFrSync = 1;
     else
         iFrSync = min(vFrStart);  % earliest sync point among RX channels
+
+        % Strategy: Manually shift forward (Back-off)
+        safetyMargin = 20; 
+        iFrSync = iFrSync - safetyMargin;
+        
+        % Ensure don't overstep 
+        iFrStart = max(1, iFrSync + iNfft);
     end
 
     % S&C training symbol length = iNfft, no CP

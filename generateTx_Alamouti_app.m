@@ -49,7 +49,7 @@ function [mFrameTxCar, meta] = generateTx_Alamouti_app(params, mDataTxFreq, vPre
 
     % --- Defaults to match your Rx timing approach ---
     if ~isfield(params,'headZeros'), params.headZeros = 1000; end
-    if ~isfield(params,'tailZeros'), params.tailZeros = 3000; end
+    if ~isfield(params,'tailZeros'), params.tailZeros = 1000; end
     if ~isfield(params,'peak'),      params.peak      = 0.9;  end
     if ~isfield(params,'addSync'),   params.addSync   = true; end
 
@@ -125,7 +125,7 @@ function [mFrameTxCar, meta] = generateTx_Alamouti_app(params, mDataTxFreq, vPre
     end
 
     headZeros = zeros(params.headZeros, 2);
-    tailZeros = zeros(params.tailZeros, 2);
+    tailZeros = zeros(1000, 2);
 
     mFrameTxBB = [headZeros; syncBlock; mFrameTxBB; tailZeros];
 

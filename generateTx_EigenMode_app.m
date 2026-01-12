@@ -82,7 +82,7 @@ function [mFrameTxCar, meta] = generateTx_EigenMode_app(params, mDataTxFreq, vPr
     end
 
     % ---- A. Append tail of empty OFDM symbols ----
-    mFrameTxTp = cat(2, mFrame, zeros(iNfft, 20, iNoTxAnt));
+    mFrameTxTp = cat(2, mFrame, zeros(iNfft, 15, iNoTxAnt));
 
     % ---- B. Add cyclic prefix (baseband) ----
     mFrameBB = [mFrameTxTp(end-iNg+1:end,:,:); mFrameTxTp];  % [iNb x iNewNoBlocks x iNoTxAnt]
@@ -104,14 +104,14 @@ function [mFrameTxCar, meta] = generateTx_EigenMode_app(params, mDataTxFreq, vPr
     syncBlock = repmat(syncNoCp, 1, iNoTxAnt);    % [iNfft x iNoTxAnt]
 
     headZeros = zeros(1000, iNoTxAnt);
-    tailZeros = zeros(3000, iNoTxAnt);
+    %tailZeros = zeros(1000, iNoTxAnt);
 
-    mFrameTxBB = [headZeros; syncBlock; payloadBB; tailZeros];
+    mFrameTxBB = [headZeros; syncBlock; payloadBB];
 
     meta.Lsync        = Lsync;
     meta.syncLen      = length(syncNoCp);
     meta.headLen      = size(headZeros,1);
-    meta.tailLen      = size(tailZeros,1);
+   % meta.tailLen      = size(tailZeros,1);
     meta.basebandLen  = size(mFrameTxBB,1);
 
     % ---- D. Resample to DAC rate ----

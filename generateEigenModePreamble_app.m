@@ -80,7 +80,7 @@ function [txPreCar, metaPre] = generateEigenModePreamble_app(params)
 
     % ---- Head/tail silence in baseband ----
     headZeros = zeros(1000, iNoTxAnt);
-    tailZeros = zeros(3000, iNoTxAnt);
+    tailZeros = zeros(1000, iNoTxAnt);
     mPreambleBB = [headZeros; mPreambleBB; tailZeros];
 
     metaPre.headLen = size(headZeros,1);
