@@ -112,17 +112,31 @@ function data = Signalverarbeitung_app(procParam)
             end
             
         case "text"
-            [textDecoded, ~] = bits2text_app(mEmpfDataBits, kanal);
-            data.text = textDecoded;
-            data.bild = [];
+    % --- Fix 1: ensure bit length is multiple of 8 (byte aligned) ---
+    rxBits = mEmpfDataBits(:).';                 % force row
+    L = numel(rxBits);
+    L8 = floor(L/8)*8;                           % drop incomplete last byte
+    rxBits = rxBits(1:L8);
 
-            if isfield(procParam,'SendeDatei') && ~isempty(procParam.SendeDatei)
-                [data.numBitError, data.bitErrorRate] = ...
-                    bitFehlerRaten_app(textDecoded, procParam.SendeDatei, procParam.DatenTyp);
-            else
-                data.numBitError  = NaN;
-                data.bitErrorRate = NaN;
-            end
+    % --- Fix 2 (optional): if kanal carries the true payload length, crop to it ---
+    % You can add kanal.len_payload_bits on Tx side later for perfect trimming.
+    if isfield(kanal,'len_payload_bits') && ~isempty(kanal.len_payload_bits) && kanal.len_payload_bits > 0
+        Lp = floor(double(kanal.len_payload_bits)/8)*8;
+        rxBits = rxBits(1:min(Lp, numel(rxBits)));
+    end
+
+    [textDecoded, ~] = bits2text_app(rxBits, kanal);
+    data.text = textDecoded;
+    data.bild = [];
+
+    if isfield(procParam,'SendeDatei') && ~isempty(procParam.SendeDatei)
+        [data.numBitError, data.bitErrorRate] = ...
+            bitFehlerRaten_app(textDecoded, procParam.SendeDatei, procParam.DatenTyp);
+    else
+        data.numBitError  = NaN;
+        data.bitErrorRate = NaN;
+    end
+
         otherwise
             data.text = '(Unknown DatenTyp: cannot reconstruct payload)';
             data.bild = [];

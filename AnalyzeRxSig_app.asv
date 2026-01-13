@@ -75,44 +75,50 @@ function [mEmpfDataBits, data] = AnalyzeRxSig_app(rxFrame, params, kanal)
     end
 
     %% 3. Schmidl & Cox timing
-vFrStart   = zeros(1, iNoRxAnt);
-vCarOff    = zeros(1, iNoRxAnt);
-MetricData = cell(1, iNoRxAnt);
+    vFrStart   = [];
+    vCarOff    = [];
+    MetricData = cell(1, iNoRxAnt);
 
-for iC = 1:iNoRxAnt
-    [frameStartTmp, fCarOffTmp, metricStruct] = ...
-        EstFrameStart_app(mDataRxDem(iC,:), iNfft, iNg);
+    for iC = 1:iNoRxAnt
+        [frameStartTmp, fCarOffTmp, metricStruct] = ...
+            EstFrameStart_app(mDataRxDem(iC,:), iNfft, iNg);
 
-    vFrStart(iC)   = frameStartTmp;
-    vCarOff(iC)    = fCarOffTmp;
-    MetricData{iC} = metricStruct;
-end
-
-% ---- pick global sync start (earliest mic) ----
-if all(~isfinite(vFrStart)) || isempty(vFrStart)
-    iFrSync = 10;
-else
-    iFrSync = min(vFrStart(isfinite(vFrStart)));
-end
-
-% ---- payload start: sync block length = iNfft (no CP) ----
-% keep your empirical back-off (early start)
-safetyMargin = 0;                       % you said this works best
-iFrStart = iFrSync + iNfft - safetyMargin;
-
-% bound protection
-iFrStart = max(1, min(iFrStart, Lbb));
-
-% --- CFO compensation (LEGACY scaling + per-channel) ---
-% Old version used: exp(-1j*2*pi/iNfft * vCarOff(iC) * n)
-n = 1:Lbb;   % use 1..N to match legacy
-for iC = 1:iNoRxAnt
-    cfo = vCarOff(iC);
-    if isfinite(cfo) && ~isnan(cfo) && abs(cfo) > 0
-        mDataRxDem(iC,:) = mDataRxDem(iC,:) .* exp(-1j*2*pi/iNfft * cfo .* n);
+        vFrStart = [vFrStart, frameStartTmp];
+        vCarOff  = [vCarOff,  fCarOffTmp]; %#ok<AGROW>
+        MetricData{iC} = metricStruct;
     end
-end
 
+    if isempty(vFrStart)
+        iFrSync = 1;
+    else
+        iFrSync = min(vFrStart);  % earliest sync point among RX channels
+
+        % Strategy: Manually shift forward (Back-off)
+        safetyMargin = 20; 
+        iFrSync = iFrSync - safetyMargin;
+        
+        % Ensure don't overstep 
+        iFrStart = max(1, iFrSync + iNfft);
+    end
+
+    % S&C training symbol length = iNfft, no CP
+    iFrStart = iFrSync + iNfft;
+    iFrStart = max(1, min(iFrStart, Lbb));
+
+    % --- CFO compensation (fCarOffset is normalized cycles/sample) ---
+    if ~isempty(vCarOff)
+        cfoVals = vCarOff(~isnan(vCarOff) & isfinite(vCarOff));
+        if ~isempty(cfoVals)
+            fCfo = median(cfoVals);  % robust across Rx channels
+            if isfinite(fCfo) && abs(fCfo) > 0
+                n = 0:(Lbb-1);
+                rot = exp(-1j*2*pi*fCfo*n);  % cycles/sample -> rad/sample
+                for iC = 1:iNoRxAnt
+                    mDataRxDem(iC,:) = mDataRxDem(iC,:) .* rot;
+                end
+            end
+        end
+    end
 
     %% 4. Cut OFDM blocks and remove CP
     maxSamplesAvail = Lbb - iFrStart + 1;
@@ -250,7 +256,7 @@ function [mEmpfDataBits, data] = SM_VBLAST_Rx_app(mFrameRxNoCP, params, kanal, l
     end
 
     badMask = ~isfinite(mSNR) | (mSNR <= 0);
-    mSNR(badMask) = 1;
+    mSNR(badMask) = 1e6;
 
     vSNRperSCperBl = zeros(iNfft,1);
     for k = 1:iNfft
@@ -261,13 +267,6 @@ function [mEmpfDataBits, data] = SM_VBLAST_Rx_app(mFrameRxNoCP, params, kanal, l
     if ~isfinite(iSNR) || iSNR <= 0
         iSNR = 1e4;
     end
-    SNR  = 10*log10(iSNR); 
-    fprintf('iSNR (linear) = %.3f , SNR = %.2f dB\n', iSNR, 10*log10(iSNR));
-    fprintf('iSNR=%.2f (%.2f dB), mSNR min=%.2f dB, max=%.2f dB\n', ...
-    iSNR, 10*log10(iSNR+eps), ...
-    10*log10(min(mSNR(:))+eps), 10*log10(max(mSNR(:))+eps));
-
-
 
     % Channel estimation
     vPreambleFreqCol = vPreambleFreq(:);
@@ -356,55 +355,6 @@ function [mEmpfDataBits, data] = SM_VBLAST_Rx_app(mFrameRxNoCP, params, kanal, l
             end
         else
             error('SM_VBLAST_Rx_app: unknown equalizer: %s', kanal.entzerrer);
-        end
-    end
-
-   % ---- Decision-Directed CPE correction (per OFDM block, per Tx stream) ----
-    % This tracks residual phase drift/jitter. It mainly fixes rotation.
-    % Tightening is limited if noise/ICI dominates (MMSE helps more).
-    
-    M = 2^iModOrd;
-    
-    alpha = 0.65;                 % smaller -> tracks faster (less residual rotation)
-    thetaHat = zeros(iNoTxAnt,1); % one tracker per Tx stream
-    
-    for iCB = 1:iNoBlocks
-        for tx = 1:iNoTxAnt
-            s = squeeze(mDataRxEq(tx,:,iCB)).';   % [SC x 1]
-            s(~isfinite(s)) = 0;
-    
-            % Keep only "reliable" symbols for phase estimate:
-            % - remove near-zero (null/unused carriers often map to ~0 after EQ)
-            % - keep top fraction by magnitude to reduce bad subcarriers influence
-            mag = abs(s);
-            good = mag > 1e-3;
-            if nnz(good) < 16
-                continue;
-            end
-            sGood = s(good);
-            magGood = mag(good);
-    
-            % take top 50% strongest among good ones
-            thr = median(magGood);
-            keep = magGood >= thr;
-            sUse = sGood(keep);
-    
-            if numel(sUse) < 16
-                continue;
-            end
-    
-            % Hard decision
-            idx  = qamdemod(sUse, M, 'UnitAveragePower', true);
-            sRef = qammod(idx, M, 'UnitAveragePower', true);
-    
-            % Phase estimate (common phase for this Tx stream in this block)
-            ph = angle(sum(sUse .* conj(sRef)));
-    
-            % Smooth tracking
-            thetaHat(tx) = alpha*thetaHat(tx) + (1-alpha)*ph;
-    
-            % Rotate back this stream for this block
-            mDataRxEq(tx,:,iCB) = mDataRxEq(tx,:,iCB) .* exp(-1j*thetaHat(tx));
         end
     end
 
