@@ -171,6 +171,12 @@ end
     data.ta_TP        = 1 / fBBFreq;
     data.MetricData   = MetricData;
     data.iNewNoBlocks = iNewNoBlocks;
+    data.iNg      = iNg;
+    data.iNoTxAnt = params.iNoTxAnt;
+    data.iNoRxAnt = params.iNoRxAnt;
+    %data.iSNR      = iSNR;        
+    data.iFrStartUsed = iFrStart; 
+    %data.fCfoUsed  = fCfo; 
 end
 
 

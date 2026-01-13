@@ -57,8 +57,21 @@ function [mFrameTxCar, meta] = generateTx_SM_app(params, mDataTxFreq, vPreambleT
     % A) Append empty OFDM blocks at tail
     mFrameTxTp = cat(2, mFrame, zeros(iNfft,15 , iNoTxAnt));
 
-    % B) Add cyclic prefix (baseband)
-    mFrameBB = [mFrameTxTp(end-iNg+1:end,:,:); mFrameTxTp];  % [iNb x iNewNoBlocks x iNoTxAnt]
+    % B) Add cyclic prefix (baseband) - robust for iNg > iNfft
+    L = size(mFrameTxTp,1);   % useful symbol length (should be iNfft)
+    
+    if iNg <= 0
+        cpPart = zeros(0, size(mFrameTxTp,2), size(mFrameTxTp,3)); % empty CP
+    elseif iNg <= L
+        cpPart = mFrameTxTp(end-iNg+1:end,:,:);
+    else
+        % iNg > L: build CP by cyclically repeating the OFDM symbol tail
+        % idx has length iNg and values always in 1..L
+        idx = mod((L - iNg):(L - 1), L) + 1;
+        cpPart = mFrameTxTp(idx,:,:);
+    end
+    
+    mFrameBB = [cpPart; mFrameTxTp];   % [(iNg+iNfft) x iNewNoBlocks x iNoTxAnt]
 
     szBB              = size(mFrameBB);
     iNewNoBlocks      = szBB(2);
