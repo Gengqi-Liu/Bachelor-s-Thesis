@@ -21,7 +21,7 @@ function [mEmpfDataBits, data] = AlamoutiRx_app(mFrameRxNoCP, params, kanal, len
 
     fBBFreq   = params.fBBFreq;
     fDACFreq  = params.fDACFreq;
-    fCarrFreq = params.fCarrFreq;  %#ok<NASGU>
+    fCarrFreq = params.fCarrFreq; 
 
     if iNoTxAnt ~= 2
         error('AlamoutiRx_app: only 2x? Alamouti supported (iNoTxAnt must be 2).');

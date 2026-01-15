@@ -1,5 +1,13 @@
 # Fdb version 4
-["pdflatex"] 1767951957.77538 "c:/Users/Liu/Desktop/BachelorThesis/thesis.tex" "thesis.pdf" "thesis" 1767951958.36 0
+["bibtex thesis"] 1768494551.60483 "thesis.aux" "thesis.bbl" "thesis" 1768494552.79959 0
+  "./references.bib" 1768493822 2092 25c1a355e2c1eb5de108d383e5e213a4 ""
+  "C:/Users/Liu/AppData/Local/Programs/MiKTeX/bibtex/bst/bibtex/ieeetr.bst" 1291864344 18361 1a00e58565e7f19bf2b3e1bfb82254ae ""
+  "thesis.aux" 1768494552 908 c44c53c8882857861b363c605c17d32f "pdflatex"
+  (generated)
+  "thesis.bbl"
+  "thesis.blg"
+  (rewritten before read)
+["pdflatex"] 1768494551.82065 "c:/Users/Liu/Desktop/Bachelor-s-Thesis/thesis/thesis.tex" "thesis.pdf" "thesis" 1768494552.80013 0
   "C:/Users/Liu/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1767950781 80909 eab91d9745dd2edfd62a31d53cd5fe15 ""
   "C:/Users/Liu/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1767950730 13332518 7525ee0dae4e0771de0614b4a8bc32cc ""
   "C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1233951848 1004 54797486969f23fa377b128694d548df ""
@@ -11,11 +19,13 @@
   "C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/tfm/public/cm/cmr12.tfm" 1136765053 1288 655e228510b4c2a1abe905c368440826 ""
   "C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/tfm/public/cm/cmr17.tfm" 1136765053 1292 296a67155bdbfc32aa9c636f21e91433 ""
   "C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/tfm/public/cm/cmsy10.tfm" 1136765053 1124 6c73e740cf17375f03eec0ee63599741 ""
+  "C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/tfm/public/cm/cmti12.tfm" 1136765053 1484 ed72f8f5cf654cda15ecc8e32bfcbee5 ""
   "C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb" 1247596666 34811 78b52f49e893bcba91bd7581cdc144c0 ""
   "C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb" 1247596666 32080 340ef9bf63678554ee606688e7b5339d ""
   "C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1247596667 35752 024fb6c41858982481f6968b5fc26508 ""
   "C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb" 1247596667 32722 d7379af29a190c3f453aba36302ff5a9 ""
   "C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb" 1247596666 32362 bc3f3eec7ab7d65fe700963d4017d32c ""
+  "C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pfb" 1247596667 36118 fad905eba93cff5bce1e185fe980a177 ""
   "C:/Users/Liu/AppData/Local/Programs/MiKTeX/tex/context/base/mkii/supp-pdf.mkii" 1580390158 71627 94eb9990bed73c364d7f53f960cc8c5b ""
   "C:/Users/Liu/AppData/Local/Programs/MiKTeX/tex/generic/babel/babel.sty" 1765441417 146654 eaac99efd6386094bb8a3980e34ec87b ""
   "C:/Users/Liu/AppData/Local/Programs/MiKTeX/tex/generic/babel/locale/en/babel-en.ini" 1765441420 3936 fef897bbcfe8e9d18c93a3d2d53cf9d8 ""
@@ -63,10 +73,11 @@
   "C:/Users/Liu/AppData/Local/Programs/MiKTeX/tex/latex/refcount/refcount.sty" 1576433952 9878 9e94e8fa600d95f9c7731bb21dfb67a4 ""
   "C:/Users/Liu/AppData/Local/Programs/MiKTeX/tex/latex/rerunfilecheck/rerunfilecheck.sty" 1751104012 9684 a33a14b82ce60d6e77cb9be689d79ee6 ""
   "C:/Users/Liu/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
-  "c:/Users/Liu/Desktop/BachelorThesis/thesis.tex" 1767951957 375 46623c2512ef7b0255d52e0f79887422 ""
-  "thesis.aux" 1767951958 389 52797f7ea0249cb96ece7f326d0d7dcf "pdflatex"
-  "thesis.out" 1767951958 103 9814c2d956916adb9290eca4e25c967a "pdflatex"
-  "thesis.tex" 1767951957 375 46623c2512ef7b0255d52e0f79887422 ""
+  "c:/Users/Liu/Desktop/Bachelor-s-Thesis/thesis/thesis.tex" 1768494548 5378 259189c32a4477af1a2f264d58876b59 ""
+  "thesis.aux" 1768494552 908 c44c53c8882857861b363c605c17d32f "pdflatex"
+  "thesis.bbl" 1768494551 1690 9b3c37a7386f8237a67e105d8e0ca251 "bibtex thesis"
+  "thesis.out" 1768494552 103 9814c2d956916adb9290eca4e25c967a "pdflatex"
+  "thesis.tex" 1768494548 5378 259189c32a4477af1a2f264d58876b59 ""
   (generated)
   "thesis.aux"
   "thesis.log"

@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.1.9)  9 JAN 2026 10:45
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.1.9)  15 JAN 2026 17:29
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**c:/Users/Liu/Desktop/BachelorThesis/thesis.tex
-(c:/Users/Liu/Desktop/BachelorThesis/thesis.tex
+**c:/Users/Liu/Desktop/Bachelor-s-Thesis/thesis/thesis.tex
+(c:/Users/Liu/Desktop/Bachelor-s-Thesis/thesis/thesis.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
 (C:\Users\Liu\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
@@ -288,9 +288,14 @@ Package hyperref Info: Link coloring OFF on input line 12.
 \@outlinefile=\write3
 \openout3 = `thesis.out'.
 
- [1
 
-{C:/Users/Liu/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] (thesis.aux)
+Overfull \hbox (1.93216pt too wide) in paragraph at lines 28--29
+[]\OT1/cmr/m/n/12 Beyond con-ven-tional radio-frequency ap-pli-ca-tions, MIMO-OFDM has also
+ []
+
+[1
+
+{C:/Users/Liu/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] [2] (thesis.bbl) [3] (thesis.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
@@ -299,17 +304,17 @@ Package rerunfilecheck Info: File `thesis.out' has not changed.
 (rerunfilecheck)             Checksum: 9814C2D956916ADB9290ECA4E25C967A;103.
  ) 
 Here is how much of TeX's memory you used:
- 10150 strings out of 467871
- 160016 string characters out of 5419345
- 582034 words of memory out of 5000000
- 38932 multiletter control sequences out of 15000+600000
- 630896 words of font info for 51 fonts, out of 8000000 for 9000
+ 10183 strings out of 467871
+ 160722 string characters out of 5419345
+ 590385 words of memory out of 5000000
+ 38950 multiletter control sequences out of 15000+600000
+ 631243 words of font info for 52 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,6n,79p,268b,464s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb>
-Output written on thesis.pdf (1 page, 60840 bytes).
+ 75i,6n,79p,791b,463s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/Liu/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pfb>
+Output written on thesis.pdf (3 pages, 99853 bytes).
 PDF statistics:
- 41 PDF objects out of 1000 (max. 8388607)
- 3 named destinations out of 1000 (max. 500000)
+ 74 PDF objects out of 1000 (max. 8388607)
+ 14 named destinations out of 1000 (max. 500000)
  9 words of extra memory for PDF output out of 10000 (max. 10000000)
 
