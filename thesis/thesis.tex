@@ -1,44 +1,38 @@
 \documentclass[12pt,a4paper]{article}
 
 \usepackage[english]{babel}
+\usepackage[utf8]{inputenc} % 关键：让 pdflatex 稳定处理 ü 等字符
+\usepackage[T1]{fontenc}
+
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{amssymb} 
 \usepackage{hyperref}
-
-% (Optional but recommended for a cleaner cover layout)
 \usepackage[a4paper,left=25mm,right=25mm,top=25mm,bottom=25mm]{geometry}
-
-\title{Optimierung und Weiterentwickling eines MIMO-Audiodemonstrators}
-\author{Gengqi Liu}
-\date{\today}
 
 \begin{document}
 
 % =======================
-% Cover page (UDE template-like)
+% Cover page
 % =======================
 \begin{titlepage}
 \thispagestyle{empty}
-
 \begin{center}
 \vspace*{8mm}
 
-{\large  Bachelorarbeit}\\[18mm]
-
+{\large Bachelorarbeit}\\[18mm]
 {\normalsize zum Thema}\\[14mm]
-
 {\Large \textbf{Optimierung und Weiterentwickling eines MIMO-Audiodemonstrators}}\\[40mm]
 
 \vfill
 
 {\normalsize \textbf{Vorgelegt der Fakult\"at f\"ur Ingenieurwissenschaften der Universit\"at Duisburg-Essen}}\\[8mm]
-
 {\normalsize von}\\[8mm]
 
 {\normalsize
 \textbf{Gengqi Liu}\\[3mm]
-Duisburger Str. 451\\[2mm]
-45478 Mülheim an der Ruhr\\[6mm]
+Duisburger Str.\ 451\\[2mm]
+45478 M\"ulheim an der Ruhr\\[6mm]
 Matrikelnummer 3145652
 }\\[18mm]
 
@@ -50,38 +44,34 @@ Matrikelnummer 3145652
 \begin{tabular}{@{}p{55mm}p{\dimexpr\textwidth-55mm\relax}@{}}
 Erstgutachter/Erstgutachterin: & \textless Titel\textgreater\ \textless Vorname\textgreater\ \textless Name\textgreater\\[6mm]
 Zweitgutachter/Zweitgutachterin: & \textless Titel\textgreater\ \textless Vorname\textgreater\ \textless Name\textgreater\\[6mm]
-Studiengang: &  Electrical and Electronic Engineering (ISE)(B.Sc.) \\[6mm]
+Studiengang: & Electrical and Electronic Engineering (ISE) (B.Sc.)\\[6mm]
 Studiensemester: & Wintersemester 25/26\\
 \end{tabular}
 
 \end{titlepage}
 
-\maketitle
-
+% =======================
+% Abstract + TOC + Chapters
+% =======================
 \begin{abstract}
 This thesis investigates ...
 \end{abstract}
+\newpage
+\tableofcontents
+\newpage
 
-\section{Introduction}
-
-Efficient data transmission over frequency-selective and multipath channels has long been a central challenge in digital communication systems. One widely adopted solution to this problem is \emph{Orthogonal Frequency-Division Multiplexing} (OFDM), which mitigates inter-symbol interference (ISI) by distributing a high-rate data stream over a large number of orthogonal narrowband subcarriers and by employing a cyclic prefix \cite{nee2000ofdm,proakis2008digital}. Due to its robustness against multipath propagation, OFDM has become a key modulation technique for broadband communication systems.
-
-In parallel, \emph{Multiple-Input Multiple-Output} (MIMO) technology exploits multiple transmit and receive antennas to increase channel capacity or improve link reliability without requiring additional bandwidth or transmit power. Fundamental theoretical works have shown that MIMO systems can significantly enhance spectral efficiency by exploiting spatial degrees of freedom \cite{telatar1999capacity,foschini1998limits}. By combining MIMO with OFDM, MIMO-OFDM systems are able to jointly exploit spatial, frequency, and temporal diversity, making them particularly suitable for broadband and frequency-selective channels.
-
-As a result of these advantages, MIMO-OFDM has been widely adopted in modern wireless communication standards, including IEEE~802.11n/ac/ax and cellular systems such as LTE and 5G \cite{larsson2014massive}. Consequently, MIMO-OFDM represents not only a topic of high theoretical relevance, but also a core technology in practical communication systems. This importance makes it an essential subject in communication engineering education.
-
-Beyond conventional radio-frequency applications, MIMO-OFDM has also been investigated for use in acoustic transmission environments, most notably in underwater acoustic communication systems. Acoustic channels are characterized by limited available bandwidth, low propagation speed, severe multipath propagation, and pronounced Doppler effects, all of which pose significant challenges for reliable high-rate communication \cite{stojanovic2007underwater}. Several studies have demonstrated that MIMO-OFDM can substantially improve spectral efficiency and robustness in such environments when appropriate synchronization and channel estimation techniques are employed \cite{li2009mimo,stojanovic2009ofdm}.
-
-In the context of communication education, experimental platforms based on radio-frequency hardware are often complex and costly, and they typically offer limited possibilities for intuitive perception of the transmission process. An alternative approach is provided by acoustic MIMO demonstrators, in which loudspeakers and microphones are used instead of conventional radio transmitters and receivers. This approach enables low-cost experimentation while allowing the transmitted signals to be directly audible, thereby enhancing the intuitive understanding of signal processing algorithms.
-
-Within the EIT/ISE study program, an existing acoustic MIMO demonstrator has been developed to illustrate fundamental concepts of MIMO signal transmission and reception. The system is implemented in MATLAB and realizes a complete signal chain from signal generation and modulation to acoustic transmission, reception, and baseband processing. The original system was designed for earlier audio hardware and employed MATLAB's GUIDE framework for the graphical user interface. While the demonstrator already enables the presentation of basic MIMO concepts, its structure and functionality exhibit limitations with respect to modern hardware interfaces, software maintainability, and extensibility.
-
-In particular, the replacement of the original audio hardware by a modern multi-channel audio interface requires adaptations in signal generation, acquisition, and channel mapping. Furthermore, the GUIDE-based graphical user interface does not support a modular and extensible design suitable for future developments. From an algorithmic perspective, the existing demonstrator provides only limited insight into receiver-side signal processing and lacks comprehensive visualization of key performance metrics such as channel characteristics, spatial degrees of freedom, channel rank, signal-to-noise ratio (SNR), and error vector magnitude (EVM).
-
-Against this background, the objective of this bachelor thesis is the systematic optimization and further development of the existing acoustic MIMO demonstrator. This includes adapting the software to the new hardware platform, redesigning the graphical user interface using MATLAB App Designer, and optimizing receiver-side signal processing algorithms. In addition, new analysis and visualization features are introduced to enhance the demonstrator's functionality and to provide a clearer and more comprehensive illustration of MIMO-OFDM principles for educational and experimental purposes.
-
-
+% Chapters (each file should start with \section{...} etc.)
+\input{chapters/01-introduction.tex}
+\input{chapters/02-method.tex}
+\input{chapters/03-results.tex}
+\input{chapters/04-diskussion.tex}
+\input{chapters/05-conclusion.tex}
+\newpage
+% =======================
+% Bibliography (ONLY ONCE)
+% =======================
 \bibliographystyle{ieeetr}
 \bibliography{references}
+
 
 \end{document}
