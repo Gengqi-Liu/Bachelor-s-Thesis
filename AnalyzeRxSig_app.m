@@ -97,7 +97,7 @@ end
 
 % ---- payload start: sync block length = iNfft (no CP) ----
 % keep your empirical back-off (early start)
-safetyMargin = 0;                       % you said this works best
+safetyMargin = 10;                       % you said this works best
 iFrStart = iFrSync + iNfft - safetyMargin;
 
 % bound protection
