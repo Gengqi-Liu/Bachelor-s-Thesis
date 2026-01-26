@@ -54,7 +54,7 @@ function data = Signalverarbeitung_app(procParam)
         len_cInfoBits = 0;
     end
     if isfield(procParam,'origTxtLenBits')
-        origTxtLenBits =procParam.origTxtLenBits;
+        origTxtLenBits=procParam.origTxtLenBits;
     end
 
 
@@ -65,7 +65,7 @@ function data = Signalverarbeitung_app(procParam)
         'entzerrer',     procParam.equalizerMode, ...
         'origTxtLenBits', procParam.origTxtLenBits...
     );
-   
+
     % --- Pass-through EigenMode matrices if provided ---
     if isfield(params,'mimoMode') && strcmpi(strtrim(lower(string(params.mimoMode))), 'eigenmode')
         if isfield(params,'V1') && ~isempty(params.V1)
@@ -95,7 +95,7 @@ function data = Signalverarbeitung_app(procParam)
     dt = lower(string(procParam.DatenTyp));
 
     switch dt
-        case {"image"}
+        case {"bild","image"}
             bild = bits2bild_app(mEmpfDataBits, kanal);
             data.bild = bild;
             data.text = '';

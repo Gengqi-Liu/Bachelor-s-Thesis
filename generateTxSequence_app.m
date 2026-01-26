@@ -36,6 +36,8 @@ function [mFrameTxCar, meta] = generateTxSequence_app(params, source)
             [vInfoBits, AnzUeb, metaTxt, original_data_bits] = ...
                 text2bits_app(string(source.SendeDatei), coding, anzMaxBits, iModOrd);
             len_cInfoBits = metaTxt.len_cInfoBits;
+            metaBits.origTxtLenBits=metaTxt.txt_size;
+            metaBits.lenCodeBits=metaTxt.lenCodeBits;
 
         otherwise
             error('Unknown DatenTyp: %s (expected Text/Bild/Image).', datenTyp);
@@ -131,7 +133,9 @@ end
 
 function metaOut = mergeMeta(metaBase, metaMode)
     metaOut = metaBase;
-    if isempty(metaMode), return; end
+    if isempty(metaMode)
+        return;
+    end
     fns = fieldnames(metaMode);
     for k = 1:numel(fns)
         fn = fns{k};

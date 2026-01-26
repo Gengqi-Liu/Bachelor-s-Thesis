@@ -1,4 +1,4 @@
-function [bits, AnzUeb, meta, original_data_bits] = text2bits_app(SendeDatei, codingMode, anzMaxBits, iModOrd)
+function [bits, AnzUeb, metaTxt, original_data_bits] = text2bits_app(SendeDatei, codingMode, anzMaxBits, iModOrd)
     %TEXT2BITS_APP
     % Text to bitstream with optional convolutional coding.
     
@@ -11,8 +11,8 @@ function [bits, AnzUeb, meta, original_data_bits] = text2bits_app(SendeDatei, co
     tx_vBits   = reshape(mBits.', 1, len_txBits);
     
     original_data_bits = tx_vBits;
-    meta               = struct();
-    meta.txt_size      = len_txBits;
+    metaTxt               = struct();
+    metaTxt.txt_size      = len_txBits;
     
     % 2) Control info (payload length)
     tx_infoBits = de2bi(len_txBits, 64, 'left-msb');
@@ -23,7 +23,7 @@ function [bits, AnzUeb, meta, original_data_bits] = text2bits_app(SendeDatei, co
     tx_infoBits_with_tail = [tx_infoBits, randi([0 1], 1, tblen_ci)];
     tx_infoBits_code      = convenc(tx_infoBits_with_tail, trel_ci);
     
-    meta.len_cInfoBits = length(tx_infoBits_code);
+    metaTxt.len_cInfoBits = length(tx_infoBits_code);
     
     % 3) Payload coding
     vBits_to_encode = tx_vBits;
@@ -60,16 +60,16 @@ function [bits, AnzUeb, meta, original_data_bits] = text2bits_app(SendeDatei, co
     for i = 1:iModOrd
         code_vBits = [tx_infoBits_code, code_vBits]; %#ok<AGROW>
     end
-    meta.lenCodeBits = length(code_vBits);
+    metaTxt.lenCodeBits = length(code_vBits);
     
     % 5) Frame count and padding
     if ~(isscalar(anzMaxBits) && isnumeric(anzMaxBits) && anzMaxBits > 0)
         error('anzMaxBits must be a positive scalar.');
     end
     
-    AnzUeb           = ceil(meta.lenCodeBits / anzMaxBits);
+    AnzUeb           = ceil(metaTxt.lenCodeBits / anzMaxBits);
     len_total_needed = AnzUeb * anzMaxBits;
-    padding_bits     = len_total_needed - meta.lenCodeBits;
+    padding_bits     = len_total_needed - metaTxt.lenCodeBits;
     
     if padding_bits > 0
         bits = [code_vBits, randi([0 1], 1, padding_bits)];
