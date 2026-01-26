@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.14)  23 JAN 2026 08:47
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.14)  26 JAN 2026 14:59
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -381,38 +381,38 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has b
 <to be read again> 
                    \relax 
 l.59 \newpage
-              [1] (./thesis.toc)
+              [1] (./thesis.toc
+
+[2])
 \tf@toc=\write4
 \openout4 = `thesis.toc'.
 
 
 
-[2] (./chapters/01-introduction.tex
+[3] (./chapters/01-introduction.tex
 Overfull \hbox (2.04967pt too wide) in paragraph at lines 5--6
 []\T1/cmr/m/n/12 In par-al-lel, \T1/cmr/m/it/12 Multiple-Input Multiple-Output \T1/cmr/m/n/12 (MIMO) tech-nol-ogy ex-ploits mul-ti-ple trans-
  []
 
 
 
-[3]) (./chapters/02-background.tex) (./chapters/03-method.tex
+[4]) (./chapters/02-background.tex
 
-[4]
+[5]
 Overfull \hbox (11.70848pt too wide) in paragraph at lines 30--31
 []\T1/cmr/m/n/12 The fun-da-men-tal idea of mul-ti-car-rier trans-mis-sion is to de-com-pose a wide-band frequency-
  []
 
 
 
-[5]
-
 [6]
+
+[7]
 Overfull \hbox (8.81601pt too wide) in paragraph at lines 114--115
 \T1/cmr/m/n/12 multiple-output (SIMO), multiple-input single-output (MISO), and multiple-input multiple-
  []
 
 
-
-[7]
 
 [8]
 
@@ -422,33 +422,100 @@ Overfull \hbox (8.81601pt too wide) in paragraph at lines 114--115
 
 [11]
 
-[12]) (./chapters/04-results.tex
+[12]
 
-[13]) (./chapters/05-diskussion.tex) (./chapters/06-conclusion.tex)
+[13]) (./chapters/03-methodik.tex
 
-[14] (./thesis.bbl)
+[14]
 
-[15] (./thesis.aux)
+[15]
+
+[16]
+Underfull \hbox (badness 10000) in paragraph at lines 45--46
+[]\T1/cmr/m/n/12 Integrated multi-channel
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 46--47
+[]\T1/cmr/m/n/12 Hardware-level com-mon
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 47--48
+[]\T1/cmr/m/n/12 High-quality audio-grade
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--49
+[]\T1/cmr/m/n/12 Genelec 8010 near-field
+ []
+
+
+Underfull \hbox (badness 4084) in paragraph at lines 49--50
+[]\T1/cmr/m/n/12 t.bone SC140 con-denser
+ []
+
+
+Underfull \hbox (badness 2486) in paragraph at lines 51--52
+[]\T1/cmr/m/n/12 Fully pa-ram-e-ter-ized and
+ []
+
+
+Overfull \hbox (53.73735pt too wide) in paragraph at lines 59--60
+\T1/cmr/m/n/12 To in-ter-face the up-graded hard-ware from MAT-LAB, the soft-ware em-ploys the \T1/cmtt/m/n/12 audioPlayerRecorder
+ []
+
+
+
+[17]
+
+[18{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
+
+[19]
+Underfull \hbox (badness 3209) in paragraph at lines 147--148
+[]\T1/cmr/m/n/12 Spatial mul-ti-plex-ing, Alam-outi, Eigen-Mode, V-
+ []
+
+LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <12> not available
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 155.
+
+
+[20]
+
+[21]
+Overfull \hbox (2.60231pt too wide) in paragraph at lines 237--238
+[]\T1/cmr/m/n/12 Frame syn-chro-niza-tion is per-formed in-de-pen-dently per re-ceive chan-nel us-ing a Schmidl--
+ []
+
+
+
+[22]
+
+[23]) (./chapters/04-results.tex) (./chapters/05-diskussion.tex) (./chapters/06-conclusion.tex)
+
+[24] (./thesis.bbl)
+
+[25] (./thesis.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 1EB46B8D27C57F37265A78C2C7CC9F2A;8202.
+(rerunfilecheck)             Checksum: 9AFC348A623203DBF39EEC50D6AFCDF6;16618.
  ) 
 Here is how much of TeX's memory you used:
- 11604 strings out of 473190
- 179332 string characters out of 5715800
- 592696 words of memory out of 5000000
- 34606 multiletter control sequences out of 15000+600000
- 571274 words of font info for 66 fonts, out of 8000000 for 9000
+ 11720 strings out of 473190
+ 181388 string characters out of 5715800
+ 601435 words of memory out of 5000000
+ 34675 multiletter control sequences out of 15000+600000
+ 573454 words of font info for 70 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,8n,79p,840b,476s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb>
-Output written on thesis.pdf (16 pages, 322800 bytes).
+ 75i,14n,79p,1164b,589s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
+Output written on thesis.pdf (26 pages, 420848 bytes).
 PDF statistics:
- 430 PDF objects out of 1000 (max. 8388607)
- 368 compressed objects within 4 object streams
- 86 named destinations out of 1000 (max. 500000)
- 249 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 641 PDF objects out of 1000 (max. 8388607)
+ 562 compressed objects within 6 object streams
+ 128 named destinations out of 1000 (max. 500000)
+ 449 words of extra memory for PDF output out of 10000 (max. 10000000)
 
