@@ -54,7 +54,14 @@ Studiensemester: & Wintersemester 25/26\\
 % Abstract + TOC + Chapters
 % =======================
 \begin{abstract}
-This thesis investigates ...
+This thesis presents the design and implementation of a multi-channel MIMO-OFDM audio demonstrator intended for teaching and experimental analysis of physical-layer communication concepts. The work focuses on adapting an existing software framework to a modern multi-channel audio interface, restructuring the graphical user interface using MATLAB App Designer, and implementing a configurable MIMO-OFDM receiver chain that exposes relevant intermediate processing results.
+
+The demonstrator enables end-to-end transmission of payload data, such as text, over an acoustic multi-input multi-output channel using spatial multiplexing and OFDM modulation. Frame-based audio playback and recording are employed to ensure stable operation, while receiver processing includes timing synchronization, carrier-frequency-offset compensation, channel estimation, MIMO equalization, symbol demapping, and payload reconstruction.
+
+Beyond payload recovery, the system provides access to a range of physical-layer observables, including synchronization metrics, estimated channel impulse and transfer functions, equalized symbol constellations, channel rank measures, and error vector magnitude (EVM). These quantities allow systematic evaluation of system behavior and facilitate intuitive visualization of MIMO-OFDM principles.
+
+Experimental results obtained with a 4-transmit, 8-receive spatial multiplexing configuration using 4-QAM modulation demonstrate stable operation and reproducible analysis outputs. While channel coding is not yet integrated at the receiver side, the implemented framework provides a solid basis for further extensions and serves as an effective platform for education-oriented experimentation and analysis of MIMO-OFDM systems.
+
 \end{abstract}
 \newpage
 \tableofcontents

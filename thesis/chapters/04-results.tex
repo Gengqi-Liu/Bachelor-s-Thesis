@@ -1,0 +1,296 @@
+% ======================================================================
+% Chapter 4 — Results
+% ======================================================================
+
+\section{Results}
+\label{ch:results}
+
+\subsection{Overview of reported results}
+\label{sec:results_overview}
+
+Building on the theoretical background and the implementation methodology described in the previous chapters, the project yields a stable and repeatedly executable \emph{MIMO audio demonstration} (MIMO-audio demonstrator) that supports end-to-end transmission of payload data (text, and in principle also images) over a multi-channel acoustic link. Besides recovering the transmitted payload, the demonstrator exposes a set of intermediate physical-layer observables that can be used for systematic analysis and for teaching-oriented visualization (e.g., synchronization metrics, channel estimates, equalized symbols, rank-related measures, and EVM).
+
+Unless stated otherwise, the results presented in this chapter are obtained with the \textbf{main operating mode} of the demonstrator:
+\begin{itemize}
+    \item MIMO mode: \textbf{Spatial Multiplexing (SM)}
+    \item Antenna configuration: \textbf{4 transmit channels and 8 receive channels (4T8R)}
+    \item Modulation: \textbf{4-QAM} (i.e., $M = 4$, corresponding to \texttt{iModOrd = 2})
+    \item Channel estimation: \textbf{Zero-Forcing / Least-Squares-style} estimator (configured as ``ZF'')
+    \item Equalization: \textbf{MMSE} equalizer (configured as ``MMSE'')
+    \item Channel coding: \textbf{disabled} (no channel coding)
+\end{itemize}
+
+The chapter follows the guideline that results are \emph{reported without interpretation}. Therefore, each subsection focuses on \emph{what is measured, computed, or displayed} by the software. Explanations of \emph{why} the observed behavior occurs and comparisons between modes are deferred to the discussion chapter.
+
+\paragraph{Placeholders for figures and tables.}
+At this stage, the manuscript includes explicit placeholders for figures/tables that will be inserted once representative screenshots or exported plots are available.
+
+% ----------------------------------------------------------------------
+
+\subsection{Recorded Tx/Rx signals in passband and baseband domains}
+\label{sec:results_signals}
+
+The demonstrator provides a dedicated visualization tool for the recorded receive signals and (when available) the corresponding transmit signals. The output is organized into time-domain waveforms, frequency-domain spectra, and a baseband spectral slice around the configured carrier frequency. These plots serve as direct observables of the transmitted/received waveform content at the audio interface.
+
+\subsubsection{Time-domain waveforms}
+\label{sec:results_signals_time}
+
+For each receive channel (microphone) the time-domain waveform $r_c(t)$ is plotted over the full recording length. If a transmit sequence is available for the same run, the corresponding transmit-channel waveform $x_a(t)$ is shown analogously.
+
+\subsubsection{Frequency-domain spectra}
+\label{sec:results_signals_freq}
+
+The demonstrator computes magnitude spectra via an FFT-based periodogram-style visualization. Each channel is displayed separately to reflect channel-dependent spectral shaping introduced by the acoustic path and the analog front-end.
+
+\subsubsection{Baseband spectral slice around the carrier}
+\label{sec:results_signals_baseband}
+
+Given the configured carrier frequency $f_c$ and baseband bandwidth parameter $B$, the tool extracts and displays the spectral region satisfying $|f-f_c| \leq B/2$ and re-centers it to an equivalent baseband frequency axis. This provides a compact view of the occupied band around the carrier.
+
+% ----------------------------------------------------------------------
+
+\subsection{Timing synchronization results}
+\label{sec:results_sync}
+
+Frame timing synchronization is computed using a Schmidl--Cox-style repeated training structure. For each receive channel, the demonstrator reports the complex correlation sum $P(d)$, the energy term $R(d)$, and the normalized timing metric $M(d)$, along with the index of the detected maximum.
+
+\subsubsection{Per-channel synchronization observables}
+\label{sec:results_sync_observables}
+
+For a given channel $c$, the synchronizer evaluates the correlation between two consecutive half-symbol segments of length $L$ (with $2L = N_{\mathrm{FFT}}$), producing:
+\begin{itemize}
+    \item $|P(d)|$: magnitude of the correlation sum between the two halves,
+    \item $R(d)$: combined energy over the two halves,
+    \item $M(d)$: normalized timing metric used for peak detection.
+\end{itemize}
+The estimated frame start per channel is given by the index of the maximum metric value, denoted \texttt{idxMax} in the implementation.
+
+\begin{figure}[t]
+    \centering
+    \fbox{\parbox{0.93\linewidth}{
+    \vspace{2mm}
+    \textbf{Placeholder: Synchronization plots per microphone.}\\
+    Insert screenshot/export of the ``Show Synchronization'' figure: rows for $|P(d)|$, $R(d)$, $M(d)$ and a vertical marker at \texttt{idxMax}.
+    \vspace{2mm}}}
+    \caption{Synchronization observables per receive channel: $|P(d)|$, $R(d)$, and $M(d)$ with detected peak location.}
+    \label{fig:results_sync_metrics}
+\end{figure}
+
+
+\subsubsection{CFO estimate and compensation (implementation-dependent reporting)}
+\label{sec:results_sync_cfo}
+
+
+A coarse carrier-frequency-offset (CFO) estimate is computed from the phase of the correlation sum at the detected peak. The receiver applies a per-channel phase rotation to compensate the estimated offset prior to OFDM block slicing.
+
+\textit{Implementation note (to be reconciled):} In the current code base, CFO values are computed per channel and used for compensation in the processing chain. However, a single consolidated ``CFO used'' value is not consistently stored in the common results struct for all modes/versions (some fields are present only in specific branches or are commented out). This chapter therefore treats CFO reporting as \emph{available when stored} and otherwise relies on the per-channel internal values.
+
+
+\subsection{Channel estimation outputs: CIR and CTF}
+\label{sec:results_channel}
+
+After synchronization and CP removal, the receiver estimates the frequency-domain channel transfer function (CTF) from preamble symbols, and derives the corresponding time-domain channel impulse response (CIR) by an inverse FFT. Results are stored in four-dimensional tensors indexed by subcarrier (or tap), subframe, receive channel, and transmit channel.
+
+\subsubsection{Estimated CIR (channel impulse response)}
+\label{sec:results_cir}
+
+The CIR magnitude $|h[n]|$ is displayed for selected subframes, for each transmit channel and each receive channel. For comparability across channels, the visualization applies a normalization step (as implemented by a local normalization helper).
+
+\begin{figure}[t]
+    \centering
+    \fbox{\parbox{0.93\linewidth}{
+    \vspace{2mm}
+    \textbf{Placeholder: CIR plots.}\\
+    Insert screenshot/export of the ``Show CIR CTF'' visualization (top row), for a selected subframe, organized by (Tx tab $\times$ Rx columns).
+    \vspace{2mm}}}
+    \caption{Magnitude of the estimated channel impulse response (CIR) $|h[n]|$ for one selected subframe, shown for each Rx--Tx pair.}
+    \label{fig:results_cir}
+\end{figure}
+
+\subsubsection{Estimated CTF (channel transfer function)}
+\label{sec:results_ctf}
+
+The CTF magnitude $|H[k]|$ is displayed across subcarriers for the same selected subframe and channel pairing. The visualization typically uses a logarithmic magnitude scale in dB.
+
+\begin{figure}[t]
+    \centering
+    \fbox{\parbox{0.93\linewidth}{
+    \vspace{2mm}
+    \textbf{Placeholder: CTF plots.}\\
+    Insert screenshot/export of the ``Show CIR CTF'' visualization (bottom row), for the same selected subframe.
+    \vspace{2mm}}}
+    \caption{Magnitude of the estimated channel transfer function (CTF) $|H[k]|$ (in dB) across subcarriers for one selected subframe, shown for each Rx--Tx pair.}
+    \label{fig:results_ctf}
+\end{figure}
+
+\subsection{Equalized symbol-domain results: constellation plots}
+\label{sec:results_constellation}
+
+After MIMO equalization/detection, the demonstrator stores the equalized complex symbols for each spatial stream. These symbols are visualized as constellation scatter plots, aggregated across subcarriers and OFDM blocks.
+
+\subsubsection{Constellation per transmit stream}
+\label{sec:results_constellation_streams}
+
+For SM in 4T8R, the equalized symbols are organized into $N_t=4$ streams. A tabbed visualization displays the constellation for each stream individually.
+
+\begin{figure}[t]
+    \centering
+    \fbox{\parbox{0.93\linewidth}{
+    \vspace{2mm}
+    \textbf{Placeholder: Constellation plots.}\\
+    Insert screenshot/export of the ``Show Channel Symbols'' output: one tab per stream (Tx1--Tx4) showing the equalized constellation points.
+    \vspace{2mm}}}
+    \caption{Equalized symbol constellations per spatial stream for the main configuration (SM, 4T8R, 4-QAM).}
+    \label{fig:results_constellations}
+\end{figure}
+
+\subsection{Channel rank and conditioning results}
+\label{sec:results_rank}
+
+To quantify the spatial degrees of freedom available per subcarrier, the demonstrator computes the numerical rank of the estimated MIMO channel matrix $H[k]$ for each subcarrier and subframe. In addition, two auxiliary quantities are reported: the smallest singular value and an estimate of the condition number.
+
+\subsubsection{Rank over subcarriers and its histogram}
+\label{sec:results_rank_hist}
+
+For each subframe and each subcarrier, the rank is computed from the singular values of $H[k]$ using an implementation-defined tolerance. The results are visualized as (i) rank versus subcarrier index and (ii) a histogram of rank counts.
+
+\begin{figure}[t]
+    \centering
+    \fbox{\parbox{0.93\linewidth}{
+    \vspace{2mm}
+    \textbf{Placeholder: Rank plots and histogram.}\\
+    Insert screenshot/export of the ``Show Channel Rank'' output for one or multiple subframes: rank-vs-subcarrier and rank histogram.
+    \vspace{2mm}}}
+    \caption{Channel rank results per subframe: rank versus subcarrier and rank histogram (based on the estimated CTF tensors).}
+    \label{fig:results_rank}
+\end{figure}
+
+\subsubsection{Minimum singular value and condition-number proxy}
+\label{sec:results_conditioning}
+
+Alongside rank, the demonstrator reports:
+\begin{itemize}
+    \item the minimum singular value $\sigma_{\min}(H[k])$ (often plotted in dB),
+    \item a condition-number proxy $\mathrm{cond}(H[k]) = \sigma_{\max}(H[k])/\sigma_{\min}(H[k])$, plotted on a logarithmic axis.
+\end{itemize}
+
+\begin{figure}[t]
+    \centering
+    \fbox{\parbox{0.93\linewidth}{
+    \vspace{2mm}
+    \textbf{Placeholder: $\sigma_{\min}$ and condition-number plots.}\\
+    Insert screenshot/export of the ``Show Channel Rank'' output (lower panels): $\sigma_{\min}$ in dB and $\log_{10}(\mathrm{cond})$ vs subcarrier.
+    \vspace{2mm}}}
+    \caption{Auxiliary channel conditioning measures per subframe: minimum singular value and condition-number proxy versus subcarrier.}
+    \label{fig:results_conditioning}
+\end{figure}
+
+\subsection{EVM results}
+\label{sec:results_evm}
+
+Error vector magnitude (EVM) is computed from the equalized symbols by comparing each symbol to its nearest ideal constellation point under the configured $M$-QAM modulation. The demonstrator reports EVM per spatial stream as well as per subcarrier, and provides error-magnitude histograms.
+
+\subsubsection{RMS EVM per stream (payload-only)}
+\label{sec:results_evm_rms}
+
+To prevent header modulation from contaminating QAM-based EVM, the EVM computation can exclude symbol positions associated with a BPSK header (when such a header is configured and its length is known). In the main operating mode used here (no channel coding; SM; 4-QAM), the EVM is reported for payload symbols and stored in the analysis data structure for later inspection.
+
+\begin{figure}[t]
+    \centering
+    \fbox{\parbox{0.93\linewidth}{
+    \vspace{2mm}
+    \textbf{Placeholder: EVM summary (bar plot).}\\
+    Insert screenshot/export of the ``Show EVM'' summary tab showing RMS EVM per stream (in dB).
+    \vspace{2mm}}}
+    \caption{RMS EVM per spatial stream (in dB), computed from equalized symbols using nearest-constellation reference points.}
+    \label{fig:results_evm_rms}
+\end{figure}
+
+\subsubsection{EVM over subcarriers and error-magnitude histograms}
+\label{sec:results_evm_sc_hist}
+
+Beyond a single RMS value, the demonstrator reports EVM as a function of subcarrier index and visualizes the distribution of error magnitudes $|e|$ via histograms. These plots are provided both in an all-stream summary view and in per-stream tabs.
+
+\begin{figure}[t]
+    \centering
+    \fbox{\parbox{0.93\linewidth}{
+    \vspace{2mm}
+    \textbf{Placeholder: EVM vs subcarrier and error histograms.}\\
+    Insert screenshot/export of the ``Show EVM'' summary tab: EVM-vs-subcarrier curves and $|e|$ histogram overlays; optionally add per-stream tabs.
+    \vspace{2mm}}}
+    \caption{EVM versus subcarrier and error-magnitude histograms derived from the equalized symbols (payload-only when applicable).}
+    \label{fig:results_evm_sc_hist}
+\end{figure}
+
+\subsection{End-to-end payload reconstruction and bit error results}
+\label{sec:results_payload_ber}
+
+The receiver reconstructs the transmitted payload from the demapped bitstream. For text payloads, the reconstructed characters are displayed in the GUI preview area. When the original transmitted payload is available as reference data, the demonstrator also reports bit error count and BER.
+
+\subsubsection{Recovered text output (example)}
+\label{sec:results_text}
+
+In text mode, the recovered output is obtained by removing any configured control/header bits, applying payload-length truncation when the true payload length is known, enforcing byte alignment, and converting bytes to ASCII characters. The GUI displays the decoded text directly after the processing step.
+
+\begin{figure}[t]
+    \centering
+    \fbox{\parbox{0.93\linewidth}{
+    \vspace{2mm}
+    \textbf{Placeholder: Recovered text preview.}\\
+    Insert screenshot of the GUI preview area showing the recovered text for one run.
+    \vspace{2mm}}}
+    \caption{Example of reconstructed text payload displayed by the demonstrator after receiver processing.}
+    \label{fig:results_text_preview}
+\end{figure}
+
+\subsubsection{Bit error count and BER (when reference is available)}
+\label{sec:results_ber}
+
+If the transmitted reference payload is stored for the run, the demonstrator computes the number of bit errors and the corresponding bit error rate (BER) between the reconstructed payload and the original payload.
+
+\begin{table}[t]
+    \centering
+    \caption{Placeholder for BER reporting for the main configuration (SM, 4T8R, 4-QAM, ZF estimation, MMSE equalization, no channel coding).}
+    \label{tab:results_ber}
+    \begin{tabular}{lcc}
+        \hline
+        Configuration / Run ID & Bit errors & BER \\
+        \hline
+        (to be inserted) & (to be inserted) & (to be inserted) \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\textit{Implementation note (to be reconciled):} Channel coding is currently not enabled in the receiver chain. While a coding mode parameter exists at the transmitter side in the broader project, the present main configuration uses no channel coding and therefore reports BER purely for the uncoded link. A complete coded BER evaluation requires receiver-side decoding to be integrated consistently.
+
+\subsection{Key metrics summary (tool-reported snapshot)}
+\label{sec:results_keymetrics}
+
+For rapid inspection and teaching-oriented demonstrations, the GUI provides a consolidated ``Key Metrics'' view that lists selected parameters and computed metrics from the receiver processing. Typical entries include FFT and CP sizes, modulation order, the number of transmit/receive channels, the selected frame start index, and (when stored) SNR-related quantities, EVM per stream, and rank summary statistics.
+
+\begin{table}[t]
+    \centering
+    \caption{Placeholder for the key-metrics snapshot exported from the demonstrator for one representative run.}
+    \label{tab:results_keymetrics}
+    \begin{tabular}{lc}
+        \hline
+        Metric & Value \\
+        \hline
+        $N_{\mathrm{FFT}}$ & (to be inserted) \\
+        $N_g$ (CP length) & (to be inserted) \\
+        Modulation ($M$) & (to be inserted) \\
+        $N_t$ / $N_r$ & (to be inserted) \\
+        Frame start used & (to be inserted) \\
+        $i\mathrm{SNR}$ (if stored) & (to be inserted) \\
+        EVM per stream (if stored) & (to be inserted) \\
+        Rank mean/min/max (if stored) & (to be inserted) \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\textit{Implementation note (to be reconciled):} Some metrics are mode-dependent and may be stored under different field names or only in specific receiver branches. The ``Key Metrics'' view therefore reports available quantities for the selected mode and run.
+
+\subsection{Chapter summary}
+\label{sec:results_summary}
+
+This chapter reported the measurable outputs produced by the MIMO-audio demonstrator in its main configuration (SM, 4T8R, 4-QAM, ZF channel estimation, MMSE equalization, no channel coding). The reported results include waveform- and spectrum-level signal views, per-channel timing synchronization observables, estimated CIR/CTF representations of the acoustic MIMO channel, equalized symbol constellations, rank and conditioning measures per subcarrier, and EVM metrics in both aggregated and subcarrier-resolved form. End-to-end payload reconstruction outputs and BER reporting were included where reference data is available. Interpretation of these results and the implications for system behavior are deferred to the discussion chapter.

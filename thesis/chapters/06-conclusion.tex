@@ -1,0 +1,44 @@
+% ======================================================================
+% Chapter 6 — Conclusion
+% ======================================================================
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+This thesis addressed the development of a MIMO-OFDM audio demonstrator with the dual purpose of enabling hands-on experimentation and supporting teaching-oriented analysis of modern physical-layer concepts. Starting from an existing software framework, the work focused on adapting the system to new hardware constraints, restructuring the user interface, and extending the receiver processing chain to expose meaningful and interpretable intermediate results.
+
+\subsection{Summary of achieved objectives}
+\label{sec:conclusion_objectives}
+
+The thesis objectives defined in Chapter~1 have been met as follows.
+
+\paragraph{Objective 1: Adaptation to a multi-channel audio interface.}
+The demonstrator was successfully adapted to operate with a modern multi-channel audio interface, supporting simultaneous playback and recording across multiple loudspeaker and microphone channels. A stable streaming setup was achieved using frame-based audio I/O, with explicit handling of buffering, latency, and synchronization constraints. The resulting system enables repeatable transmission and reception of broadband OFDM waveforms in an acoustic environment, forming a reliable experimental basis for further signal processing and analysis.
+
+\paragraph{Objective 2: Migration and restructuring of the graphical user interface.}
+The legacy GUIDE-based GUI was migrated to MATLAB App Designer and restructured to clearly separate user interaction from signal-processing logic. The resulting application provides intuitive configuration of physical-layer parameters, mode selection, and execution control, while exposing a rich set of visualization and analysis tools. This modular design improves maintainability and extensibility, and aligns the software structure with current MATLAB development practices.
+
+\paragraph{Objective 3: Implementation and analysis of a MIMO-OFDM receiver chain.}
+A configurable receiver processing pipeline was implemented, including timing synchronization, carrier-frequency-offset compensation, channel estimation, MIMO equalization/detection, symbol demapping, and payload reconstruction. The receiver supports spatial multiplexing operation with multiple estimation and equalization strategies and exposes intermediate quantities such as synchronization metrics, CIR/CTF estimates, equalized symbols, channel rank, and EVM. These outputs allow systematic evaluation of MIMO-OFDM behavior and form the core analytical contribution of the demonstrator.
+
+\subsection{Key outcomes and insights}
+\label{sec:conclusion_outcomes}
+
+The experimental results demonstrate that the implemented system operates stably in its main configuration (spatial multiplexing, 4T8R, 4-QAM, zero-forcing channel estimation, MMSE equalization, no channel coding) and reliably supports end-to-end text transmission. Beyond payload recovery, the system provides a coherent set of physical-layer observables whose behavior is consistent with theoretical expectations for frequency-selective MIMO channels.
+
+In particular, the combination of channel estimation, rank analysis, and symbol-domain quality metrics illustrates how spatial multiplexing performance varies across subcarriers and spatial streams. The availability of such intermediate results is especially valuable in an educational context, where understanding system behavior is often more important than optimizing absolute performance figures.
+
+\subsection{Limitations of the current implementation}
+\label{sec:conclusion_limitations}
+
+Several limitations of the present implementation have been identified. Although channel coding options exist conceptually, receiver-side channel decoding is not yet integrated in a consistent manner, and the reported BER results therefore correspond to uncoded transmission. In addition, certain auxiliary metrics (e.g., consolidated CFO or SNR reporting) are not uniformly stored across all processing branches, reflecting the incremental development process.
+
+These limitations do not compromise the validity of the reported results but indicate areas where further consolidation and refinement would improve completeness and comparability.
+
+\subsection{Outlook and future work}
+\label{sec:conclusion_outlook}
+
+Future work could extend the demonstrator in several directions. Integrating channel decoding would enable systematic coded performance evaluations and closer alignment with standard communication-system models. Additional MIMO transmission schemes, such as Alamouti and eigenmode transmission, could be analyzed more comprehensively using the existing framework. Finally, enhanced automation of measurement logging and result export would facilitate larger experimental studies and further strengthen the demonstrator’s value as a teaching and experimentation platform.
+
+\paragraph{Concluding remark.}
+Overall, this thesis demonstrates that a carefully designed audio-based MIMO-OFDM demonstrator can serve as an effective bridge between theoretical communication concepts and practical experimentation. By emphasizing transparency, stability, and analytical accessibility, the developed system provides a solid foundation for both education and further research-oriented extensions.

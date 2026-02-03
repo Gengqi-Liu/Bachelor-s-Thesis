@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.14)  26 JAN 2026 14:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.14)  3 FEB 2026 12:00
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -375,46 +375,51 @@ Overfull \hbox (12.0pt too wide) in paragraph at lines 43--50
 [1
 
 {/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}]
+Overfull \hbox (11.46445pt too wide) in paragraph at lines 57--58
+\T1/cmr/m/n/10.95 OFDM au-dio demon-stra-tor in-tended for teach-ing and ex-per-i-men-tal anal-y-sis of physical-
+ []
+
+
 
 
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.59 \newpage
+l.66 \newpage
               [1] (./thesis.toc
 
-[2])
+[2]
+
+[3])
 \tf@toc=\write4
 \openout4 = `thesis.toc'.
 
 
 
-[3] (./chapters/01-introduction.tex
+[4] (./chapters/01-introduction.tex
 Overfull \hbox (2.04967pt too wide) in paragraph at lines 5--6
 []\T1/cmr/m/n/12 In par-al-lel, \T1/cmr/m/it/12 Multiple-Input Multiple-Output \T1/cmr/m/n/12 (MIMO) tech-nol-ogy ex-ploits mul-ti-ple trans-
  []
 
 
 
-[4]) (./chapters/02-background.tex
+[5]) (./chapters/02-background.tex
 
-[5]
+[6]
 Overfull \hbox (11.70848pt too wide) in paragraph at lines 30--31
 []\T1/cmr/m/n/12 The fun-da-men-tal idea of mul-ti-car-rier trans-mis-sion is to de-com-pose a wide-band frequency-
  []
 
 
 
-[6]
-
 [7]
+
+[8]
 Overfull \hbox (8.81601pt too wide) in paragraph at lines 114--115
 \T1/cmr/m/n/12 multiple-output (SIMO), multiple-input single-output (MISO), and multiple-input multiple-
  []
 
 
-
-[8]
 
 [9]
 
@@ -424,13 +429,15 @@ Overfull \hbox (8.81601pt too wide) in paragraph at lines 114--115
 
 [12]
 
-[13]) (./chapters/03-methodik.tex
+[13]
 
-[14]
+[14]) (./chapters/03-methodik.tex
 
 [15]
 
 [16]
+
+[17]
 Underfull \hbox (badness 10000) in paragraph at lines 45--46
 []\T1/cmr/m/n/12 Integrated multi-channel
  []
@@ -467,11 +474,11 @@ Overfull \hbox (53.73735pt too wide) in paragraph at lines 59--60
 
 
 
-[17]
+[18]
 
-[18{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
+[19{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
 
-[19]
+[20]
 Underfull \hbox (badness 3209) in paragraph at lines 147--148
 []\T1/cmr/m/n/12 Spatial mul-ti-plex-ing, Alam-outi, Eigen-Mode, V-
  []
@@ -480,42 +487,79 @@ LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <12> not available
 (Font)              Font shape `T1/cmtt/m/n' tried instead on input line 155.
 
 
-[20]
-
 [21]
+
+[22]
 Overfull \hbox (2.60231pt too wide) in paragraph at lines 237--238
 []\T1/cmr/m/n/12 Frame syn-chro-niza-tion is per-formed in-de-pen-dently per re-ceive chan-nel us-ing a Schmidl--
  []
 
 
 
-[22]
+[23]
 
-[23]) (./chapters/04-results.tex) (./chapters/05-diskussion.tex) (./chapters/06-conclusion.tex)
+[24]) (./chapters/04-results.tex
 
-[24] (./thesis.bbl)
+[25]
 
-[25] (./thesis.aux)
+[26]
+
+[27]
+
+[28]
+
+[29]) (./chapters/05-diskussion.tex
+
+[30]
+
+[31]
+Overfull \hbox (3.28561pt too wide) in paragraph at lines 25--26
+\T1/cmr/m/n/12 The syn-chro-niza-tion re-sults pre-sented in Chap-ter 4 show well-defined peaks in the Schmidl--
+ []
+
+
+
+[32]
+Overfull \hbox (7.94073pt too wide) in paragraph at lines 41--42
+[]\T1/cmr/m/n/12 However, the rank is not uni-formly max-i-mal across all sub-car-ri-ers. Subcarrier-dependent
+ []
+
+
+
+[33]) (./chapters/06-conclusion.tex
+
+[34]
+Overfull \hbox (44.97388pt too wide) in paragraph at lines 22--23
+\T1/cmr/m/n/12 niza-tion, carrier-frequency-offset com-pen-sa-tion, chan-nel es-ti-ma-tion, MIMO equal-iza-tion/detection,
+ []
+
+)
+
+[35]
+
+[36] (./thesis.bbl)
+
+[37] (./thesis.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 9AFC348A623203DBF39EEC50D6AFCDF6;16618.
+(rerunfilecheck)             Checksum: 35113C3B75595453122158224FC6B257;26925.
  ) 
 Here is how much of TeX's memory you used:
- 11720 strings out of 473190
- 181388 string characters out of 5715800
- 601435 words of memory out of 5000000
- 34675 multiletter control sequences out of 15000+600000
+ 11881 strings out of 473190
+ 184127 string characters out of 5715800
+ 606767 words of memory out of 5000000
+ 34768 multiletter control sequences out of 15000+600000
  573454 words of font info for 70 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,14n,79p,1164b,589s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on thesis.pdf (26 pages, 420848 bytes).
+Output written on thesis.pdf (38 pages, 473689 bytes).
 PDF statistics:
- 641 PDF objects out of 1000 (max. 8388607)
- 562 compressed objects within 6 object streams
- 128 named destinations out of 1000 (max. 500000)
- 449 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 926 PDF objects out of 1000 (max. 8388607)
+ 832 compressed objects within 9 object streams
+ 196 named destinations out of 1000 (max. 500000)
+ 769 words of extra memory for PDF output out of 10000 (max. 10000000)
 
