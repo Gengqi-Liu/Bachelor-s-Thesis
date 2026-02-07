@@ -5,69 +5,79 @@
 \section{Discussion}
 \label{sec:discussion}
 
-This chapter discusses and interprets the experimental results reported in Chapter~4. In contrast to the results chapter, which focused strictly on reporting observable quantities, the present discussion aims to relate these observations to theoretical expectations, system design choices, and practical constraints of the implemented MIMO-audio demonstrator. The discussion is limited to the main operating mode of the system, namely spatial multiplexing with four transmit channels and eight receive channels (4T8R), 4-QAM modulation, zero-forcing-style channel estimation, MMSE equalization, and no channel coding.
+Chapter~4 reported the observable results obtained from the implemented MIMO audio demonstrator under its main operating configuration. These results demonstrated stable end-to-end transmission and provided detailed insight into synchronization behavior, channel estimation quality, spatial multiplexing characteristics, symbol-domain distortion, and end-to-end payload recovery. The purpose of the present chapter is to interpret these observations by relating them to the concrete implementation choices described in Chapter~3 and to the physical constraints of the acoustic transmission environment.
 
-\subsection{Scope and perspective of the discussion}
-\label{sec:discussion_scope}
+Rather than evaluating idealized performance limits, the discussion focuses on explaining specific non-ideal phenomena visible in the results, identifying their underlying causes in the signal-processing chain and system setup, and outlining potential directions for improvement.
 
-The primary objective of the implemented system is not to maximize communication performance in terms of spectral efficiency or error-rate optimality, but to provide a stable, repeatable, and transparent MIMO-OFDM demonstrator suitable for analysis and teaching. Consequently, the discussion emphasizes qualitative consistency with theory, internal coherence of the reported metrics, and the extent to which the observed results can be explained by known properties of MIMO-OFDM systems and acoustic transmission channels.
+% ----------------------------------------------------------------------
 
-\subsection{Stability and repeatability of the demonstrator}
-\label{sec:discussion_stability}
+\subsection{Reliable decoding despite non-ideal symbol quality}
+\label{sec:discussion_evm_vs_ber}
 
-A central outcome of the presented results is the stable operation of the MIMO-audio demonstrator across repeated runs with identical parameter settings. The system reliably supports end-to-end transmission of text payloads while simultaneously exposing a rich set of intermediate physical-layer observables, including synchronization metrics, channel estimates, equalized symbols, rank-related quantities, and EVM measures.
+A central observation in the reported results is that reliable payload decoding is achieved even when symbol-domain quality indicators, such as constellation compactness and error vector magnitude (EVM), are clearly non-ideal. In multiple runs, text payloads are decoded correctly with zero or very low bit error rates, while the corresponding constellation diagrams exhibit noticeable spreading and the measured EVM remains relatively high.
 
-The observed repeatability can be attributed to several design choices described in Chapter~3, such as deterministic framing, controlled random number generation during transmission, and centralized storage of receiver-side analysis data. From a teaching-oriented perspective, this stability is essential, as it enables meaningful comparisons between different parameter settings and transmission modes without being dominated by uncontrolled run-to-run variability.
+This apparent discrepancy can be directly explained by the structure of the implemented receiver and the chosen modulation scheme. In the main operating mode, 4-QAM modulation is used in combination with hard-decision demapping based on nearest-neighbor detection. As long as the equalized symbols remain within the correct decision regions, moderate distortion does not result in bit errors. Consequently, BER may remain zero even when constellation spreading is clearly visible. This behavior is well known in digital communication systems and highlights that BER alone is an insufficient indicator of link quality, particularly in uncoded systems \cite{proakis2008digital}.
 
-\subsection{Interpretation of timing synchronization behavior}
+The use of MMSE equalization further contributes to this effect. Unlike zero-forcing equalization, MMSE explicitly trades residual interference for reduced noise amplification. As a result, the equalized symbols are not forced onto ideal constellation points, which manifests as increased EVM even when symbol decisions remain correct. In this sense, the observed EVM values are consistent with the chosen equalization strategy rather than an indication of malfunction.
+
+% ----------------------------------------------------------------------
+
+\subsection{Constellation rotation and amplitude contraction}
+\label{sec:discussion_constellation}
+
+Several runs exhibit constellation patterns that are rotated with respect to the ideal reference or show a contraction of symbol clusters toward the origin. These effects can be traced back to specific implementation choices in the receiver chain.
+
+Carrier-frequency-offset (CFO) estimation and compensation are performed during the synchronization stage based on the Schmidl--Cox metric. In the current implementation, this compensation is applied once as a static correction prior to OFDM block extraction. No subsequent pilot-assisted phase tracking or decision-directed phase-locked loop is implemented. As a result, residual phase offsets and slow phase drift can persist, leading to an apparent rotation of the constellation. Such behavior is well documented in OFDM systems when only coarse CFO correction is applied \cite{nee2000ofdm}.
+
+Amplitude contraction of constellation points can be explained by the interaction between channel estimation, normalization, and MMSE equalization. While channel estimates are normalized for visualization purposes, the equalizer itself does not enforce explicit unit-gain normalization per spatial stream. MMSE equalization preserves relative amplitude scaling across streams and subcarriers, particularly in ill-conditioned channel realizations. Consequently, residual amplitude mismatch remains visible in the equalized symbols, causing the constellation to appear compressed toward the origin.
+
+% ----------------------------------------------------------------------
+
+\subsection{Frame timing uncertainty and CIR alignment}
 \label{sec:discussion_sync}
 
-The synchronization results presented in Chapter~4 show well-defined peaks in the Schmidl--Cox timing metric for all receive channels, albeit with channel-dependent variations in magnitude and sharpness. Such variations are expected in an acoustic multi-channel scenario, where individual microphone paths experience different gains, noise levels, and multipath conditions.
+The estimated channel impulse responses (CIRs) reveal that the dominant tap position is not perfectly aligned across all runs and subframes, but may shift slightly within the available delay window. This behavior is closely related to the frame-start selection strategy used in the receiver.
 
-The presence of a clear dominant peak in the timing metric confirms that the chosen synchronization scheme remains effective in the audio-frequency domain and under multi-channel operation. The use of a single global frame start index, derived from the earliest reliable detection across channels, represents a pragmatic compromise between per-channel accuracy and system-wide consistency. This choice simplifies subsequent OFDM block alignment while maintaining sufficient robustness for the demonstrated operating conditions.
+Although the Schmidl--Cox timing metric produces clear and distinct peaks for all receive channels, the exact peak indices differ slightly between microphones due to channel-dependent propagation delays and noise. The current implementation selects a single global frame start index based on the earliest reliable detection across channels. This approach ensures consistent OFDM block alignment for all receive channels, but it does not guarantee optimal FFT window placement for each individual channel.
 
-\subsection{Channel estimation characteristics: CIR and CTF}
-\label{sec:discussion_channel}
+As a result, the FFT window may not be centered identically with respect to the dominant CIR energy for all channels, leading to small shifts in the estimated CIR and corresponding variations in the CTF. More advanced synchronization schemes could mitigate this effect by performing per-channel fine timing adjustment or by selecting the FFT window to maximize energy concentration within the cyclic prefix interval \cite{schmidl1997}.
 
-The estimated channel impulse responses (CIRs) and channel transfer functions (CTFs) exhibit features that are consistent with indoor acoustic propagation. The CIR plots reveal energy spread over multiple taps, reflecting multipath components caused by reflections from walls, furniture, and other objects. Differences between transmit--receive channel pairs further highlight the spatial diversity inherent in the 4T8R configuration.
+% ----------------------------------------------------------------------
 
-In the frequency domain, the CTF magnitude responses show pronounced frequency selectivity across subcarriers. Such behavior is typical for broadband acoustic channels and directly motivates the use of OFDM. The consistency between CIR and CTF representations confirms the internal coherence of the channel estimation pipeline and provides a meaningful basis for subsequent MIMO detection and performance evaluation.
-
-\subsection{Spatial multiplexing and channel rank behavior}
+\subsection{Spatial multiplexing performance and channel rank}
 \label{sec:discussion_rank}
 
-The channel-rank analysis provides insight into the spatial degrees of freedom available for spatial multiplexing. In the considered 4T8R configuration, the estimated rank approaches the number of transmit channels for a large portion of subcarriers, indicating that the channel can, in principle, support four parallel spatial streams.
+The channel-rank analysis provides valuable insight into the spatial degrees of freedom available in the acoustic MIMO channel. In the considered configuration with four transmit loudspeakers and eight receive microphones, the estimated channel rank approaches the maximum value of four for a large portion of subcarriers. This indicates that the channel can, in principle, support four parallel spatial streams, which is consistent with the successful operation of spatial multiplexing in the reported experiments.
 
-However, the rank is not uniformly maximal across all subcarriers. Subcarrier-dependent rank reductions, accompanied by small minimum singular values and increased condition numbers, indicate locally ill-conditioned channel realizations. These effects are expected in frequency-selective channels and highlight that spatial multiplexing performance can vary significantly across frequency, even within a single OFDM symbol.
+However, the rank is not uniformly maximal across all subcarriers. Subcarrier-dependent reductions in rank, accompanied by small minimum singular values and elevated condition numbers, indicate locally ill-conditioned channel realizations. These effects are characteristic of frequency-selective MIMO channels and imply that some spatial dimensions are weakly excited at certain frequencies. In such cases, spatial streams become more sensitive to noise and estimation errors, which directly impacts symbol-domain quality and EVM, even when the overall rank remains high \cite{tse2005fundamentals}.
 
-The inclusion of singular-value-based conditioning measures complements the rank metric by providing a more nuanced view of channel quality. While rank alone indicates the number of usable spatial dimensions, the singular-value spread reflects how reliably these dimensions can be exploited in the presence of noise.
+% ----------------------------------------------------------------------
 
-\subsection{Symbol-domain quality and EVM interpretation}
+\subsection{EVM as a complementary performance metric}
 \label{sec:discussion_evm}
 
-The constellation plots and EVM results offer a direct view of symbol-domain quality after MIMO equalization. The observed constellation spreading is consistent with the estimated channel conditions and the residual noise and interference present after equalization. Differences in EVM between spatial streams further reflect asymmetries in channel quality and effective post-equalization SNR.
+The reported EVM results provide a continuous and informative performance measure that complements discrete metrics such as BER. Subcarrier-resolved EVM curves closely mirror the frequency selectivity observed in the estimated CTF, illustrating the strong link between channel frequency response and symbol-domain distortion.
 
-The subcarrier-resolved EVM curves closely mirror the frequency selectivity observed in the CTF estimates, illustrating the strong link between channel frequency response and symbol-domain distortion. Excluding header symbols modulated with BPSK from the EVM computation ensures that the reported EVM values accurately reflect the quality of the QAM payload symbols, thereby improving the interpretability of the metric.
+The exclusion of header symbols modulated with BPSK from the EVM computation improves interpretability by ensuring that the reported values reflect the quality of the QAM payload symbols only. This distinction is particularly important in mixed-modulation systems, where header and payload symbols are subject to different detection characteristics.
 
-Overall, the EVM results provide a continuous and informative performance indicator that complements discrete measures such as BER, especially in scenarios where error-free decoding is occasionally achieved despite non-negligible symbol distortion.
+Overall, the EVM analysis confirms that while the system operates reliably at the bit level, significant symbol-domain distortion remains, leaving clear room for improvement through enhanced channel estimation, phase tracking, and coding.
+
+% ----------------------------------------------------------------------
 
 \subsection{End-to-end payload recovery and uncoded BER}
 \label{sec:discussion_payload}
 
-The successful reconstruction of text payloads demonstrates that the implemented receiver chain operates coherently across all processing stages, from synchronization and channel estimation to equalization and demapping. The reported bit error counts and BER values, when reference data is available, reflect the combined effect of channel conditions, MIMO detection, and the absence of channel coding.
+The successful reconstruction of text payloads demonstrates the internal coherence of the implemented receiver chain across all processing stages, from synchronization and channel estimation to equalization and demapping. When reference payload data is available, the reported bit error counts and BER values reflect the combined effect of channel conditions, MIMO detection, and the absence of channel coding.
 
-While uncoded transmission limits the achievable error performance, the results confirm that reliable payload recovery is feasible under the chosen operating conditions. This outcome aligns with the demonstrator’s primary goal of illustrating MIMO-OFDM concepts rather than achieving near-capacity performance.
+While uncoded transmission limits the achievable error performance, the results confirm that reliable payload recovery is feasible under the chosen operating conditions. This outcome is consistent with the demonstrator’s primary objective of illustrating MIMO-OFDM concepts rather than achieving near-capacity performance.
 
-\subsection{Limitations and inconsistencies of the current implementation}
+% ----------------------------------------------------------------------
+
+\subsection{Limitations and opportunities for improvement}
 \label{sec:discussion_limitations}
 
-Several limitations and implementation inconsistencies are intentionally acknowledged. Although channel coding options exist at the transmitter side in the broader project, receiver-side channel decoding is not yet integrated in a unified manner. As a result, coding gain is not realized in the current evaluation, and BER results correspond to uncoded transmission.
+Several limitations of the current implementation are intentionally acknowledged. Although channel coding options exist at the transmitter side, receiver-side channel decoding is not yet integrated in a unified manner. As a result, coding gain is not realized, and BER results correspond to uncoded transmission only.
 
-Furthermore, certain auxiliary metrics, such as carrier-frequency-offset estimates or SNR-related quantities, are not consistently stored across all processing branches or operating modes. These inconsistencies reflect the evolutionary nature of the software development and do not undermine the validity of the reported results, but they highlight areas where further consolidation would improve completeness and clarity.
+Furthermore, auxiliary metrics such as CFO estimates and SNR-related quantities are not consistently stored across all processing branches, reflecting the evolutionary nature of the software development. From a system-design perspective, integrating pilot-assisted phase tracking, refined synchronization strategies, and receiver-side channel decoding would constitute natural next steps toward improved performance and completeness.
 
-\subsection{Outlook and possible extensions}
-\label{sec:discussion_outlook}
-
-Several extensions naturally follow from the presented work. Integrating receiver-side channel decoding would enable systematic coded BER evaluations and facilitate comparisons between modulation and coding schemes. Additional operating modes, such as Alamouti or eigenmode transmission, could be analyzed more extensively using the existing visualization and analysis framework.
-
-Finally, further automation of experiment logging and result export would support larger measurement campaigns and enhance the demonstrator’s value as a teaching and experimentation platform.
+Finally, it must be emphasized that the acoustic transmission medium itself imposes fundamental constraints. Loudspeaker directivity, microphone placement, partial obstruction, and room reflections introduce spatial asymmetries and time variations that are difficult to control. These effects limit the extent to which ideal MIMO-OFDM behavior can be reproduced and must be considered an inherent part of any practical MIMO-audio demonstrator.

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.14)  3 FEB 2026 12:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.14)  7 FEB 2026 15:32
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -268,7 +268,11 @@ Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count299
 \l__pdf_internal_box=\box54
-) (./thesis.aux)
+) (./thesis.aux
+
+LaTeX Warning: Label `fig:results_rank_conditioning' multiply defined.
+
+)
 \openout1 = `thesis.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
@@ -388,38 +392,38 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has b
 l.66 \newpage
               [1] (./thesis.toc
 
-[2]
-
-[3])
+[2])
 \tf@toc=\write4
 \openout4 = `thesis.toc'.
 
 
 
-[4] (./chapters/01-introduction.tex
+[3] (./chapters/01-introduction.tex
 Overfull \hbox (2.04967pt too wide) in paragraph at lines 5--6
 []\T1/cmr/m/n/12 In par-al-lel, \T1/cmr/m/it/12 Multiple-Input Multiple-Output \T1/cmr/m/n/12 (MIMO) tech-nol-ogy ex-ploits mul-ti-ple trans-
  []
 
 
 
-[5]) (./chapters/02-background.tex
+[4]) (./chapters/02-background.tex
 
-[6]
+[5]
 Overfull \hbox (11.70848pt too wide) in paragraph at lines 30--31
 []\T1/cmr/m/n/12 The fun-da-men-tal idea of mul-ti-car-rier trans-mis-sion is to de-com-pose a wide-band frequency-
  []
 
 
 
-[7]
+[6]
 
-[8]
+[7]
 Overfull \hbox (8.81601pt too wide) in paragraph at lines 114--115
 \T1/cmr/m/n/12 multiple-output (SIMO), multiple-input single-output (MISO), and multiple-input multiple-
  []
 
 
+
+[8]
 
 [9]
 
@@ -429,15 +433,13 @@ Overfull \hbox (8.81601pt too wide) in paragraph at lines 114--115
 
 [12]
 
-[13]
+[13]) (./chapters/03-methodik.tex
 
-[14]) (./chapters/03-methodik.tex
+[14]
 
 [15]
 
 [16]
-
-[17]
 Underfull \hbox (badness 10000) in paragraph at lines 45--46
 []\T1/cmr/m/n/12 Integrated multi-channel
  []
@@ -474,11 +476,11 @@ Overfull \hbox (53.73735pt too wide) in paragraph at lines 59--60
 
 
 
-[18]
+[17]
 
-[19{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
+[18{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
 
-[20]
+[19]
 Underfull \hbox (badness 3209) in paragraph at lines 147--148
 []\T1/cmr/m/n/12 Spatial mul-ti-plex-ing, Alam-outi, Eigen-Mode, V-
  []
@@ -487,40 +489,93 @@ LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <12> not available
 (Font)              Font shape `T1/cmtt/m/n' tried instead on input line 155.
 
 
-[21]
+[20]
 
-[22]
+[21]
 Overfull \hbox (2.60231pt too wide) in paragraph at lines 237--238
 []\T1/cmr/m/n/12 Frame syn-chro-niza-tion is per-formed in-de-pen-dently per re-ceive chan-nel us-ing a Schmidl--
  []
 
 
 
-[23]
+[22]
 
-[24]) (./chapters/04-results.tex
+[23]) (./chapters/04-results.tex
+<figures/ch4/ui-sm-bpsk.png, id=656, 2786.41pt x 1577.895pt>
+File: figures/ch4/ui-sm-bpsk.png Graphic file (type png)
+<use figures/ch4/ui-sm-bpsk.png>
+Package pdftex.def Info: figures/ch4/ui-sm-bpsk.png  used on input line 35.
+(pdftex.def)             Requested size: 441.58734pt x 250.06068pt.
 
-[25]
 
-[26]
-
-[27]
-
-[28]
-
-[29]) (./chapters/05-diskussion.tex
-
-[30]
-
-[31]
-Overfull \hbox (3.28561pt too wide) in paragraph at lines 25--26
-\T1/cmr/m/n/12 The syn-chro-niza-tion re-sults pre-sented in Chap-ter 4 show well-defined peaks in the Schmidl--
+[24]
+Overfull \hbox (7.85388pt too wide) in paragraph at lines 52--61
+\T1/cmr/m/n/12 mag-ni-tude spec-tra for all chan-nels, al-low-ing the oc-cu-pied band-width and channel-dependent
  []
 
 
 
+[25 <./figures/ch4/ui-sm-bpsk.png (PNG copy)>]
+<figures/ch4/sm-qam-syn.png, id=669, 2949.0175pt x 1612.0225pt>
+File: figures/ch4/sm-qam-syn.png Graphic file (type png)
+<use figures/ch4/sm-qam-syn.png>
+Package pdftex.def Info: figures/ch4/sm-qam-syn.png  used on input line 93.
+(pdftex.def)             Requested size: 441.58734pt x 241.37479pt.
+
+Overfull \hbox (3.34663pt too wide) in paragraph at lines 102--108
+\T1/cmr/m/n/12 After frame syn-chro-niza-tion and cyclic-prefix re-moval, the re-ceiver es-ti-mates the frequency-
+ []
+
+
+
+[26 <./figures/ch4/sm-qam-syn.png (PNG copy)>]
+<figures/ch4/sm-qam-cir.png, id=676, 2951.025pt x 1610.015pt>
+File: figures/ch4/sm-qam-cir.png Graphic file (type png)
+<use figures/ch4/sm-qam-cir.png>
+Package pdftex.def Info: figures/ch4/sm-qam-cir.png  used on input line 132.
+(pdftex.def)             Requested size: 441.58734pt x 240.90222pt.
+<figures/ch4/sm-qam-con.png, id=678, 2951.025pt x 1612.0225pt>
+File: figures/ch4/sm-qam-con.png Graphic file (type png)
+<use figures/ch4/sm-qam-con.png>
+Package pdftex.def Info: figures/ch4/sm-qam-con.png  used on input line 153.
+(pdftex.def)             Requested size: 441.58734pt x 241.2026pt.
+
+
+[27 <./figures/ch4/sm-qam-cir.png (PNG copy)>]
+<figures/ch4/sm-qam-evm.png, id=685, 2951.025pt x 1608.0075pt>
+File: figures/ch4/sm-qam-evm.png Graphic file (type png)
+<use figures/ch4/sm-qam-evm.png>
+Package pdftex.def Info: figures/ch4/sm-qam-evm.png  used on input line 171.
+(pdftex.def)             Requested size: 441.58734pt x 240.60185pt.
+
+
+[28 <./figures/ch4/sm-qam-con.png (PNG copy)>]
+<figures/ch4/sm-qam-rank.png, id=696, 2951.025pt x 1612.0225pt>
+File: figures/ch4/sm-qam-rank.png Graphic file (type png)
+<use figures/ch4/sm-qam-rank.png>
+Package pdftex.def Info: figures/ch4/sm-qam-rank.png  used on input line 203.
+(pdftex.def)             Requested size: 441.58734pt x 241.2026pt.
+
+
+[29 <./figures/ch4/sm-qam-evm.png (PNG copy)>]
+Overfull \hbox (1.56326pt too wide) in paragraph at lines 221--222
+\T1/cmr/m/n/12 run), the demon-stra-tor com-putes the bit er-ror count and BER us-ing \T1/cmtt/m/n/12 bitFehlerRaten_app\T1/cmr/m/n/12 .
+ []
+
+
+
+[30 <./figures/ch4/sm-qam-rank.png (PNG copy)>]
+<figures/ch4/sm-qam-ber.png, id=708, 588.1975pt x 120.45pt>
+File: figures/ch4/sm-qam-ber.png Graphic file (type png)
+<use figures/ch4/sm-qam-ber.png>
+Package pdftex.def Info: figures/ch4/sm-qam-ber.png  used on input line 229.
+(pdftex.def)             Requested size: 341.43307pt x 69.91801pt.
+) (./chapters/05-diskussion.tex
+
+[31 <./figures/ch4/sm-qam-ber.png (PNG copy)>]
+
 [32]
-Overfull \hbox (7.94073pt too wide) in paragraph at lines 41--42
+Overfull \hbox (7.94073pt too wide) in paragraph at lines 52--53
 []\T1/cmr/m/n/12 However, the rank is not uni-formly max-i-mal across all sub-car-ri-ers. Subcarrier-dependent
  []
 
@@ -533,33 +588,48 @@ Overfull \hbox (44.97388pt too wide) in paragraph at lines 22--23
 \T1/cmr/m/n/12 niza-tion, carrier-frequency-offset com-pen-sa-tion, chan-nel es-ti-ma-tion, MIMO equal-iza-tion/detection,
  []
 
+
+
+[35])
+
+[36] (./appendix.tex
+Overfull \hbox (12.6148pt too wide) in paragraph at lines 3--3
+[]\T1/cmr/bx/n/17.28 Extended re-sult fig-ures for ad-di-tional op-er-at-ing modes 
+ []
+
+File: figures/ch4/sm-qam-con.png Graphic file (type png)
+<use figures/ch4/sm-qam-con.png>
+Package pdftex.def Info: figures/ch4/sm-qam-con.png  used on input line 8.
+(pdftex.def)             Requested size: 441.58734pt x 241.2026pt.
 )
 
-[35]
+[37] (./thesis.bbl)
 
-[36] (./thesis.bbl)
-
-[37] (./thesis.aux)
+[38] (./thesis.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
+
+
+LaTeX Warning: There were multiply-defined labels.
+
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 35113C3B75595453122158224FC6B257;26925.
+(rerunfilecheck)             Checksum: 7CA78A06B89E98A1B31C8CA16A5F0B15;24146.
  ) 
 Here is how much of TeX's memory you used:
- 11881 strings out of 473190
- 184127 string characters out of 5715800
- 606767 words of memory out of 5000000
- 34768 multiletter control sequences out of 15000+600000
+ 11902 strings out of 473190
+ 185167 string characters out of 5715800
+ 605146 words of memory out of 5000000
+ 34798 multiletter control sequences out of 15000+600000
  573454 words of font info for 70 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,14n,79p,1164b,589s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on thesis.pdf (38 pages, 473689 bytes).
+Output written on thesis.pdf (39 pages, 2080888 bytes).
 PDF statistics:
- 926 PDF objects out of 1000 (max. 8388607)
- 832 compressed objects within 9 object streams
- 196 named destinations out of 1000 (max. 500000)
- 769 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 893 PDF objects out of 1000 (max. 8388607)
+ 792 compressed objects within 8 object streams
+ 185 named destinations out of 1000 (max. 500000)
+ 724 words of extra memory for PDF output out of 10000 (max. 10000000)
 
