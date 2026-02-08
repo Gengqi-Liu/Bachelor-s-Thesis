@@ -1,14 +1,17 @@
 \documentclass[12pt,a4paper]{article}
 
 \usepackage[english]{babel}
-\usepackage[utf8]{inputenc} % 关键：让 pdflatex 稳定处理 ü 等字符
+\usepackage[utf8]{inputenc} 
 \usepackage[T1]{fontenc}
-
+\usepackage{xurl} 
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb} 
 \usepackage{hyperref}
 \usepackage[a4paper,left=25mm,right=25mm,top=25mm,bottom=25mm]{geometry}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode} 
 
 \begin{document}
 
@@ -76,13 +79,13 @@ Experimental results obtained with a 4-transmit, 8-receive spatial multiplexing 
 \input{chapters/06-conclusion.tex}
 \newpage
 
-\input{appendix.tex}
-\newpage
-% =======================
-% Bibliography (ONLY ONCE)
-% =======================
 \bibliographystyle{ieeetr}
 \bibliography{references}
+
+\newpage
+\appendix
+\input{appendix.tex}
+
 
 
 \end{document}

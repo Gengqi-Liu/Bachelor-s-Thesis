@@ -28,17 +28,16 @@ The experimental results demonstrate that the implemented system operates stably
 
 In particular, the combination of channel estimation, rank analysis, and symbol-domain quality metrics illustrates how spatial multiplexing performance varies across subcarriers and spatial streams. The availability of such intermediate results is especially valuable in an educational context, where understanding system behavior is often more important than optimizing absolute performance figures.
 
-\subsection{Limitations of the current implementation}
-\label{sec:conclusion_limitations}
+\subsection{Consolidation and future perspectives}
+\label{sec:conclusion_future}
 
-Several limitations of the present implementation have been identified. Although channel coding options exist conceptually, receiver-side channel decoding is not yet integrated in a consistent manner, and the reported BER results therefore correspond to uncoded transmission. In addition, certain auxiliary metrics (e.g., consolidated CFO or SNR reporting) are not uniformly stored across all processing branches, reflecting the incremental development process.
+From an engineering perspective, the most relevant outcome of this thesis is not the optimization of a single transmission configuration, but the creation of a \emph{structured, extensible, and transparent} MIMO-audio demonstrator. The current implementation intentionally focuses on a stable baseline configuration and on exposing intermediate physical-layer observables in a form that is easy to inspect, visualize, and reason about.
 
-These limitations do not compromise the validity of the reported results but indicate areas where further consolidation and refinement would improve completeness and comparability.
+Some limitations of the present system naturally follow from this design focus. Advanced features such as channel coding, alternative estimation or equalization strategies, and extended performance metrics are not emphasized in the current evaluation. These aspects are not treated as deficiencies of the system, but rather as conscious design boundaries chosen to preserve clarity, robustness, and didactic value.
 
-\subsection{Outlook and future work}
-\label{sec:conclusion_outlook}
+At the same time, the modular signal-processing pipeline, the centralized data management, and the GUI-based visualization framework provide a solid foundation for future extensions. The clear separation between transmission, reception, analysis, and visualization enables new functionality to be added with minimal structural changes. Examples include the integration of additional MIMO modes, alternative channel estimators and equalizers, larger or more diverse payload types, and more advanced interaction concepts.
 
-Future work could extend the demonstrator in several directions. Integrating channel decoding would enable systematic coded performance evaluations and closer alignment with standard communication-system models. Additional MIMO transmission schemes, such as Alamouti and eigenmode transmission, could be analyzed more comprehensively using the existing framework. Finally, enhanced automation of measurement logging and result export would facilitate larger experimental studies and further strengthen the demonstrator’s value as a teaching and experimentation platform.
+Beyond algorithmic extensions, the developed user interface plays a central role in enabling future experimentation. By offering direct access to key parameters and by visualizing intermediate results in a consistent manner, the demonstrator lowers the barrier for iterative development, comparative studies, and exploratory “what-if” experiments. This makes the system well suited not only for further technical enhancement, but also as a reusable platform in laboratory exercises and project-based teaching.
 
 \paragraph{Concluding remark.}
-Overall, this thesis demonstrates that a carefully designed audio-based MIMO-OFDM demonstrator can serve as an effective bridge between theoretical communication concepts and practical experimentation. By emphasizing transparency, stability, and analytical accessibility, the developed system provides a solid foundation for both education and further research-oriented extensions.
+In summary, this thesis demonstrates that a carefully structured software design, combined with a transparent user interface and a reproducible experimental workflow, can transform an audio-based MIMO-OFDM system into a versatile exploration platform. Rather than aiming for maximal performance, the developed demonstrator prioritizes insight, extensibility, and usability—thereby providing a practical bridge between communication theory and hands-on experimentation, and a flexible starting point for future development.

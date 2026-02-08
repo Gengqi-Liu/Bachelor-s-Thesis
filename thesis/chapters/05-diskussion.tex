@@ -64,20 +64,28 @@ Overall, the EVM analysis confirms that while the system operates reliably at th
 
 % ----------------------------------------------------------------------
 
-\subsection{End-to-end payload recovery and uncoded BER}
-\label{sec:discussion_payload}
-
-The successful reconstruction of text payloads demonstrates the internal coherence of the implemented receiver chain across all processing stages, from synchronization and channel estimation to equalization and demapping. When reference payload data is available, the reported bit error counts and BER values reflect the combined effect of channel conditions, MIMO detection, and the absence of channel coding.
-
-While uncoded transmission limits the achievable error performance, the results confirm that reliable payload recovery is feasible under the chosen operating conditions. This outcome is consistent with the demonstrator’s primary objective of illustrating MIMO-OFDM concepts rather than achieving near-capacity performance.
-
 % ----------------------------------------------------------------------
+\subsection{Extensions and future experimentation possibilities}
+\label{sec:discussion_extensions}
 
-\subsection{Limitations and opportunities for improvement}
-\label{sec:discussion_limitations}
+The experiments in Chapter~4 show that the demonstrator already supports stable end-to-end transmission in the main configuration, while exposing intermediate observables such as synchronization metrics, channel estimates, rank-related measures, and EVM. Beyond the current baseline, the platform is intentionally designed as an extensible testbed. This opens up several directions for future work that are both technically meaningful and well suited for teaching-oriented ``hands-on'' experimentation.
 
-Several limitations of the current implementation are intentionally acknowledged. Although channel coding options exist at the transmitter side, receiver-side channel decoding is not yet integrated in a unified manner. As a result, coding gain is not realized, and BER results correspond to uncoded transmission only.
+\paragraph{Adding channel coding and coded performance evaluation.}
+Although the present evaluation uses the \texttt{None} coding mode, the demonstrator can be extended to include receiver-side channel decoding and to perform systematic comparisons between uncoded and coded links. This would enable experiments on coding gain, robustness under low SNR, and the trade-off between redundancy and throughput, using the existing visualization and logging infrastructure.
 
-Furthermore, auxiliary metrics such as CFO estimates and SNR-related quantities are not consistently stored across all processing branches, reflecting the evolutionary nature of the software development. From a system-design perspective, integrating pilot-assisted phase tracking, refined synchronization strategies, and receiver-side channel decoding would constitute natural next steps toward improved performance and completeness.
+\paragraph{Exploring alternative channel estimation methods.}
+The current pipeline uses a ZF/LS-style estimator based on preamble observations. A natural extension is to implement and compare improved estimators under the same hardware conditions, for example regularized LS, MMSE-style estimators, or pilot-assisted tracking across OFDM symbols. Such variants would be particularly relevant in the presence of noise enhancement, strong frequency selectivity, or time-varying acoustic paths.
 
-Finally, it must be emphasized that the acoustic transmission medium itself imposes fundamental constraints. Loudspeaker directivity, microphone placement, partial obstruction, and room reflections introduce spatial asymmetries and time variations that are difficult to control. These effects limit the extent to which ideal MIMO-OFDM behavior can be reproduced and must be considered an inherent part of any practical MIMO-audio demonstrator.
+\paragraph{Investigating alternative equalization and detection strategies.}
+In the reported results, MMSE equalization is used in the main operating mode. Extending the receiver to additional detectors (e.g., ZF, V-BLAST variants with ordering, or more advanced soft-output detection) would allow controlled experiments on interference suppression versus noise amplification. In combination with rank and conditioning measures, this can provide a concrete link between channel properties and detector behavior.
+
+\paragraph{Scaling payload size and testing robustness limits.}
+At present, the demonstrator reliably transmits typical text payloads. A straightforward stress test is to increase payload size substantially (e.g., transmitting long text files such as entire chapters or book-length content) and evaluate failure modes. Such experiments can reveal limitations in framing, buffering, synchronization robustness, and error accumulation over long transmissions.
+
+\paragraph{Supporting additional data types and file formats.}
+Besides text, the same PHY chain can be used to transmit other payload types, such as images or generic binary files. This requires a consistent file-to-bit mapping, metadata handling (file size, type, checksums), and appropriate reconstruction on the receiver side. The benefit is twofold: it broadens the demonstrator’s educational value and provides more diverse test cases with different sensitivity to bit errors.
+
+\paragraph{Towards interactive or real-time communication.}
+A longer-term extension is to move from offline-style transmission to interactive or real-time communication. This would require tighter latency control, continuous frame synchronization, and robust handling of timing drift and channel variation. Even a simplified real-time mode (e.g., short packets with acknowledgements) could substantially enhance the demonstrator’s relevance for system-level teaching.
+
+Overall, these extensions emphasize that the current system is not only a working demonstrator for a specific configuration, but also a flexible framework for exploring a wide range of physical-layer and system-level design questions in an acoustic MIMO-OFDM setting.

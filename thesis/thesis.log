@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.14)  7 FEB 2026 15:32
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2026.1.14)  8 FEB 2026 16:59
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -48,7 +48,12 @@ Package: inputenc 2024/02/08 v1.3d Input encoding file
 \inpenc@posthook=\toks18
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/base/fontenc.sty
 Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
-) (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/xurl/xurl.sty
+Package: xurl 2022/01/09 v 0.10 modify URL breaks
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip17
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)) (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
  (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
@@ -110,7 +115,7 @@ LaTeX Info: Redefining \smash on input line 939.
 LaTeX Info: Redefining \relbar on input line 969.
 LaTeX Info: Redefining \Relbar on input line 970.
 \c@MaxMatrixCols=\count278
-\dotsspace@=\muskip17
+\dotsspace@=\muskip18
 \c@parentequation=\count279
 \dspbrk@lvl=\count280
 \tag@help=\toks21
@@ -201,10 +206,6 @@ Package hyperref Info: Backreferencing OFF on input line 4177.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4424.
 \c@Hy@tempcnt=\count289
- (/usr/local/texlive/2025/texmf-dist/tex/latex/url/url.sty
-\Urlmuskip=\muskip18
-Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
-)
 LaTeX Info: Redefining \url on input line 4763.
 \XeTeXLinkMargin=\dimen155
  (/usr/local/texlive/2025/texmf-dist/tex/generic/bitset/bitset.sty
@@ -264,55 +265,83 @@ Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 \Gm@layouthoffset=\dimen164
 \Gm@layoutvoffset=\dimen165
 \Gm@dimlist=\toks25
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/algorithms/algorithm.sty
+Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating environment
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count299
+\float@exts=\toks26
+\float@box=\box54
+\@float@everytoks=\toks27
+\@floatcapt=\box55
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
+)
+\@float@every@algorithm=\toks28
+\c@algorithm=\count300
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty
+Package: algpseudocode 
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/algorithmicx/algorithmicx.sty
+Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
+
+Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
+\c@ALG@line=\count301
+\c@ALG@rem=\count302
+\c@ALG@nested=\count303
+\ALG@tlm=\skip55
+\ALG@thistlm=\skip56
+\c@ALG@Lnr=\count304
+\c@ALG@blocknr=\count305
+\c@ALG@storecount=\count306
+\c@ALG@tmpcounter=\count307
+\ALG@tmplength=\skip57
+)
+Document Style - pseudocode environments for use with the `algorithmicx' style
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count299
-\l__pdf_internal_box=\box54
-) (./thesis.aux
-
-LaTeX Warning: Label `fig:results_rank_conditioning' multiply defined.
-
-)
+\l__color_backend_stack_int=\count308
+\l__pdf_internal_box=\box56
+) (./thesis.aux)
 \openout1 = `thesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
  (/usr/local/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count300
+\scratchcounter=\count309
 \scratchdimen=\dimen166
-\scratchbox=\box55
-\nofMPsegments=\count301
-\nofMParguments=\count302
-\everyMPshowfont=\toks26
-\MPscratchCnt=\count303
+\scratchbox=\box57
+\nofMPsegments=\count310
+\nofMParguments=\count311
+\everyMPshowfont=\toks29
+\MPscratchCnt=\count312
 \MPscratchDim=\dimen167
-\MPnumerator=\count304
-\makeMPintoPDFobject=\count305
-\everyMPtoPDFconversion=\toks27
+\MPnumerator=\count313
+\makeMPintoPDFobject=\count314
+\everyMPtoPDFconversion=\toks30
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-Package hyperref Info: Link coloring OFF on input line 13.
+Package hyperref Info: Link coloring OFF on input line 16.
  (./thesis.out) (./thesis.out)
 \@outlinefile=\write3
 \openout3 = `thesis.out'.
@@ -352,25 +381,25 @@ Package hyperref Info: Link coloring OFF on input line 13.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 44.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 47.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 44.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 47.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Overfull \hbox (2.54874pt too wide) in paragraph at lines 45--45
+Overfull \hbox (2.54874pt too wide) in paragraph at lines 48--48
 []\T1/cmr/m/n/12 Erstgutachter/Erstgutachterin:| 
  []
 
 
-Overfull \hbox (15.80106pt too wide) in paragraph at lines 46--46
+Overfull \hbox (15.80106pt too wide) in paragraph at lines 49--49
 []\T1/cmr/m/n/12 Zweitgutachter/Zweitgutachterin:| 
  []
 
 
-Overfull \hbox (12.0pt too wide) in paragraph at lines 43--50
+Overfull \hbox (12.0pt too wide) in paragraph at lines 46--53
 [] 
  []
 
@@ -379,7 +408,7 @@ Overfull \hbox (12.0pt too wide) in paragraph at lines 43--50
 [1
 
 {/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}]
-Overfull \hbox (11.46445pt too wide) in paragraph at lines 57--58
+Overfull \hbox (11.46445pt too wide) in paragraph at lines 60--61
 \T1/cmr/m/n/10.95 OFDM au-dio demon-stra-tor in-tended for teach-ing and ex-per-i-men-tal anal-y-sis of physical-
  []
 
@@ -389,10 +418,15 @@ Overfull \hbox (11.46445pt too wide) in paragraph at lines 57--58
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.66 \newpage
+l.69 \newpage
               [1] (./thesis.toc
 
-[2])
+[2]
+Overfull \hbox (3.33705pt too wide) in paragraph at lines 51--51
+ [][] [][]\T1/cmr/m/n/12 Per-subcarrier MMSE de-tec-tion and op-tional decision-directed phase 
+ []
+
+)
 \tf@toc=\write4
 \openout4 = `thesis.toc'.
 
@@ -412,16 +446,21 @@ Overfull \hbox (11.70848pt too wide) in paragraph at lines 30--31
 []\T1/cmr/m/n/12 The fun-da-men-tal idea of mul-ti-car-rier trans-mis-sion is to de-com-pose a wide-band frequency-
  []
 
+<figures/ch2/ofdm_tx_rx_blockdiagram.png, id=449, 2031.59pt x 1080.035pt>
+File: figures/ch2/ofdm_tx_rx_blockdiagram.png Graphic file (type png)
+<use figures/ch2/ofdm_tx_rx_blockdiagram.png>
+Package pdftex.def Info: figures/ch2/ofdm_tx_rx_blockdiagram.png  used on input line 42.
+(pdftex.def)             Requested size: 432.48051pt x 229.91228pt.
 
 
 [6]
 
-[7]
-Overfull \hbox (8.81601pt too wide) in paragraph at lines 114--115
-\T1/cmr/m/n/12 multiple-output (SIMO), multiple-input single-output (MISO), and multiple-input multiple-
- []
-
-
+[7
+pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.78 
+      <./figures/ch2/ofdm_tx_rx_blockdiagram.png (PNG copy)>]
 
 [8]
 
@@ -430,206 +469,321 @@ Overfull \hbox (8.81601pt too wide) in paragraph at lines 114--115
 [10]
 
 [11]
+Overfull \hbox (1.39369pt too wide) in paragraph at lines 217--219
+\T1/cmr/m/n/12 reliable re-cov-ery of the trans-mit-ted sym-bol vec-tor $\OT1/cmr/bx/n/12 x\OT1/cmr/m/n/12 [\OML/cmm/m/it/12 k\OT1/cmr/m/n/12 ]$ \T1/cmr/m/n/12 re-quires knowl-edge of the frequency-
+ []
 
-[12]
 
-[13]) (./chapters/03-methodik.tex
+
+[12]) (./chapters/03-methodik.tex
+
+[13]
 
 [14]
 
 [15]
-
-[16]
-Underfull \hbox (badness 10000) in paragraph at lines 45--46
+Underfull \hbox (badness 10000) in paragraph at lines 52--53
 []\T1/cmr/m/n/12 Integrated multi-channel
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 46--47
+Underfull \hbox (badness 10000) in paragraph at lines 53--54
 []\T1/cmr/m/n/12 Hardware-level com-mon
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 47--48
+Underfull \hbox (badness 10000) in paragraph at lines 54--55
 []\T1/cmr/m/n/12 High-quality audio-grade
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 48--49
+Underfull \hbox (badness 10000) in paragraph at lines 55--56
 []\T1/cmr/m/n/12 Genelec 8010 near-field
  []
 
 
-Underfull \hbox (badness 4084) in paragraph at lines 49--50
+Underfull \hbox (badness 4084) in paragraph at lines 56--57
 []\T1/cmr/m/n/12 t.bone SC140 con-denser
  []
 
 
-Underfull \hbox (badness 2486) in paragraph at lines 51--52
+Underfull \hbox (badness 2486) in paragraph at lines 58--59
 []\T1/cmr/m/n/12 Fully pa-ram-e-ter-ized and
  []
 
 
-Overfull \hbox (53.73735pt too wide) in paragraph at lines 59--60
-\T1/cmr/m/n/12 To in-ter-face the up-graded hard-ware from MAT-LAB, the soft-ware em-ploys the \T1/cmtt/m/n/12 audioPlayerRecorder
- []
+
+[16
+pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.88 
+     ]
+
+[17
+pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.106 
+      ]
+<figures/ch3/ui.png, id=558, 2499.3375pt x 1318.9275pt>
+File: figures/ch3/ui.png Graphic file (type png)
+<use figures/ch3/ui.png>
+Package pdftex.def Info: figures/ch3/ui.png  used on input line 124.
+(pdftex.def)             Requested size: 455.24411pt x 240.23436pt.
 
 
+[18]
 
-[17]
-
-[18{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
-
-[19]
-Underfull \hbox (badness 3209) in paragraph at lines 147--148
+[19
+pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.159 
+       <./figures/ch3/ui.png (PNG copy)>]
+Underfull \hbox (badness 3209) in paragraph at lines 180--181
 []\T1/cmr/m/n/12 Spatial mul-ti-plex-ing, Alam-outi, Eigen-Mode, V-
  []
 
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 155.
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 188.
 
 
-[20]
+[20
+pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.196 
+      ]
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 226.
 
-[21]
-Overfull \hbox (2.60231pt too wide) in paragraph at lines 237--238
-[]\T1/cmr/m/n/12 Frame syn-chro-niza-tion is per-formed in-de-pen-dently per re-ceive chan-nel us-ing a Schmidl--
+
+[21
+pdfTeX warning (ext4): destination with the same identifier (name{table.4}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.249 
+      ]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 250.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\rightarrow' on input line 250.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 250.
+
+
+Overfull \hbox (10.64198pt too wide) in paragraph at lines 253--254
+\T1/cmr/m/n/12 rent build, the pay-load type is text-only: the func-tion ex-plic-itly checks \T1/cmtt/m/n/12 procParam.DatenTyp
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 267--268
+[]\T1/cmtt/m/n/12 [rxBits, data] = AnalyzeRxSig_app(procParam.rxSignal$[]$, params,
+ []
+
+
+Overfull \hbox (39.34912pt too wide) in paragraph at lines 281--282
+[]\T1/cmr/m/n/12 After tim-ing, the base-band streams are seg-mented into OFDM blocks of length \T1/cmtt/m/n/12 iNb=iNfft+iNg
  []
 
 
 
 [22]
+Underfull \hbox (badness 10000) in paragraph at lines 300--300
+[]\T1/cmr/bx/n/12 Algorithm 3 \T1/cmr/m/n/12 Front-end syn-chro-niza-tion and OFDM block ex-trac-tion
+ []
 
-[23]) (./chapters/04-results.tex
-<figures/ch4/ui-sm-bpsk.png, id=656, 2786.41pt x 1577.895pt>
-File: figures/ch4/ui-sm-bpsk.png Graphic file (type png)
-<use figures/ch4/ui-sm-bpsk.png>
-Package pdftex.def Info: figures/ch4/ui-sm-bpsk.png  used on input line 35.
-(pdftex.def)             Requested size: 441.58734pt x 250.06068pt.
 
+Overfull \hbox (10.75482pt too wide) in paragraph at lines 303--304
+[]\T1/cmtt/m/n/12 rxFrame $\OT1/cmr/m/n/12 [\OML/cmm/m/it/12 N[] \OMS/cmsy/m/n/12 ^^B \OML/cmm/m/it/12 N[]\OT1/cmr/m/n/12 ]$\T1/cmr/m/n/12 , \T1/cmtt/m/n/12 params \T1/cmr/m/n/12 (\T1/cmtt/m/n/12 iNfft,iNg,iNb,fBBFreq,fDACFreq,fCarrFreq\T1/cmr/m/n/12 ),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 307--308
+[] \T1/cmtt/m/n/12 bb(r,:) = DeModulateSignal_app(rxFrame(r,:), fBBFreq, fDACFreq,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 310--311
+[] \T1/cmtt/m/n/12 [start(r), cfo(r), metric(r)] = EstFrameStart_app(bb(r,:), iNfft,
+ []
+
+
+
+[23]
 
 [24]
-Overfull \hbox (7.85388pt too wide) in paragraph at lines 52--61
+Underfull \hbox (badness 10000) in paragraph at lines 369--369
+[]\T1/cmr/bx/n/12 Algorithm 4 \T1/cmr/m/n/12 Per-subcarrier MMSE de-tec-tion in spa-tial mul-ti-plex-ing
+ []
+
+
+
+[25]
+Overfull \hbox (21.05048pt too wide) in paragraph at lines 403--404
+\T1/cmr/m/n/12 and presents the cor-re-spond-ing plots (syn-chro-niza-tion met-rics, CIR/CTF, con-stel-la-tion/EVM,
+ []
+
+) (./chapters/04-results.tex
+<figures/ch4/ui-sm-qam.png, id=620, 2786.41pt x 1577.895pt>
+File: figures/ch4/ui-sm-qam.png Graphic file (type png)
+<use figures/ch4/ui-sm-qam.png>
+Package pdftex.def Info: figures/ch4/ui-sm-qam.png  used on input line 24.
+(pdftex.def)             Requested size: 441.58734pt x 250.06068pt.
+
+Overfull \hbox (7.85388pt too wide) in paragraph at lines 41--50
 \T1/cmr/m/n/12 mag-ni-tude spec-tra for all chan-nels, al-low-ing the oc-cu-pied band-width and channel-dependent
  []
 
 
 
-[25 <./figures/ch4/ui-sm-bpsk.png (PNG copy)>]
-<figures/ch4/sm-qam-syn.png, id=669, 2949.0175pt x 1612.0225pt>
+[26{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
+<figures/ch4/sm-qam-syn.png, id=628, 2949.0175pt x 1612.0225pt>
 File: figures/ch4/sm-qam-syn.png Graphic file (type png)
 <use figures/ch4/sm-qam-syn.png>
-Package pdftex.def Info: figures/ch4/sm-qam-syn.png  used on input line 93.
+Package pdftex.def Info: figures/ch4/sm-qam-syn.png  used on input line 82.
 (pdftex.def)             Requested size: 441.58734pt x 241.37479pt.
 
-Overfull \hbox (3.34663pt too wide) in paragraph at lines 102--108
+Overfull \hbox (3.34663pt too wide) in paragraph at lines 91--97
 \T1/cmr/m/n/12 After frame syn-chro-niza-tion and cyclic-prefix re-moval, the re-ceiver es-ti-mates the frequency-
  []
 
 
 
-[26 <./figures/ch4/sm-qam-syn.png (PNG copy)>]
-<figures/ch4/sm-qam-cir.png, id=676, 2951.025pt x 1610.015pt>
+[27
+pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.97 
+      <./figures/ch4/ui-sm-qam.png>]
+<figures/ch4/sm-qam-cir.png, id=637, 2951.025pt x 1610.015pt>
 File: figures/ch4/sm-qam-cir.png Graphic file (type png)
 <use figures/ch4/sm-qam-cir.png>
-Package pdftex.def Info: figures/ch4/sm-qam-cir.png  used on input line 132.
+Package pdftex.def Info: figures/ch4/sm-qam-cir.png  used on input line 121.
 (pdftex.def)             Requested size: 441.58734pt x 240.90222pt.
-<figures/ch4/sm-qam-con.png, id=678, 2951.025pt x 1612.0225pt>
+
+
+[28
+pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.132 
+       <./figures/ch4/sm-qam-syn.png (PNG copy)>]
+<figures/ch4/sm-qam-con.png, id=644, 2951.025pt x 1612.0225pt>
 File: figures/ch4/sm-qam-con.png Graphic file (type png)
 <use figures/ch4/sm-qam-con.png>
-Package pdftex.def Info: figures/ch4/sm-qam-con.png  used on input line 153.
+Package pdftex.def Info: figures/ch4/sm-qam-con.png  used on input line 142.
 (pdftex.def)             Requested size: 441.58734pt x 241.2026pt.
 
 
-[27 <./figures/ch4/sm-qam-cir.png (PNG copy)>]
-<figures/ch4/sm-qam-evm.png, id=685, 2951.025pt x 1608.0075pt>
+[29
+pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.153 
+       <./figures/ch4/sm-qam-cir.png (PNG copy)>]
+<figures/ch4/sm-qam-evm.png, id=652, 2951.025pt x 1608.0075pt>
 File: figures/ch4/sm-qam-evm.png Graphic file (type png)
 <use figures/ch4/sm-qam-evm.png>
-Package pdftex.def Info: figures/ch4/sm-qam-evm.png  used on input line 171.
+Package pdftex.def Info: figures/ch4/sm-qam-evm.png  used on input line 160.
 (pdftex.def)             Requested size: 441.58734pt x 240.60185pt.
 
 
-[28 <./figures/ch4/sm-qam-con.png (PNG copy)>]
-<figures/ch4/sm-qam-rank.png, id=696, 2951.025pt x 1612.0225pt>
+[30
+pdfTeX warning (ext4): destination with the same identifier (name{figure.6}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.181 
+       <./figures/ch4/sm-qam-con.png (PNG copy)>]
+<figures/ch4/sm-qam-rank.png, id=662, 2951.025pt x 1612.0225pt>
 File: figures/ch4/sm-qam-rank.png Graphic file (type png)
 <use figures/ch4/sm-qam-rank.png>
-Package pdftex.def Info: figures/ch4/sm-qam-rank.png  used on input line 203.
+Package pdftex.def Info: figures/ch4/sm-qam-rank.png  used on input line 192.
 (pdftex.def)             Requested size: 441.58734pt x 241.2026pt.
 
 
-[29 <./figures/ch4/sm-qam-evm.png (PNG copy)>]
-Overfull \hbox (1.56326pt too wide) in paragraph at lines 221--222
+[31
+pdfTeX warning (ext4): destination with the same identifier (name{figure.7}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.206 
+       <./figures/ch4/sm-qam-evm.png (PNG copy)>]
+Overfull \hbox (1.56326pt too wide) in paragraph at lines 210--211
 \T1/cmr/m/n/12 run), the demon-stra-tor com-putes the bit er-ror count and BER us-ing \T1/cmtt/m/n/12 bitFehlerRaten_app\T1/cmr/m/n/12 .
  []
 
-
-
-[30 <./figures/ch4/sm-qam-rank.png (PNG copy)>]
-<figures/ch4/sm-qam-ber.png, id=708, 588.1975pt x 120.45pt>
+<figures/ch4/sm-qam-ber.png, id=668, 588.1975pt x 120.45pt>
 File: figures/ch4/sm-qam-ber.png Graphic file (type png)
 <use figures/ch4/sm-qam-ber.png>
-Package pdftex.def Info: figures/ch4/sm-qam-ber.png  used on input line 229.
+Package pdftex.def Info: figures/ch4/sm-qam-ber.png  used on input line 218.
 (pdftex.def)             Requested size: 341.43307pt x 69.91801pt.
-) (./chapters/05-diskussion.tex
 
-[31 <./figures/ch4/sm-qam-ber.png (PNG copy)>]
 
-[32]
+[32
+pdfTeX warning (ext4): destination with the same identifier (name{figure.8}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.229 
+       <./figures/ch4/sm-qam-rank.png (PNG copy)>]) (./chapters/05-diskussion.tex
+
+[33
+pdfTeX warning (ext4): destination with the same identifier (name{figure.9}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.9 
+    
+pdfTeX warning (ext4): destination with the same identifier (name{table.5}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.9 
+     <./figures/ch4/sm-qam-ber.png (PNG copy)>]
+
+[34]
 Overfull \hbox (7.94073pt too wide) in paragraph at lines 52--53
 []\T1/cmr/m/n/12 However, the rank is not uni-formly max-i-mal across all sub-car-ri-ers. Subcarrier-dependent
  []
 
 
 
-[33]) (./chapters/06-conclusion.tex
+[35]
 
-[34]
+[36]) (./chapters/06-conclusion.tex
 Overfull \hbox (44.97388pt too wide) in paragraph at lines 22--23
 \T1/cmr/m/n/12 niza-tion, carrier-frequency-offset com-pen-sa-tion, chan-nel es-ti-ma-tion, MIMO equal-iza-tion/detection,
  []
 
 
 
-[35])
+[37])
 
-[36] (./appendix.tex
-Overfull \hbox (12.6148pt too wide) in paragraph at lines 3--3
-[]\T1/cmr/bx/n/17.28 Extended re-sult fig-ures for ad-di-tional op-er-at-ing modes 
- []
+[38] (./thesis.bbl)
 
-File: figures/ch4/sm-qam-con.png Graphic file (type png)
-<use figures/ch4/sm-qam-con.png>
-Package pdftex.def Info: figures/ch4/sm-qam-con.png  used on input line 8.
-(pdftex.def)             Requested size: 441.58734pt x 241.2026pt.
-)
-
-[37] (./thesis.bbl)
-
-[38] (./thesis.aux)
+[39] (./appendix.tex) (./thesis.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
-
-
-LaTeX Warning: There were multiply-defined labels.
-
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 7CA78A06B89E98A1B31C8CA16A5F0B15;24146.
+(rerunfilecheck)             Checksum: 8DBC1FC3BD7AB0B6EE964E1B3EABE650;21463.
  ) 
 Here is how much of TeX's memory you used:
- 11902 strings out of 473190
- 185167 string characters out of 5715800
- 605146 words of memory out of 5000000
- 34798 multiletter control sequences out of 15000+600000
- 573454 words of font info for 70 fonts, out of 8000000 for 9000
+ 12644 strings out of 473190
+ 197287 string characters out of 5715800
+ 616880 words of memory out of 5000000
+ 35508 multiletter control sequences out of 15000+600000
+ 574843 words of font info for 73 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,14n,79p,1164b,589s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on thesis.pdf (39 pages, 2080888 bytes).
+ 75i,14n,79p,952b,589s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
+Output written on thesis.pdf (40 pages, 2238142 bytes).
 PDF statistics:
- 893 PDF objects out of 1000 (max. 8388607)
- 792 compressed objects within 8 object streams
- 185 named destinations out of 1000 (max. 500000)
- 724 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 866 PDF objects out of 1000 (max. 8388607)
+ 758 compressed objects within 8 object streams
+ 193 named destinations out of 1000 (max. 500000)
+ 630 words of extra memory for PDF output out of 10000 (max. 10000000)
 

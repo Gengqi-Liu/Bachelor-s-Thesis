@@ -4,91 +4,88 @@
 \contentsline {subsection}{\numberline {2.1}Radio Propagation Channels and Motivation for OFDM}{5}{subsection.2.1}%
 \contentsline {subsection}{\numberline {2.2}Principles of OFDM Transmission}{6}{subsection.2.2}%
 \contentsline {subsubsection}{\numberline {2.2.1}Discrete-Time OFDM Signal Model}{7}{subsubsection.2.2.1}%
-\contentsline {subsubsection}{\numberline {2.2.2}Cyclic Prefix and Circular Convolution}{7}{subsubsection.2.2.2}%
-\contentsline {subsubsection}{\numberline {2.2.3}Frequency-Domain Representation and One-Tap Equalization}{7}{subsubsection.2.2.3}%
+\contentsline {subsubsection}{\numberline {2.2.2}Cyclic Prefix and Circular Convolution}{8}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}Frequency-Domain Representation and One-Tap Equalization}{8}{subsubsection.2.2.3}%
 \contentsline {subsubsection}{\numberline {2.2.4}Advantages and Limitations of OFDM}{8}{subsubsection.2.2.4}%
-\contentsline {subsection}{\numberline {2.3}Fundamentals of MIMO Systems}{8}{subsection.2.3}%
-\contentsline {subsubsection}{\numberline {2.3.1}Motivation for Multi-Antenna Communication}{8}{subsubsection.2.3.1}%
-\contentsline {subsubsection}{\numberline {2.3.2}Classification of Multi-Antenna Systems}{8}{subsubsection.2.3.2}%
-\contentsline {subsubsection}{\numberline {2.3.3}Transmission Modes and Gains in MIMO Systems}{9}{subsubsection.2.3.3}%
-\contentsline {paragraph}{Spatial Multiplexing (Focus of This Work)}{9}{section*.2}%
-\contentsline {paragraph}{Diversity Transmission and Alamouti Coding}{9}{section*.3}%
-\contentsline {paragraph}{Eigenmode Transmission and Beamforming}{9}{section*.4}%
-\contentsline {subsubsection}{\numberline {2.3.4}MIMO Channel Model and Matrix Representation}{10}{subsubsection.2.3.4}%
-\contentsline {subsubsection}{\numberline {2.3.5}Channel Rank and Spatial Degrees of Freedom}{10}{subsubsection.2.3.5}%
-\contentsline {subsubsection}{\numberline {2.3.6}Summary and Relation to Subsequent Chapters}{10}{subsubsection.2.3.6}%
+\contentsline {subsection}{\numberline {2.3}Fundamentals of MIMO Systems}{9}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Motivation for Multi-Antenna Communication}{9}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}Transmission Modes in MIMO Systems}{9}{subsubsection.2.3.2}%
+\contentsline {paragraph}{Spatial Multiplexing (Primary Focus of This Work)}{9}{section*.2}%
+\contentsline {paragraph}{Diversity-Oriented Transmission and Alamouti Coding}{9}{section*.3}%
+\contentsline {paragraph}{Eigenmode Transmission and Beamforming}{10}{section*.4}%
+\contentsline {subsubsection}{\numberline {2.3.3}MIMO Channel Model and Spatial Degrees of Freedom}{10}{subsubsection.2.3.3}%
 \contentsline {subsection}{\numberline {2.4}MIMO-OFDM Signal Model}{10}{subsection.2.4}%
 \contentsline {subsubsection}{\numberline {2.4.1}Conceptual Combination of MIMO and OFDM}{10}{subsubsection.2.4.1}%
 \contentsline {subsubsection}{\numberline {2.4.2}Discrete-Time Transmit Model}{11}{subsubsection.2.4.2}%
 \contentsline {subsubsection}{\numberline {2.4.3}Per-Subcarrier MIMO Channel Model}{11}{subsubsection.2.4.3}%
-\contentsline {subsubsection}{\numberline {2.4.4}Structure and Physical Interpretation of the Channel Matrix}{11}{subsubsection.2.4.4}%
+\contentsline {subsubsection}{\numberline {2.4.4}Structure and Interpretation of the Channel Matrix}{11}{subsubsection.2.4.4}%
 \contentsline {subsubsection}{\numberline {2.4.5}Detection Problem in MIMO-OFDM Systems}{12}{subsubsection.2.4.5}%
-\contentsline {subsubsection}{\numberline {2.4.6}Summary and Relation to Subsequent Chapters}{12}{subsubsection.2.4.6}%
-\contentsline {subsection}{\numberline {2.5}Channel Estimation and Equalization in MIMO-OFDM Systems}{12}{subsection.2.5}%
-\contentsline {subsubsection}{\numberline {2.5.1}Role of Channel Estimation in MIMO-OFDM}{12}{subsubsection.2.5.1}%
-\contentsline {subsubsection}{\numberline {2.5.2}Training-Based Channel Estimation}{13}{subsubsection.2.5.2}%
-\contentsline {subsubsection}{\numberline {2.5.3}Pilot-Based Channel Estimation}{13}{subsubsection.2.5.3}%
-\contentsline {subsubsection}{\numberline {2.5.4}Frequency-Domain Equalization}{13}{subsubsection.2.5.4}%
-\contentsline {subsubsection}{\numberline {2.5.5}Linear Equalization: ZF and MMSE}{13}{subsubsection.2.5.5}%
-\contentsline {subsubsection}{\numberline {2.5.6}Successive Interference Cancellation and V-BLAST}{14}{subsubsection.2.5.6}%
-\contentsline {subsubsection}{\numberline {2.5.7}Performance Metrics for Receiver Evaluation}{14}{subsubsection.2.5.7}%
-\contentsline {subsubsection}{\numberline {2.5.8}Summary and Relation to System Evaluation}{15}{subsubsection.2.5.8}%
-\contentsline {section}{\numberline {3}Methodology: System Adaptation and Development}{15}{section.3}%
-\contentsline {subsection}{\numberline {3.1}System-level workflow and design principles}{15}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Objective 1: Adapting the software to the new multi-channel audio interface}{16}{subsection.3.2}%
-\contentsline {subsubsection}{\numberline {3.2.1}Hardware platform upgrade and its implications}{16}{subsubsection.3.2.1}%
-\contentsline {subsubsection}{\numberline {3.2.2}Software-level audio I/O interface and channel mapping}{17}{subsubsection.3.2.2}%
-\contentsline {subsubsection}{\numberline {3.2.3}Frame-based streaming, underrun/overrun monitoring, and fallback mode}{18}{subsubsection.3.2.3}%
-\contentsline {subsubsection}{\numberline {3.2.4}Amplitude protection and traceability via audio logging}{18}{subsubsection.3.2.4}%
+\contentsline {subsection}{\numberline {2.5}Channel Estimation and Linear Equalization in the Implemented MIMO-OFDM Receiver}{12}{subsection.2.5}%
+\contentsline {subsubsection}{\numberline {2.5.1}Training-based channel estimation using a deterministic preamble}{12}{subsubsection.2.5.1}%
+\contentsline {subsubsection}{\numberline {2.5.2}Linear MMSE equalization on each subcarrier}{13}{subsubsection.2.5.2}%
+\contentsline {subsubsection}{\numberline {2.5.3}Relation to observable receiver metrics}{13}{subsubsection.2.5.3}%
+\contentsline {section}{\numberline {3}Methodology: System Adaptation and Development}{14}{section.3}%
+\contentsline {subsection}{\numberline {3.1}System-level workflow and design principles}{14}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Objective 1: Adapting the software to the new multi-channel audio interface}{15}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Hardware platform upgrade and its implications}{15}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Software-level audio I/O interface and channel mapping}{16}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}Frame-based streaming, underrun/overrun monitoring, and fallback mode}{17}{subsubsection.3.2.3}%
+\contentsline {subsubsection}{\numberline {3.2.4}Amplitude protection and traceability via audio logging}{17}{subsubsection.3.2.4}%
 \contentsline {subsection}{\numberline {3.3}Objective 2: Porting and restructuring the GUI using MATLAB App Designer}{18}{subsection.3.3}%
 \contentsline {subsubsection}{\numberline {3.3.1}Motivation for migration and architectural objectives}{18}{subsubsection.3.3.1}%
-\contentsline {subsubsection}{\numberline {3.3.2}Event-driven workflow and separation of concerns}{19}{subsubsection.3.3.2}%
-\contentsline {subsubsection}{\numberline {3.3.3}Global parameter management and state consistency}{19}{subsubsection.3.3.3}%
-\contentsline {subsubsection}{\numberline {3.3.4}GUI-driven configuration of transmission and reception methods}{19}{subsubsection.3.3.4}%
-\contentsline {subsubsection}{\numberline {3.3.5}Structured parameter interface via \texttt {procParam}}{20}{subsubsection.3.3.5}%
-\contentsline {subsubsection}{\numberline {3.3.6}Methodological implications}{20}{subsubsection.3.3.6}%
-\contentsline {subsection}{\numberline {3.4}Objective 3: Algorithmic design and optimization of the end-to-end PHY pipeline}{21}{subsection.3.4}%
-\contentsline {subsubsection}{\numberline {3.4.1}Design objectives and architectural principles}{21}{subsubsection.3.4.1}%
-\contentsline {subsubsection}{\numberline {3.4.2}Transmit-side processing: payload framing and symbol generation}{21}{subsubsection.3.4.2}%
-\contentsline {subsubsection}{\numberline {3.4.3}Control information and header handling}{21}{subsubsection.3.4.3}%
-\contentsline {subsubsection}{\numberline {3.4.4}Training and synchronization signal design}{22}{subsubsection.3.4.4}%
-\contentsline {subsubsection}{\numberline {3.4.5}Mode-specific OFDM framing and MIMO mapping}{22}{subsubsection.3.4.5}%
-\contentsline {subsubsection}{\numberline {3.4.6}Receiver front-end: downconversion, synchronization, and OFDM extraction}{22}{subsubsection.3.4.6}%
-\contentsline {subsubsection}{\numberline {3.4.7}Channel estimation and equalization}{23}{subsubsection.3.4.7}%
-\contentsline {subsubsection}{\numberline {3.4.8}Symbol demapping and payload reconstruction}{23}{subsubsection.3.4.8}%
-\contentsline {subsubsection}{\numberline {3.4.9}Reproducibility and traceability within the processing chain}{23}{subsubsection.3.4.9}%
-\contentsline {subsection}{\numberline {3.5}Chapter summary}{24}{subsection.3.5}%
-\contentsline {section}{\numberline {4}Results}{24}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Overview of reported results}{24}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Recorded transmit and receive signals}{25}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Timing synchronization results}{25}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Channel estimation outputs: CIR and CTF}{26}{subsection.4.4}%
-\contentsline {subsection}{\numberline {4.5}Equalized symbol-domain results: constellations and EVM}{27}{subsection.4.5}%
-\contentsline {subsubsection}{\numberline {4.5.1}Equalized constellations per spatial stream}{27}{subsubsection.4.5.1}%
-\contentsline {subsubsection}{\numberline {4.5.2}EVM-based quality metrics}{28}{subsubsection.4.5.2}%
-\contentsline {subsection}{\numberline {4.6}Channel rank and conditioning results}{28}{subsection.4.6}%
-\contentsline {subsubsection}{\numberline {4.6.1}Rank over subcarriers and rank histogram}{29}{subsubsection.4.6.1}%
-\contentsline {subsubsection}{\numberline {4.6.2}Minimum singular value and condition-number proxy}{29}{subsubsection.4.6.2}%
-\contentsline {subsection}{\numberline {4.7}End-to-end payload reconstruction and bit error results}{30}{subsection.4.7}%
-\contentsline {subsubsection}{\numberline {4.7.1}Recovered text output}{30}{subsubsection.4.7.1}%
-\contentsline {subsubsection}{\numberline {4.7.2}Bit error count and BER (GUI indicators)}{30}{subsubsection.4.7.2}%
-\contentsline {subsection}{\numberline {4.8}Key metrics summary (tool-reported snapshot)}{31}{subsection.4.8}%
-\contentsline {subsection}{\numberline {4.9}From results to discussion}{31}{subsection.4.9}%
-\contentsline {section}{\numberline {5}Discussion}{32}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Reliable decoding despite non-ideal symbol quality}{32}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Constellation rotation and amplitude contraction}{32}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Frame timing uncertainty and CIR alignment}{33}{subsection.5.3}%
-\contentsline {subsection}{\numberline {5.4}Spatial multiplexing performance and channel rank}{33}{subsection.5.4}%
-\contentsline {subsection}{\numberline {5.5}EVM as a complementary performance metric}{33}{subsection.5.5}%
-\contentsline {subsection}{\numberline {5.6}End-to-end payload recovery and uncoded BER}{34}{subsection.5.6}%
-\contentsline {subsection}{\numberline {5.7}Limitations and opportunities for improvement}{34}{subsection.5.7}%
-\contentsline {section}{\numberline {6}Conclusion}{34}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Summary of achieved objectives}{35}{subsection.6.1}%
-\contentsline {paragraph}{Objective 1: Adaptation to a multi-channel audio interface.}{35}{section*.5}%
-\contentsline {paragraph}{Objective 2: Migration and restructuring of the graphical user interface.}{35}{section*.6}%
-\contentsline {paragraph}{Objective 3: Implementation and analysis of a MIMO-OFDM receiver chain.}{35}{section*.7}%
-\contentsline {subsection}{\numberline {6.2}Key outcomes and insights}{35}{subsection.6.2}%
-\contentsline {subsection}{\numberline {6.3}Limitations of the current implementation}{35}{subsection.6.3}%
-\contentsline {subsection}{\numberline {6.4}Outlook and future work}{36}{subsection.6.4}%
-\contentsline {paragraph}{Concluding remark.}{36}{section*.8}%
-\contentsline {section}{\numberline {A}Extended result figures for additional operating modes}{37}{appendix.A}%
+\contentsline {subsubsection}{\numberline {3.3.2}Event-driven workflow and separation of concerns}{18}{subsubsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {3.3.3}Graphical layout as a reflection of the signal-processing pipeline}{19}{subsubsection.3.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.4}Global parameter management and state consistency}{19}{subsubsection.3.3.4}%
+\contentsline {subsubsection}{\numberline {3.3.5}GUI-driven configuration of transmission and reception methods}{20}{subsubsection.3.3.5}%
+\contentsline {subsubsection}{\numberline {3.3.6}Structured parameter interface via \texttt {procParam}}{20}{subsubsection.3.3.6}%
+\contentsline {subsubsection}{\numberline {3.3.7}Methodological implications}{21}{subsubsection.3.3.7}%
+\contentsline {subsection}{\numberline {3.4}Objective 3: End-to-end PHY pipeline for text transmission}{21}{subsection.3.4}%
+\contentsline {subsubsection}{\numberline {3.4.1}Processing contract and data interface (\texttt {procParam} $\rightarrow $ \texttt {data})}{22}{subsubsection.3.4.1}%
+\contentsline {paragraph}{Receiver pipeline overview (implementation-level pseudocode).}{22}{section*.5}%
+\contentsline {subsubsection}{\numberline {3.4.2}Receiver front-end: baseband conversion, timing, and OFDM extraction}{22}{subsubsection.3.4.2}%
+\contentsline {paragraph}{Schmidl--Cox timing and coarse CFO estimate (code-faithful model).}{23}{section*.6}%
+\contentsline {paragraph}{Timing front-end (implementation-level pseudocode).}{23}{section*.7}%
+\contentsline {subsubsection}{\numberline {3.4.3}Training structure and per-subframe parsing for spatial multiplexing and V-BLAST}{24}{subsubsection.3.4.3}%
+\contentsline {subsubsection}{\numberline {3.4.4}Training-based channel estimation used in the receiver (ZF/LS via preamble division)}{24}{subsubsection.3.4.4}%
+\contentsline {subsubsection}{\numberline {3.4.5}Noise power and SNR proxy from the trailing blocks}{24}{subsubsection.3.4.5}%
+\contentsline {subsubsection}{\numberline {3.4.6}Per-subcarrier MMSE detection and optional decision-directed phase tracking}{24}{subsubsection.3.4.6}%
+\contentsline {paragraph}{Subcarrier-wise MMSE detection (implementation-level pseudocode).}{25}{section*.8}%
+\contentsline {subsubsection}{\numberline {3.4.7}Symbol demapping and ASCII reconstruction}{25}{subsubsection.3.4.7}%
+\contentsline {subsubsection}{\numberline {3.4.8}Stored observables for GUI-based analysis}{25}{subsubsection.3.4.8}%
+\contentsline {subsection}{\numberline {3.5}Chapter summary}{26}{subsection.3.5}%
+\contentsline {section}{\numberline {4}Results}{26}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Recorded transmit and receive signals}{26}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Timing synchronization results}{27}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Channel estimation outputs: CIR and CTF}{28}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Equalized symbol-domain results: constellations and EVM}{29}{subsection.4.4}%
+\contentsline {subsubsection}{\numberline {4.4.1}Equalized constellations per spatial stream}{29}{subsubsection.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.2}EVM-based quality metrics}{29}{subsubsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.5}Channel rank and conditioning results}{30}{subsection.4.5}%
+\contentsline {subsubsection}{\numberline {4.5.1}Rank over subcarriers and rank histogram}{30}{subsubsection.4.5.1}%
+\contentsline {subsubsection}{\numberline {4.5.2}Minimum singular value and condition-number proxy}{31}{subsubsection.4.5.2}%
+\contentsline {subsection}{\numberline {4.6}End-to-end payload reconstruction and bit error results}{31}{subsection.4.6}%
+\contentsline {subsubsection}{\numberline {4.6.1}Recovered text output}{32}{subsubsection.4.6.1}%
+\contentsline {subsubsection}{\numberline {4.6.2}Bit error count and BER (GUI indicators)}{32}{subsubsection.4.6.2}%
+\contentsline {subsection}{\numberline {4.7}Key metrics summary (tool-reported snapshot)}{33}{subsection.4.7}%
+\contentsline {subsection}{\numberline {4.8}From results to discussion}{33}{subsection.4.8}%
+\contentsline {section}{\numberline {5}Discussion}{33}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Reliable decoding despite non-ideal symbol quality}{34}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Constellation rotation and amplitude contraction}{34}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Frame timing uncertainty and CIR alignment}{35}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Spatial multiplexing performance and channel rank}{35}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}EVM as a complementary performance metric}{35}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}Extensions and future experimentation possibilities}{36}{subsection.5.6}%
+\contentsline {paragraph}{Adding channel coding and coded performance evaluation.}{36}{section*.9}%
+\contentsline {paragraph}{Exploring alternative channel estimation methods.}{36}{section*.10}%
+\contentsline {paragraph}{Investigating alternative equalization and detection strategies.}{36}{section*.11}%
+\contentsline {paragraph}{Scaling payload size and testing robustness limits.}{36}{section*.12}%
+\contentsline {paragraph}{Supporting additional data types and file formats.}{36}{section*.13}%
+\contentsline {paragraph}{Towards interactive or real-time communication.}{36}{section*.14}%
+\contentsline {section}{\numberline {6}Conclusion}{37}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Summary of achieved objectives}{37}{subsection.6.1}%
+\contentsline {paragraph}{Objective 1: Adaptation to a multi-channel audio interface.}{37}{section*.15}%
+\contentsline {paragraph}{Objective 2: Migration and restructuring of the graphical user interface.}{37}{section*.16}%
+\contentsline {paragraph}{Objective 3: Implementation and analysis of a MIMO-OFDM receiver chain.}{37}{section*.17}%
+\contentsline {subsection}{\numberline {6.2}Key outcomes and insights}{38}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Consolidation and future perspectives}{38}{subsection.6.3}%
+\contentsline {paragraph}{Concluding remark.}{38}{section*.18}%

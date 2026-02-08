@@ -37,6 +37,15 @@ where $T_s$ denotes the useful OFDM symbol duration. This choice ensures orthogo
 
 For discrete-time baseband modeling, the multipath channel is commonly represented as a finite impulse response (FIR) filter, also referred to as a tapped delay line model. This discrete-time representation provides the mathematical foundation for the implementation of OFDM systems using inverse discrete Fourier transform (IDFT) and discrete Fourier transform (DFT) operations, and it forms the basis for most practical OFDM transmitters and receivers.
 
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.95\linewidth]{figures/ch2/ofdm_tx_rx_blockdiagram.png}
+    \caption{Block diagram of a generic OFDM transmitter and receiver chain, illustrating the main signal-processing stages and the role of time and frequency synchronization. Adapted from \cite{haring_ofdm_lecture}.}
+    \label{fig:ofdm_blockdiagram}
+\end{figure}
+
+Figure~\ref{fig:ofdm_blockdiagram} illustrates a generic block diagram of an OFDM transmitter and receiver, highlighting the key signal-processing stages discussed above. In particular, the diagram emphasizes how time and frequency synchronization, cyclic prefix handling, and frequency-domain equalization interact to mitigate the effects of multipath propagation and enable efficient multicarrier transmission.
+
 \subsection{Principles of OFDM Transmission}
 
 Orthogonal Frequency Division Multiplexing (OFDM) is a multicarrier transmission technique whose fundamental idea is to decompose a wideband frequency-selective channel into a set of mutually orthogonal narrowband subchannels. By doing so, each subchannel can be approximated as a frequency-flat channel, which significantly reduces the complexity of receiver-side equalization.
@@ -105,72 +114,58 @@ Despite these advantages, OFDM also exhibits certain limitations. The superposit
 
 \subsubsection{Motivation for Multi-Antenna Communication}
 
-In conventional single-input single-output (SISO) communication systems, system performance is primarily limited by channel fading and available bandwidth. In multipath propagation environments, random fluctuations in signal amplitude and phase may lead to deep fades and a significant degradation of link reliability.
+In conventional single-input single-output (SISO) communication systems, performance is fundamentally limited by channel fading and available bandwidth. In multipath propagation environments, random fluctuations in signal amplitude and phase may lead to deep fades, resulting in a significant degradation of link reliability.
 
-Multi-antenna communication techniques address these limitations by introducing multiple antennas at the transmitter and/or receiver, thereby providing additional spatial degrees of freedom. Multiple-input multiple-output (MIMO) systems exploit these spatial dimensions to improve link reliability or increase data rates without requiring additional bandwidth or transmit power. As a result, MIMO has become a key technology in modern broadband communication systems.
+Multi-antenna communication techniques address these limitations by introducing multiple antennas at the transmitter and/or receiver, thereby creating additional spatial degrees of freedom. Multiple-input multiple-output (MIMO) systems exploit these spatial dimensions to either improve link reliability through diversity or increase data rates through parallel transmission, without requiring additional bandwidth or transmit power. For this reason, MIMO has become a key enabling technology in modern broadband communication systems.
 
-\subsubsection{Classification of Multi-Antenna Systems}
+From a system-level perspective, the use of multiple antennas naturally generalizes single-antenna configurations. Depending on the number of transmit and receive antennas, systems may operate in SISO, SIMO, MISO, or full MIMO configurations. In the context of the audio-based demonstrator developed in this work, all of these configurations can be realized, with the focus placed on full MIMO operation.
 
-Depending on the number of transmit and receive antennas, multi-antenna systems can be classified into four main categories: single-input single-output (SISO), single-input multiple-output (SIMO), multiple-input single-output (MISO), and multiple-input multiple-output (MIMO). While SIMO and MISO systems are primarily employed to achieve diversity or array gain, full MIMO systems are capable of supporting different transmission modes, including diversity-oriented and multiplexing-oriented schemes.
+\subsubsection{Transmission Modes in MIMO Systems}
 
-In practical system design, the choice of a specific MIMO transmission mode depends on the targeted performance objective, such as improved reliability or increased spectral efficiency.
+While the presence of multiple antennas provides additional spatial degrees of freedom, the manner in which these degrees of freedom are exploited depends on the chosen transmission mode. Different MIMO transmission strategies emphasize different performance objectives, such as reliability, throughput, or robustness against channel impairments.
 
-\subsubsection{Transmission Modes and Gains in MIMO Systems}
+\paragraph{Spatial Multiplexing (Primary Focus of This Work)}
 
-Compared to single-antenna systems, MIMO systems offer several potential advantages. However, different MIMO transmission modes emphasize different performance objectives. In this work, \emph{spatial multiplexing} is considered the primary focus, while other transmission modes are introduced for comparison and contextual understanding.
+Spatial multiplexing aims at increasing the achievable data rate by transmitting multiple independent data streams simultaneously over the same time and frequency resources. Under favorable channel conditions, the achievable throughput can scale approximately linearly with the number of transmit antennas, making spatial multiplexing particularly attractive for spectrally efficient communication.
 
-\paragraph{Spatial Multiplexing (Focus of This Work)}
+In spatial multiplexing systems, independent data streams are transmitted from different antennas and superimposed by the propagation channel. At the receiver, multi-antenna signal processing algorithms are required to separate the streams. Common detection techniques include zero-forcing (ZF), minimum mean square error (MMSE) detection, and successive interference cancellation schemes such as the V-BLAST architecture.
 
-Spatial multiplexing is one of the most prominent transmission modes in MIMO systems. Its key principle is the simultaneous transmission of multiple independent data streams over the same time and frequency resources. Under favorable channel conditions, spatial multiplexing enables an almost linear increase in data rate with the number of antennas, making it particularly attractive for improving spectral efficiency.
+For the audio-based MIMO demonstrator considered in this thesis, spatial multiplexing is especially well suited for algorithmic analysis and visualization. It enables a direct illustration of channel rank, spatial degrees of freedom, and receiver detection performance, and is therefore selected as the primary transmission mode for implementation and evaluation.
 
-In spatial multiplexing systems, independent data streams are transmitted from different antennas and superimposed in the spatial channel. At the receiver, multi-antenna signal processing algorithms are employed to separate these streams. Typical detection techniques include zero-forcing (ZF), minimum mean square error (MMSE) detection, and successive interference cancellation schemes such as the Vertical Bell Labs Layered Space-Time (V-BLAST) architecture.
+\paragraph{Diversity-Oriented Transmission and Alamouti Coding}
 
-Since the acoustic MIMO demonstrator considered in this thesis aims at algorithmic analysis and visualization, spatial multiplexing allows for an intuitive illustration of channel rank, spatial degrees of freedom, and receiver detection performance. Therefore, it is selected as the primary transmission mode implemented and analyzed in this work.
+In contrast to spatial multiplexing, diversity-oriented transmission schemes aim at improving link robustness rather than increasing data rate. A well-known example is the Alamouti space-time block code, which achieves full transmit diversity for two transmit antennas while retaining a simple linear receiver structure.
 
-\paragraph{Diversity Transmission and Alamouti Coding}
-
-In addition to spatial multiplexing, MIMO systems can also be operated in diversity-oriented modes to enhance link reliability. A prominent example is the Alamouti space-time block code, which achieves full diversity gain for two transmit antennas while maintaining a simple linear receiver structure.
-
-Unlike spatial multiplexing, Alamouti coding does not aim to increase the data rate but rather improves robustness against fading through redundant transmission. In this work, Alamouti transmission is mainly considered as a reference scheme to highlight the trade-off between reliability and throughput in different MIMO transmission modes.
+In this work, Alamouti transmission is considered mainly as a reference scheme. It provides a useful contrast to spatial multiplexing by highlighting the fundamental trade-off between reliability and throughput in different MIMO transmission modes.
 
 \paragraph{Eigenmode Transmission and Beamforming}
 
-If channel state information is available at the transmitter, the MIMO channel matrix can be decomposed into independent spatial subchannels by means of eigenvalue or singular value decomposition. This approach, commonly referred to as eigenmode transmission or beamforming, enables capacity-optimal transmission under ideal conditions.
+If accurate channel state information is available at the transmitter, the MIMO channel matrix can be decomposed into orthogonal spatial subchannels using singular value decomposition. This principle, commonly referred to as eigenmode transmission or beamforming, enables capacity-optimal transmission under idealized conditions.
 
-However, eigenmode transmission requires accurate channel knowledge at the transmitter and involves increased implementation complexity. Therefore, this transmission mode is not considered for practical implementation in the demonstrator, but is briefly introduced as part of the theoretical background.
+Due to its reliance on transmitter-side channel knowledge and increased implementation complexity, eigenmode transmission is not pursued as a primary operating mode in the demonstrator. Nevertheless, it is briefly introduced here to complete the conceptual overview of MIMO transmission strategies.
 
-\subsubsection{MIMO Channel Model and Matrix Representation}
+\subsubsection{MIMO Channel Model and Spatial Degrees of Freedom}
 
-For analytical purposes, MIMO systems are commonly described using a matrix-based baseband equivalent channel model. Assuming $N_\mathrm{T}$ transmit antennas and $N_\mathrm{R}$ receive antennas, the MIMO system can be expressed as
+For analytical purposes, MIMO systems are commonly described using a matrix-based baseband-equivalent channel model. Assuming $N_\mathrm{T}$ transmit antennas and $N_\mathrm{R}$ receive antennas, the input--output relationship can be written as
 \begin{equation}
 \mathbf{y} = \mathbf{H}\mathbf{x} + \mathbf{n},
 \end{equation}
 where $\mathbf{x} \in \mathbb{C}^{N_\mathrm{T} \times 1}$ denotes the transmit signal vector, $\mathbf{y} \in \mathbb{C}^{N_\mathrm{R} \times 1}$ the receive signal vector, $\mathbf{H} \in \mathbb{C}^{N_\mathrm{R} \times N_\mathrm{T}}$ the channel matrix, and $\mathbf{n}$ additive noise.
 
-This model captures the fundamental property of MIMO systems, namely that multiple transmitted signals are linearly superimposed by the spatial channel and jointly processed at the receiver.
-
-\subsubsection{Channel Rank and Spatial Degrees of Freedom}
-
-An essential parameter in MIMO systems is the rank of the channel matrix. The channel rank determines the number of independent spatial data streams that can be transmitted simultaneously and is bounded by
+An essential property of the MIMO channel is its rank, which determines the number of independent spatial data streams that can be transmitted simultaneously. The channel rank is bounded by
 \begin{equation}
 \mathrm{rank}(\mathbf{H}) \leq \min(N_\mathrm{T}, N_\mathrm{R}).
 \end{equation}
 
-In spatial multiplexing systems, the channel rank directly limits the achievable multiplexing gain. A full-rank channel allows the transmission of the maximum number of independent data streams, whereas a reduced rank leads to a loss of spatial degrees of freedom. Consequently, the channel rank plays a central role in the analysis of spatial multiplexing performance and serves as a key metric in the evaluation of MIMO demonstrators.
-
-\subsubsection{Summary and Relation to Subsequent Chapters}
-
-This section introduced the fundamental concepts of multi-antenna communication with a focus on spatial multiplexing as the primary transmission mode. Diversity-oriented schemes such as Alamouti coding and eigenmode transmission were discussed for comparison. The matrix-based MIMO channel model and the concept of channel rank were presented as essential tools for analyzing spatial multiplexing systems.
-
-In the following sections, these concepts are combined with OFDM transmission, leading to a per-subcarrier MIMO signal model and forming the basis for channel estimation, receiver-side detection algorithms, and performance evaluation in MIMO-OFDM systems.
+In spatial multiplexing systems, the channel rank directly limits the achievable multiplexing gain. Consequently, rank-related metrics play a central role in the analysis and evaluation of MIMO-OFDM systems and form a key part of the experimental results presented in later chapters.
 
 \subsection{MIMO-OFDM Signal Model}
 
 \subsubsection{Conceptual Combination of MIMO and OFDM}
 
-As introduced in the previous sections, OFDM enables the decomposition of a frequency-selective wideband channel into a set of parallel frequency-flat subchannels, while MIMO systems exploit spatial degrees of freedom by employing multiple transmit and receive antennas. The combination of these two techniques results in a MIMO-OFDM system, which has become the standard transmission scheme for modern broadband communication systems \cite{nee2000ofdm,tse2005fundamentals}.
+OFDM enables the decomposition of a frequency-selective wideband channel into a set of parallel frequency-flat subchannels, while MIMO systems exploit spatial degrees of freedom by employing multiple transmit and receive antennas. The combination of these two techniques results in a MIMO-OFDM system, which has become the dominant transmission scheme in modern broadband communication systems \cite{nee2000ofdm,tse2005fundamentals}.
 
-The key idea of MIMO-OFDM is to apply a narrowband MIMO channel model independently to each OFDM subcarrier. Since OFDM converts a frequency-selective channel into multiple approximately flat-fading subchannels, the complex wideband MIMO channel can be represented as a collection of parallel narrowband MIMO channels in the frequency domain \cite{proakis2008digital,haring_ofdm_lecture}. This per-subcarrier modeling approach significantly simplifies the analysis and receiver design of broadband MIMO systems.
+The key idea of MIMO-OFDM is to apply a narrowband MIMO channel model independently to each OFDM subcarrier. By transforming a frequency-selective channel into multiple approximately flat-fading subchannels, OFDM allows the wideband MIMO channel to be represented as a collection of parallel narrowband MIMO channels in the frequency domain. This per-subcarrier representation significantly simplifies both analytical treatment and receiver design \cite{proakis2008digital,haring_ofdm_lecture}.
 
 \subsubsection{Discrete-Time Transmit Model}
 
@@ -179,140 +174,93 @@ Consider a MIMO-OFDM system with $N_\mathrm{T}$ transmit antennas and $N_\mathrm
 N_\mathrm{S} \leq \min(N_\mathrm{T}, N_\mathrm{R}).
 \]
 
-On the $k$-th subcarrier, the transmit signal can be represented by the vector
+On the $k$-th subcarrier, the transmitted signal is represented by the vector
 \[
 \mathbf{x}[k] \in \mathbb{C}^{N_\mathrm{T} \times 1},
 \]
-whose elements correspond to the complex-valued symbols transmitted from the individual antennas on that subcarrier. After OFDM modulation, including IFFT operation and cyclic prefix insertion, the time-domain signals of all transmit antennas are emitted simultaneously and propagated through the spatial channel.
+whose elements correspond to the complex-valued symbols transmitted from the individual antennas. After OFDM modulation, including IFFT processing and cyclic prefix insertion, the time-domain signals of all transmit antennas are emitted simultaneously and propagated through the spatial channel.
 
 \subsubsection{Per-Subcarrier MIMO Channel Model}
 
-At the receiver, after cyclic prefix removal and FFT processing, the received signal on the $k$-th subcarrier can be expressed as the vector
+At the receiver, following cyclic prefix removal and FFT processing, the received signal on the $k$-th subcarrier can be expressed as
 \[
 \mathbf{y}[k] \in \mathbb{C}^{N_\mathrm{R} \times 1}.
 \]
 
-Under ideal synchronization conditions, the MIMO-OFDM system on each subcarrier is described by the linear model
+Under ideal synchronization conditions, the input--output relationship on each subcarrier is described by the linear model
 \begin{equation}
 \mathbf{y}[k] = \mathbf{H}[k]\mathbf{x}[k] + \mathbf{n}[k],
 \label{eq:mimo_ofdm_model}
 \end{equation}
-where $\mathbf{H}[k] \in \mathbb{C}^{N_\mathrm{R} \times N_\mathrm{T}}$ denotes the frequency-domain MIMO channel matrix on the $k$-th subcarrier and $\mathbf{n}[k]$ represents additive noise.
+where $\mathbf{H}[k] \in \mathbb{C}^{N_\mathrm{R} \times N_\mathrm{T}}$ denotes the frequency-domain MIMO channel matrix and $\mathbf{n}[k]$ additive noise.
 
-This expression constitutes the standard per-subcarrier signal model used for the analysis of MIMO-OFDM systems and is widely adopted in the literature and textbooks on multicarrier and multi-antenna communications \cite{proakis2008digital,tse2005fundamentals,haring_ofdm_lecture}. It highlights that OFDM transforms the convolutional wideband MIMO channel into a set of independent linear MIMO systems in the frequency domain.
+This formulation shows that OFDM converts the convolutional wideband MIMO channel into a set of independent linear MIMO systems in the frequency domain, each of which can be processed separately \cite{proakis2008digital,tse2005fundamentals}.
 
-\subsubsection{Structure and Physical Interpretation of the Channel Matrix}
+\subsubsection{Structure and Interpretation of the Channel Matrix}
 
-Each element $H_{ij}[k]$ of the channel matrix $\mathbf{H}[k]$ represents the complex frequency response between the $j$-th transmit antenna and the $i$-th receive antenna on the $k$-th subcarrier. The channel matrix therefore captures the combined effects of multipath propagation, antenna configuration, and the spatial characteristics of the propagation environment.
+Each element $H_{ij}[k]$ of the channel matrix represents the complex frequency response between the $j$-th transmit antenna and the $i$-th receive antenna on the $k$-th subcarrier. The matrix $\mathbf{H}[k]$ therefore captures both the multipath propagation effects and the spatial characteristics of the transmission environment.
 
-In spatial multiplexing systems, the rank of $\mathbf{H}[k]$ determines the number of independent spatial data streams that can be transmitted on the $k$-th subcarrier. A full-rank channel matrix allows the system to fully exploit spatial degrees of freedom, whereas a rank-deficient channel limits the achievable spatial multiplexing gain. As a consequence, variations of the channel rank across subcarriers directly influence the frequency-dependent performance of MIMO-OFDM systems \cite{tse2005fundamentals}.
+In spatial multiplexing systems, the rank of $\mathbf{H}[k]$ determines the number of independent data streams that can be reliably transmitted on the corresponding subcarrier. Full-rank channel realizations allow the system to fully exploit spatial degrees of freedom, whereas rank deficiencies directly limit multiplexing capability. As a result, subcarrier-dependent variations of the channel matrix play a central role in the performance behavior of MIMO-OFDM systems \cite{tse2005fundamentals}.
 
 \subsubsection{Detection Problem in MIMO-OFDM Systems}
 
-In spatial multiplexing mode, the primary task of the receiver is to recover the transmit vector $\mathbf{x}[k]$ from the received signal $\mathbf{y}[k]$. This task is commonly referred to as MIMO detection.
+The task of the receiver in spatial multiplexing mode is to recover the transmit vector $\mathbf{x}[k]$ from the received signal $\mathbf{y}[k]$. Due to the coupling of multiple data streams through the channel matrix, this constitutes a multidimensional detection problem.
 
-Due to the coupling of multiple data streams through the channel matrix $\mathbf{H}[k]$, MIMO detection constitutes a multidimensional signal separation problem. Depending on the employed algorithm, different trade-offs between computational complexity and detection performance arise. Linear detection schemes, such as zero-forcing (ZF) and minimum mean square error (MMSE) detection, offer low complexity, while successive interference cancellation techniques, including the Vertical Bell Labs Layered Space-Time (V-BLAST) algorithm, generally achieve improved performance at the cost of increased complexity \cite{tse2005fundamentals}.
+Linear detection schemes such as zero-forcing (ZF) and minimum mean square error (MMSE) detection offer low computational complexity, while successive interference cancellation approaches, including the V-BLAST architecture, improve detection performance at the cost of increased complexity. In MIMO-OFDM systems, detection is typically performed independently on each subcarrier, preserving the modular structure introduced by OFDM.
 
-In MIMO-OFDM systems, the detection process is typically performed independently on each subcarrier, which allows the wideband detection problem to be decomposed into a set of parallel narrowband MIMO detection problems.
+\subsection{Channel Estimation and Linear Equalization in the Implemented MIMO-OFDM Receiver}
+\label{sec:chest_mmse_impl}
 
-\subsubsection{Summary and Relation to Subsequent Chapters}
-
-This section established a unified signal model for MIMO-OFDM systems based on a per-subcarrier representation. The structure and physical interpretation of the frequency-domain channel matrix were discussed, and the role of channel rank in spatial multiplexing systems was highlighted. The resulting signal model provides the theoretical foundation for channel estimation, equalization, and MIMO detection algorithms, which are addressed in the subsequent sections.
-
-\subsection{Channel Estimation and Equalization in MIMO-OFDM Systems}
-
-\subsubsection{Role of Channel Estimation in MIMO-OFDM}
-
-As established in the previous section, the received signal on the $k$-th subcarrier of a MIMO-OFDM system can be expressed as
+Based on the per-subcarrier MIMO-OFDM signal model introduced in the previous section,
 \begin{equation}
-\mathbf{y}[k] = \mathbf{H}[k]\mathbf{x}[k] + \mathbf{n}[k].
+\mathbf{y}[k] = \mathbf{H}[k]\mathbf{x}[k] + \mathbf{n}[k],
 \end{equation}
-In order to reliably recover the transmit vector $\mathbf{x}[k]$, knowledge of the corresponding channel matrix $\mathbf{H}[k]$ is required at the receiver. Consequently, channel estimation constitutes a key component of MIMO-OFDM receivers, and its accuracy has a direct impact on equalization and detection performance \cite{proakis2008digital,tse2005fundamentals}.
+reliable recovery of the transmitted symbol vector $\mathbf{x}[k]$ requires knowledge of the frequency-domain MIMO channel matrix $\mathbf{H}[k]$ and an appropriate receiver-side equalization strategy. In the implemented audio-based demonstrator, channel estimation and equalization are therefore central components of the receiver chain, directly determining the quality of all subsequent symbol-domain and bit-level results reported in Chapter~4.
 
-Due to the OFDM structure, channel estimation can be performed independently on each subcarrier in the frequency domain, which significantly reduces computational complexity compared to time-domain approaches for wideband systems.
+Rather than implementing a broad set of estimation and detection techniques, the demonstrator deliberately focuses on a compact and transparent processing chain that is well suited for analysis and teaching. Consequently, the receiver employs (i) a \emph{training-based least-squares / zero-forcing (LS/ZF)} channel estimator derived from a deterministic preamble, and (ii) a \emph{linear MMSE} equalizer applied independently on each OFDM subcarrier. Both choices are consistent with standard MIMO-OFDM theory and allow a clear connection between mathematical models, implementation, and observable performance metrics.
 
-\subsubsection{Training-Based Channel Estimation}
+\subsubsection{Training-based channel estimation using a deterministic preamble}
 
-One of the most fundamental channel estimation approaches is based on known training sequences or preambles transmitted prior to data transmission. By exploiting the knowledge of the transmitted symbols, the receiver can directly estimate the channel response from the received signal.
+Channel estimation in the demonstrator is based on a known preamble transmitted prior to the payload data. A deterministic sequence with constant amplitude and favorable correlation properties is used, enabling both robust synchronization and reliable channel estimation. After FFT processing, the preamble provides a known frequency-domain reference on each subcarrier.
 
-For a MIMO-OFDM system, assuming that a known training symbol matrix $\mathbf{X}[k]$ is transmitted on the $k$-th subcarrier, the received signal can be written as
+Following time synchronization and cyclic-prefix removal, the received training symbols on subcarrier $k$ can be expressed as
 \begin{equation}
-\mathbf{Y}[k] = \mathbf{H}[k]\mathbf{X}[k] + \mathbf{N}[k].
+\mathbf{Y}[k] = \mathbf{H}[k]\mathbf{X}_{\mathrm{p}}[k] + \mathbf{N}[k],
 \end{equation}
-If $\mathbf{X}[k]$ is full rank and known at the receiver, a least-squares (LS) estimate of the channel matrix is given by
+where $\mathbf{X}_{\mathrm{p}}[k]$ denotes the known training symbol(s) transmitted during the preamble phase. In the implemented framing structure, transmit channels are sounded sequentially, such that on a given training OFDM symbol only one transmit channel is active. For the link between transmit channel $t$ and receive channel $r$, this reduces to
 \begin{equation}
-\hat{\mathbf{H}}[k] = \mathbf{Y}[k]\mathbf{X}^{-1}[k].
+Y_{r,t}[k] = H_{r,t}[k]\,X_{\mathrm{p}}[k] + N_{r,t}[k].
 \end{equation}
 
-This approach is simple to implement and provides reliable performance at sufficiently high signal-to-noise ratios. Therefore, training-based channel estimation is well suited for experimental platforms and teaching-oriented demonstrators \cite{haring_ofdm_lecture}.
-
-\subsubsection{Pilot-Based Channel Estimation}
-
-In practical systems with time-varying channels, relying solely on preamble-based estimation is often insufficient. To enable continuous channel tracking, pilot symbols are periodically embedded into the transmitted data stream.
-
-In OFDM systems, pilots can be arranged in the time domain, frequency domain, or both. The channel response is first estimated at the pilot positions and subsequently interpolated across data subcarriers. In MIMO-OFDM systems, pilot design must additionally ensure orthogonality among transmit antennas to avoid pilot contamination and to maintain channel identifiability \cite{nee2000ofdm}.
-
-\subsubsection{Frequency-Domain Equalization}
-
-Once an estimate $\hat{\mathbf{H}}[k]$ of the channel matrix is available, the receiver compensates for channel-induced distortions by means of equalization. Owing to the cyclic prefix, the equivalent frequency-domain channel exhibits a per-subcarrier matrix structure, which allows equalization to be performed independently on each subcarrier.
-
-In spatial multiplexing mode, equalization aims to construct a matrix $\mathbf{W}[k]$ such that the estimate
+A least-squares estimate of the channel coefficient is obtained by direct inversion of the known training symbol,
 \begin{equation}
-\hat{\mathbf{x}}[k] = \mathbf{W}[k]\mathbf{y}[k]
+\hat{H}_{r,t}[k] = \frac{Y_{r,t}[k]}{X_{\mathrm{p}}[k]}.
 \end{equation}
-approximates the original transmit vector $\mathbf{x}[k]$ as accurately as possible.
+This estimator corresponds to a zero-forcing inversion of the training symbol on each subcarrier and is therefore referred to as ``ZF'' in the demonstrator configuration. While more sophisticated estimators exist, the LS/ZF approach offers a particularly transparent mapping between the received signal and the estimated channel response, making it well suited for demonstrator-based analysis \cite{proakis2008digital,tse2005fundamentals}.
 
-\subsubsection{Linear Equalization: ZF and MMSE}
+The resulting frequency-domain channel estimates are stored as channel transfer functions (CTF). A corresponding channel impulse response (CIR) is obtained by applying an inverse FFT across subcarriers for each loudspeaker--microphone pair, providing an intuitive time-domain view of multipath propagation effects.
 
-The most commonly employed equalization techniques are linear equalizers, in particular zero-forcing (ZF) and minimum mean square error (MMSE) equalization.
+\subsubsection{Linear MMSE equalization on each subcarrier}
 
-The ZF equalizer completely eliminates inter-stream interference by inverting the channel matrix, yielding
+Once an estimate $\hat{\mathbf{H}}[k]$ of the channel matrix is available, the receiver proceeds with spatial separation of the simultaneously transmitted data streams. In spatial multiplexing mode, this constitutes a linear detection problem on each subcarrier.
+
+The demonstrator employs a linear minimum mean square error (MMSE) equalizer, which computes the estimate
 \begin{equation}
-\mathbf{W}_{\mathrm{ZF}}[k] = \hat{\mathbf{H}}^{-1}[k],
+\hat{\mathbf{x}}[k] = \mathbf{W}_{\mathrm{MMSE}}[k]\mathbf{y}[k],
 \end{equation}
-provided that the channel matrix is invertible. While ZF equalization achieves perfect interference suppression in the absence of noise, it may significantly amplify noise under unfavorable channel conditions.
-
-In contrast, MMSE equalization accounts for noise by balancing interference suppression and noise enhancement. The MMSE equalization matrix is given by
+with the equalization matrix
 \begin{equation}
 \mathbf{W}_{\mathrm{MMSE}}[k]
-= \left( \hat{\mathbf{H}}^{\mathrm{H}}[k]\hat{\mathbf{H}}[k] + \sigma_n^2 \mathbf{I} \right)^{-1}
+=
+\left(
+\hat{\mathbf{H}}^{\mathrm{H}}[k]\hat{\mathbf{H}}[k] + \alpha\,\mathbf{I}
+\right)^{-1}
 \hat{\mathbf{H}}^{\mathrm{H}}[k],
 \end{equation}
-where $\sigma_n^2$ denotes the noise variance. MMSE equalization generally outperforms ZF at low and moderate signal-to-noise ratios \cite{tse2005fundamentals}.
+where $\alpha>0$ is a regularization parameter related to the inverse signal-to-noise ratio. Compared to zero-forcing detection, MMSE equalization mitigates excessive noise enhancement on subcarriers where the channel matrix is ill-conditioned, a situation that frequently arises in practical acoustic MIMO channels due to spatial correlation and frequency-selective fading \cite{tse2005fundamentals}.
 
-\subsubsection{Successive Interference Cancellation and V-BLAST}
+The MMSE equalizer is applied independently on each subcarrier and OFDM block, producing a set of equalized complex symbols for all spatial streams. These symbols form the basis for constellation visualization, error vector magnitude (EVM) computation, and subsequent bit demapping as reported in Chapter~4.
 
-To further improve detection performance in spatial multiplexing systems, successive interference cancellation (SIC) techniques can be applied. A prominent example is the Vertical Bell Labs Layered Space-Time (V-BLAST) architecture.
+\subsubsection{Relation to observable receiver metrics}
 
-The core idea of V-BLAST is to detect the data stream with the highest post-detection signal-to-noise ratio first, subtract its contribution from the received signal, and subsequently detect the remaining streams. By iteratively reducing inter-stream interference, V-BLAST achieves improved performance compared to purely linear detection methods, while maintaining manageable computational complexity \cite{tse2005fundamentals}.
-
-In MIMO-OFDM systems, V-BLAST detection is typically performed independently on each subcarrier, preserving the modular structure of OFDM-based receivers.
-
-\subsubsection{Performance Metrics for Receiver Evaluation}
-
-Following channel estimation, equalization, and detection, quantitative performance metrics are required to evaluate receiver quality. One of the most fundamental measures is the signal-to-noise ratio (SNR), defined as the ratio between signal power and noise power:
-\begin{equation}
-\mathrm{SNR} = \frac{P_{\mathrm{signal}}}{P_{\mathrm{noise}}}.
-\end{equation}
-In MIMO-OFDM systems, SNR can be defined at different stages of the receiver chain and provides an important indication of channel conditions and operating points.
-
-Another widely used metric is the error vector magnitude (EVM), which quantifies the deviation between received symbols and their ideal reference positions. For the $k$-th subcarrier, the error vector is defined as
-\begin{equation}
-\mathbf{e}[k] = \hat{\mathbf{x}}[k] - \mathbf{x}[k].
-\end{equation}
-The root-mean-square EVM is then given by
-\begin{equation}
-\mathrm{EVM} =
-\sqrt{
-\frac{\mathbb{E}\{\|\mathbf{e}[k]\|^2\}}
-     {\mathbb{E}\{\|\mathbf{x}[k]\|^2\}}
-}.
-\end{equation}
-
-Unlike bit error rate (BER), EVM directly reflects symbol-level distortions and is particularly sensitive to residual interference, noise, and synchronization errors. Therefore, EVM is well suited for analyzing modulation quality and receiver performance in experimental and demonstrator-based systems \cite{proakis2008digital}.
-
-In addition, constellation diagrams provide an intuitive visualization of received symbol distributions in the complex plane and complement quantitative performance metrics. For spatial multiplexing systems, the rank of the channel matrix further serves as an important indicator of available spatial degrees of freedom and achievable multiplexing performance \cite{tse2005fundamentals}.
-
-\subsubsection{Summary and Relation to System Evaluation}
-
-This section discussed channel estimation and equalization techniques for MIMO-OFDM systems, including training-based and pilot-based estimation as well as ZF, MMSE, and V-BLAST detection methods. Furthermore, relevant performance metrics such as SNR, EVM, constellation diagrams, and channel rank were introduced. These concepts form the theoretical basis for the performance evaluation and experimental analysis presented in subsequent chapters.
+The combination of LS/ZF channel estimation and linear MMSE equalization establishes a direct link between the theoretical MIMO-OFDM model and the measurable quantities exposed by the demonstrator. Channel impulse and transfer responses reflect the estimated $\hat{\mathbf{H}}[k]$, channel rank and conditioning metrics are derived from its singular values, and constellation diagrams as well as EVM results directly visualize the quality of the MMSE-separated symbol streams. In this way, the chosen receiver structure enables a coherent and interpretable mapping from propagation effects to symbol-domain performance.

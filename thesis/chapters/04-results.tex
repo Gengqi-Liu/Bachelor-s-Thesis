@@ -5,18 +5,7 @@
 \section{Results}
 \label{ch:results}
 
-\subsection{Overview of reported results}
-\label{sec:results_overview}
-
-Building on the theoretical background and the implementation methodology
-described in the previous chapters, this project results in a stable and
-repeatedly executable MIMO audio demonstration that enables end-to-end
-transmission of payload data (text) over a
-multi-channel acoustic link. In addition to successful payload recovery,
-the system provides access to a range of physical-layer observables that
-characterize the transmission and reception process, including
-synchronization metrics, channel estimates, equalized symbols, rank-related
-measures, and error vector magnitude (EVM).
+The implementation described in the previous chapters results in a stable and repeatedly executable acoustic MIMO demonstrator that supports end-to-end transmission of text payloads over a multi-channel link. Besides successful payload recovery, the system exposes a set of physical-layer observables that make the reception process inspectable: synchronization metrics, frequency- and time-domain channel estimates (CTF/CIR), equalized symbol streams, rank-related measures, and error vector magnitude (EVM). The following sections present these results in a descriptive manner, leaving interpretation and discussion to the subsequent chapter.
 
 Unless stated otherwise, the results presented in this chapter correspond to
 the \textbf{main operating mode} of the demonstrator, which is configured as
@@ -25,14 +14,14 @@ follows:
     \item Transmission mode: \textbf{Spatial Multiplexing (SM)}
     \item Acoustic array configuration: \textbf{4 loudspeakers (Tx) and 8 microphones (Rx)}
     \item Modulation scheme: \textbf{4-QAM} ($M = 4$, corresponding to \texttt{iModOrd = 2})
-    \item Channel estimation: \textbf{Zero-Forcing } estimator (``ZF'')
+    \item Channel estimation: \textbf{Zero-Forcing} (ZF) estimator
     \item Equalization: \textbf{Minimum Mean Square Error} (MMSE) equalizer
     \item Channel coding: \textbf{disabled}
 \end{itemize}
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.97\linewidth]{figures/ch4/ui-sm-bpsk.png}
+    \includegraphics[width=0.97\linewidth]{figures/ch4/ui-sm-qam.png}
     \caption{Default UI main interface for 4T8R modulated via 4QAM in SM mode}
     \label{fig:results_ui_sm_4qam}
 \end{figure}
