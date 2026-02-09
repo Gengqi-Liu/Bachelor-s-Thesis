@@ -69,23 +69,16 @@
 \contentsline {subsection}{\numberline {4.7}Key metrics summary (tool-reported snapshot)}{33}{subsection.4.7}%
 \contentsline {subsection}{\numberline {4.8}From results to discussion}{33}{subsection.4.8}%
 \contentsline {section}{\numberline {5}Discussion}{33}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Reliable decoding despite non-ideal symbol quality}{34}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Constellation rotation and amplitude contraction}{34}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Frame timing uncertainty and CIR alignment}{35}{subsection.5.3}%
-\contentsline {subsection}{\numberline {5.4}Spatial multiplexing performance and channel rank}{35}{subsection.5.4}%
-\contentsline {subsection}{\numberline {5.5}EVM as a complementary performance metric}{35}{subsection.5.5}%
-\contentsline {subsection}{\numberline {5.6}Extensions and future experimentation possibilities}{36}{subsection.5.6}%
-\contentsline {paragraph}{Adding channel coding and coded performance evaluation.}{36}{section*.9}%
-\contentsline {paragraph}{Exploring alternative channel estimation methods.}{36}{section*.10}%
-\contentsline {paragraph}{Investigating alternative equalization and detection strategies.}{36}{section*.11}%
-\contentsline {paragraph}{Scaling payload size and testing robustness limits.}{36}{section*.12}%
-\contentsline {paragraph}{Supporting additional data types and file formats.}{36}{section*.13}%
-\contentsline {paragraph}{Towards interactive or real-time communication.}{36}{section*.14}%
-\contentsline {section}{\numberline {6}Conclusion}{37}{section.6}%
+\contentsline {subsection}{\numberline {5.1}Reliable decoding despite dispersed constellations}{34}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Influence of cyclic prefix length on constellation quality}{34}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Global frame start selection and CIR structure}{35}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Constellation contraction at low transmit amplitude}{35}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Engineering implications and refinement options}{36}{subsection.5.5}%
+\contentsline {section}{\numberline {6}Conclusion}{36}{section.6}%
 \contentsline {subsection}{\numberline {6.1}Summary of achieved objectives}{37}{subsection.6.1}%
-\contentsline {paragraph}{Objective 1: Adaptation to a multi-channel audio interface.}{37}{section*.15}%
-\contentsline {paragraph}{Objective 2: Migration and restructuring of the graphical user interface.}{37}{section*.16}%
-\contentsline {paragraph}{Objective 3: Implementation and analysis of a MIMO-OFDM receiver chain.}{37}{section*.17}%
+\contentsline {paragraph}{Objective 1: Adaptation to a multi-channel audio interface.}{37}{section*.9}%
+\contentsline {paragraph}{Objective 2: Migration and restructuring of the graphical user interface.}{37}{section*.10}%
+\contentsline {paragraph}{Objective 3: Implementation and analysis of a MIMO-OFDM receiver chain.}{38}{section*.11}%
 \contentsline {subsection}{\numberline {6.2}Key outcomes and insights}{38}{subsection.6.2}%
 \contentsline {subsection}{\numberline {6.3}Consolidation and future perspectives}{38}{subsection.6.3}%
-\contentsline {paragraph}{Concluding remark.}{38}{section*.18}%
+\contentsline {paragraph}{Concluding remark.}{39}{section*.12}%

@@ -6,24 +6,24 @@ In practical communication environments, signal propagation between transmitter 
 
 In this case, the channel is fully characterized by its channel impulse response (CIR), which can be expressed as
 \begin{equation}
-h_c(t) = \sum_{l=1}^{L} h_{c,l}\,\delta(t-\tau_l),
+h_{\mathrm{c}}(t) = \sum_{l=1}^{L} h_{{\mathrm{c}},l}\,\delta(t-\tau_l),
 \end{equation}
-where $h_{c,l}$ and $\tau_l$ denote the complex-valued path coefficient and propagation delay of the $l$-th multipath component, respectively, and $L$ represents the total number of propagation paths. The corresponding channel transfer function (CTF) in the frequency domain is obtained by the Fourier transform of the CIR and is given by
+where $h_{{\mathrm{c}},l}$ and $\tau_l$ denote the complex-valued path coefficient and propagation delay of the $l$-th multipath component, respectively, and $L$ represents the total number of propagation paths. The corresponding channel transfer function (CTF) in the frequency domain is obtained by the Fourier transform of the CIR and is given by
 \begin{equation}
-H_c(\omega) = \int_{-\infty}^{\infty} h_c(t)\,e^{-j\omega t}\,\mathrm{d}t
-= \sum_{l=1}^{L} h_{c,l}\,e^{-j\omega \tau_l}.
+H_{\mathrm{c}}(\omega) = \int_{-\infty}^{\infty} h_{\mathrm{c}}(t)\,\mathrm{e}^{-\mathrm{j}\omega t}\,\mathrm{d}t
+= \sum_{l=1}^{L} h_{{\mathrm{c}},l}\,\mathrm{e}^{-\mathrm{j}\omega \tau_l}.
 \end{equation}
 This representation highlights the frequency-selective nature of multipath channels and is commonly used in the analysis of multicarrier transmission systems \cite{proakis2008digital}.
 
 A statistical characterization of the multipath channel is provided by the power delay profile (PDP), defined as the expected squared magnitude of the CIR:
 \begin{equation}
-P_{\mathrm{PDP}}(\tau) = \mathbb{E}\{|h_c(\tau)|^2\}.
+P_{\mathrm{PDP}}(\tau) = \mathbb{E}\{|h_{\mathrm{c}}(\tau)|^2\}.
 \end{equation}
 The PDP describes how the received signal energy is distributed over different delays and allows the definition of the maximum excess delay $\tau_{\max}$. Based on this parameter, the coherence bandwidth $B_c$ of the channel can be approximated as
 \begin{equation}
-B_c \approx \frac{1}{\tau_{\max}}.
+B_{\mathrm{c}} \approx \frac{1}{\tau_{\max}}.
 \end{equation}
-If the signal bandwidth $B$ is much smaller than $B_c$, the channel can be regarded as frequency-flat. Conversely, if $B$ exceeds $B_c$, the channel exhibits frequency-selective fading \cite{haring_ofdm_lecture}.
+If the signal bandwidth $B$ is much smaller than $B_{\mathrm{c}}$, the channel can be regarded as frequency-flat. Conversely, if $B$ exceeds $B_{\mathrm{c}}$, the channel exhibits frequency-selective fading \cite{haring_ofdm_lecture}.
 
 In the time domain, frequency-selective channels give rise to inter-symbol interference (ISI), since delayed replicas of previously transmitted symbols overlap with the current symbol. In single-carrier transmission systems, the mitigation of ISI typically requires sophisticated time-domain equalization techniques whose complexity increases significantly with the channel delay spread \cite{proakis2008digital}. This complexity motivates the use of alternative transmission schemes that can more efficiently cope with frequency-selective channels.
 
@@ -80,9 +80,9 @@ To avoid this effect, a cyclic prefix (CP) is inserted at the beginning of each 
 
 If the CP length satisfies
 \begin{equation}
-N_{\mathrm{CP}} \geq L_h - 1,
+N_{\mathrm{CP}} \geq L_{\mathrm{h}} - 1,
 \end{equation}
-where $L_h$ denotes the length of the discrete-time channel impulse response, the linear convolution can be transformed into circular convolution after CP removal. In this case, the received discrete-time signal can be written as
+where $L_{\mathrm{h}}$ denotes the length of the discrete-time channel impulse response, the linear convolution can be transformed into circular convolution after CP removal. In this case, the received discrete-time signal can be written as
 \begin{equation}
 y[n] = x[n] \circledast h[n] + w[n],
 \end{equation}

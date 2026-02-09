@@ -198,40 +198,38 @@
 \newlabel{sec:results_transition}{{4.8}{33}{From results to discussion}{subsection.4.8}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {5}Discussion}{33}{section.5}\protected@file@percent }
 \newlabel{sec:discussion}{{5}{33}{Discussion}{section.5}{}}
-\citation{proakis2008digital}
-\citation{nee2000ofdm}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Reliable decoding despite non-ideal symbol quality}{34}{subsection.5.1}\protected@file@percent }
-\newlabel{sec:discussion_evm_vs_ber}{{5.1}{34}{Reliable decoding despite non-ideal symbol quality}{subsection.5.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Constellation rotation and amplitude contraction}{34}{subsection.5.2}\protected@file@percent }
-\newlabel{sec:discussion_constellation}{{5.2}{34}{Constellation rotation and amplitude contraction}{subsection.5.2}{}}
-\citation{schmidl1997}
-\citation{tse2005fundamentals}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Frame timing uncertainty and CIR alignment}{35}{subsection.5.3}\protected@file@percent }
-\newlabel{sec:discussion_sync}{{5.3}{35}{Frame timing uncertainty and CIR alignment}{subsection.5.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Spatial multiplexing performance and channel rank}{35}{subsection.5.4}\protected@file@percent }
-\newlabel{sec:discussion_rank}{{5.4}{35}{Spatial multiplexing performance and channel rank}{subsection.5.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}EVM as a complementary performance metric}{35}{subsection.5.5}\protected@file@percent }
-\newlabel{sec:discussion_evm}{{5.5}{35}{EVM as a complementary performance metric}{subsection.5.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Extensions and future experimentation possibilities}{36}{subsection.5.6}\protected@file@percent }
-\newlabel{sec:discussion_extensions}{{5.6}{36}{Extensions and future experimentation possibilities}{subsection.5.6}{}}
-\@writefile{toc}{\contentsline {paragraph}{Adding channel coding and coded performance evaluation.}{36}{section*.9}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Exploring alternative channel estimation methods.}{36}{section*.10}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Investigating alternative equalization and detection strategies.}{36}{section*.11}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Scaling payload size and testing robustness limits.}{36}{section*.12}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Supporting additional data types and file formats.}{36}{section*.13}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Towards interactive or real-time communication.}{36}{section*.14}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{37}{section.6}\protected@file@percent }
-\newlabel{sec:conclusion}{{6}{37}{Conclusion}{section.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Short cyclic prefix ($N_{\mathrm  {FFT}}=128$, $N_g=32$): dispersed constellation cloud despite reliable decoding (BER $\approx 0$).}}{34}{figure.10}\protected@file@percent }
+\newlabel{fig:cp32_cloud_ber0}{{10}{34}{Short cyclic prefix ($N_{\mathrm {FFT}}=128$, $N_g=32$): dispersed constellation cloud despite reliable decoding (BER $\approx 0$)}{figure.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Reliable decoding despite dispersed constellations}{34}{subsection.5.1}\protected@file@percent }
+\newlabel{sec:discussion_ber_constellation}{{5.1}{34}{Reliable decoding despite dispersed constellations}{subsection.5.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Influence of cyclic prefix length on constellation quality}{34}{subsection.5.2}\protected@file@percent }
+\newlabel{sec:discussion_cp}{{5.2}{34}{Influence of cyclic prefix length on constellation quality}{subsection.5.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Long cyclic prefix ($N_{\mathrm  {FFT}}=128$, $N_g=256$) at nominal volume: constellation clusters become significantly more compact, indicating reduced ISI.}}{35}{figure.11}\protected@file@percent }
+\newlabel{fig:cp256_normal}{{11}{35}{Long cyclic prefix ($N_{\mathrm {FFT}}=128$, $N_g=256$) at nominal volume: constellation clusters become significantly more compact, indicating reduced ISI}{figure.11}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Global frame start selection and CIR structure}{35}{subsection.5.3}\protected@file@percent }
+\newlabel{sec:discussion_sync_window}{{5.3}{35}{Global frame start selection and CIR structure}{subsection.5.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Constellation contraction at low transmit amplitude}{35}{subsection.5.4}\protected@file@percent }
+\newlabel{sec:discussion_low_amp}{{5.4}{35}{Constellation contraction at low transmit amplitude}{subsection.5.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Estimated CIR/CTF with \texttt  {safetyMargin=10}. The global windowing is robust, but small residual tail components appear in some channels.}}{36}{figure.12}\protected@file@percent }
+\newlabel{fig:cir_margin10}{{12}{36}{Estimated CIR/CTF with \texttt {safetyMargin=10}. The global windowing is robust, but small residual tail components appear in some channels}{figure.12}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Engineering implications and refinement options}{36}{subsection.5.5}\protected@file@percent }
+\newlabel{sec:discussion_implications}{{5.5}{36}{Engineering implications and refinement options}{subsection.5.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{36}{section.6}\protected@file@percent }
+\newlabel{sec:conclusion}{{6}{36}{Conclusion}{section.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Estimated CIR/CTF with \texttt  {safetyMargin=0}. CIR tails appear cleaner for some channels, but robustness against timing uncertainty is reduced.}}{37}{figure.13}\protected@file@percent }
+\newlabel{fig:cir_margin0}{{13}{37}{Estimated CIR/CTF with \texttt {safetyMargin=0}. CIR tails appear cleaner for some channels, but robustness against timing uncertainty is reduced}{figure.13}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Summary of achieved objectives}{37}{subsection.6.1}\protected@file@percent }
 \newlabel{sec:conclusion_objectives}{{6.1}{37}{Summary of achieved objectives}{subsection.6.1}{}}
-\@writefile{toc}{\contentsline {paragraph}{Objective 1: Adaptation to a multi-channel audio interface.}{37}{section*.15}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Objective 2: Migration and restructuring of the graphical user interface.}{37}{section*.16}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Objective 3: Implementation and analysis of a MIMO-OFDM receiver chain.}{37}{section*.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Objective 1: Adaptation to a multi-channel audio interface.}{37}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Objective 2: Migration and restructuring of the graphical user interface.}{37}{section*.10}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Low transmit amplitude ($N_{\mathrm  {FFT}}=128$, $N_g=256$): constellation clusters contract toward the origin, consistent with reduced SNR and MMSE regularization.}}{38}{figure.14}\protected@file@percent }
+\newlabel{fig:cp256_low_amp}{{14}{38}{Low transmit amplitude ($N_{\mathrm {FFT}}=128$, $N_g=256$): constellation clusters contract toward the origin, consistent with reduced SNR and MMSE regularization}{figure.14}{}}
+\@writefile{toc}{\contentsline {paragraph}{Objective 3: Implementation and analysis of a MIMO-OFDM receiver chain.}{38}{section*.11}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Key outcomes and insights}{38}{subsection.6.2}\protected@file@percent }
 \newlabel{sec:conclusion_outcomes}{{6.2}{38}{Key outcomes and insights}{subsection.6.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Consolidation and future perspectives}{38}{subsection.6.3}\protected@file@percent }
 \newlabel{sec:conclusion_future}{{6.3}{38}{Consolidation and future perspectives}{subsection.6.3}{}}
-\@writefile{toc}{\contentsline {paragraph}{Concluding remark.}{38}{section*.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Concluding remark.}{39}{section*.12}\protected@file@percent }
 \bibstyle{ieeetr}
 \bibdata{references}
 \bibcite{nee2000ofdm}{1}
@@ -248,5 +246,4 @@
 \bibcite{mathworks_audio_buffering}{12}
 \bibcite{mathworks_guide_removed}{13}
 \bibcite{mathworks_goodbye_guide}{14}
-\bibcite{schmidl1997}{15}
-\gdef \@abspage@last{40}
+\gdef \@abspage@last{41}

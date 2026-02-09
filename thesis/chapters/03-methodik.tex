@@ -63,7 +63,7 @@ Software assumptions & Fixed and partially hard-coded & Fully parameterized and 
 \subsubsection{Software-level audio I/O interface and channel mapping}
 \label{sec:apr_interface}
 
-On the software side, the upgraded hardware is interfaced through MATLAB’s \path{audioPlayerRecorder} System object, which supports synchronous multi-channel playback and recording on a single device \cite{mathworks_apr}. In the demonstrator, this audio I/O layer is intentionally treated as a narrow and explicit contract between the signal-processing code and the hardware. The contract is defined by the sample rate $f_s$, the number of active transmit and receive channels $(N_T, N_R)$, the audio frame length $L$ used for streaming, and the device identifier \path{deviceName}. In the App Designer implementation, these values are maintained as GUI-controlled app properties (e.g., \path{app.fDACFreq}, \path{app.iNoTxAnt}, \path{app.iNoRxAnt}) and passed explicitly into the I/O function.
+On the software side, the upgraded hardware is interfaced through MATLAB’s \path{audioPlayerRecorder} System object, which supports synchronous multi-channel playback and recording on a single device \cite{mathworks_apr}. In the demonstrator, this audio I/O layer is intentionally treated as a narrow and explicit contract between the signal-processing code and the hardware. The contract is defined by the sample rate $f_s$, the number of active transmit and receive channels $(N_{\mathrm{T}}, N_{\mathrm{R}})$, the audio frame length $L$ used for streaming, and the device identifier \path{deviceName}. In the App Designer implementation, these values are maintained as GUI-controlled app properties (e.g., \path{app.fDACFreq}, \path{app.iNoTxAnt}, \path{app.iNoRxAnt}) and passed explicitly into the I/O function.
 
 \begin{table}[t]
 \centering
@@ -74,8 +74,8 @@ On the software side, the upgraded hardware is interfaced through MATLAB’s \pa
 Parameter & Meaning \\
 \hline
 $f_s$ (\path{fs}) & Audio sampling rate (common device clock) \\
-$N_T$ (\path{Nt}) & Number of transmit channels (loudspeakers) \\
-$N_R$ (\path{Nr}) & Number of receive channels (microphones) \\
+$N_{\mathrm{T}}$ (\path{Nt}) & Number of transmit channels (loudspeakers) \\
+$N_{\mathrm{R}}$ (\path{Nr}) & Number of receive channels (microphones) \\
 $L$ (\path{frameLen}) & Frame length (samples per I/O call) \\
 \path{deviceName} & Driver/device identifier (platform-dependent) \\
 \hline
@@ -84,7 +84,7 @@ $L$ (\path{frameLen}) & Frame length (samples per I/O call) \\
 
 Channel mapping is made explicit rather than implicit. In \path{runScarlettMimoIO}, playback and recording are configured with
 \path{PlayerChannelMapping = 1:Nt} and \path{RecorderChannelMapping = 1:Nr}.
-This design decision directly supports reproducible experiments: once the physical cabling is fixed, the software mapping defines a stable interpretation of ``Tx1..Tx$N_T$'' and ``Rx1..Rx$N_R$'' across operating systems and driver configurations. In the GUI workflow, these mappings are consistent with how the transmit waveform is generated (matrix \path{txSig} with $N_T$ columns) and how the received waveform is stored (matrix \path{rx\_raw} with $N_R$ columns and \path{app.RxSequence}).
+This design decision directly supports reproducible experiments: once the physical cabling is fixed, the software mapping defines a stable interpretation of ``Tx1..Tx$N_{\mathrm{T}}$'' and ``Rx1..Rx$N_{\mathrm{R}}$'' across operating systems and driver configurations. In the GUI workflow, these mappings are consistent with how the transmit waveform is generated (matrix \path{txSig} with $N_{\mathrm{T}}$ columns) and how the received waveform is stored (matrix \path{rx\_raw} with $N_{\mathrm{R}}$ columns and \path{app.RxSequence}).
 
 \subsubsection{Frame-based streaming, underrun/overrun monitoring, and fallback mode}
 \label{sec:streaming}
@@ -176,7 +176,7 @@ The GUI does not interpret these selections internally. Instead, the chosen opti
 \hline
 Feature group & Implemented functionality \\
 \hline
-System parameters & FFT size, CP length, $N_T/N_R$, carrier and sampling rate \\
+System parameters & FFT size, CP length, $N_{\mathrm{T}}/N_{\mathrm{R}}$, carrier and sampling rate \\
 Transmission modes & Spatial multiplexing, Alamouti, EigenMode, V-BLAST \\
 Receiver options & Channel estimation and equalization selection \\
 Execution control & Separate triggers for transmission and receiver processing \\
