@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex thesis"] 1770644183.21929 "thesis.aux" "thesis.bbl" "thesis" 1770645342.91044 0
+["bibtex thesis"] 1770646074.49799 "thesis.aux" "thesis.bbl" "thesis" 1770646153.99569 0
   "./references.bib" 1769155062.38947 4193 692b73c0a82fb8788ad3a479377deeaa ""
   "/usr/local/texlive/2025/texmf-dist/bibtex/bst/base/ieeetr.bst" 1292289607 18361 1a00e58565e7f19bf2b3e1bfb82254ae ""
-  "thesis.aux" 1770645342.66719 31688 10a7ab8c4355cb752509b0761d063cf6 "pdflatex"
+  "thesis.aux" 1770646153.752 31688 10a7ab8c4355cb752509b0761d063cf6 "pdflatex"
   (generated)
   "thesis.bbl"
   "thesis.blg"
   (rewritten before read)
-["pdflatex"] 1770645341.53656 "/Users/arthur/Desktop/UDE/论文/Bachelor-s-Thesis/thesis/thesis.tex" "thesis.pdf" "thesis" 1770645342.91058 0
-  "/Users/arthur/Desktop/UDE/论文/Bachelor-s-Thesis/thesis/thesis.tex" 1770564911.25152 3738 531fa63d128293543730051b6aec7c57 ""
+["pdflatex"] 1770646152.67171 "/Users/arthur/Desktop/UDE/论文/Bachelor-s-Thesis/thesis/thesis.tex" "thesis.pdf" "thesis" 1770646153.99584 0
+  "/Users/arthur/Desktop/UDE/论文/Bachelor-s-Thesis/thesis/thesis.tex" 1770646152.46122 3436 38a6bb1c2f9c33ea3eb065066a864415 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -16,6 +16,8 @@
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/jknappen/ec/ecbx1200.tfm" 1136768653 3584 402da0b29eafbad07963b1224b222f18 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/jknappen/ec/ecbx1440.tfm" 1136768653 3584 13049b61b922a28b158a38aeff75ee9b ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/jknappen/ec/ecbx1728.tfm" 1136768653 3584 ad49a18d8515beef6d92d4d3f197d0fd ""
+  "/usr/local/texlive/2025/texmf-dist/fonts/tfm/jknappen/ec/eccc1200.tfm" 1136768653 3072 1e3dcc56ea731d0f3645bbefe8c8608c ""
+  "/usr/local/texlive/2025/texmf-dist/fonts/tfm/jknappen/ec/eccc1440.tfm" 1136768653 3072 f2bcba5ec52607af3501d45108193ff5 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/jknappen/ec/ecrm0600.tfm" 1136768653 3584 291a5713401683441e0a8c8f4417b17b ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/jknappen/ec/ecrm0800.tfm" 1136768653 3584 49064b465390a8e316a3c8417a050403 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/jknappen/ec/ecrm1000.tfm" 1136768653 3584 adb004a0c8e7c46ee66cad73671f37b4 ""
@@ -62,11 +64,11 @@
   "/usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb" 1215737283 140176 d4962f948b4cc0adf4d3dde77a128c95 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb" 1215737283 135942 859a90cad7494a1e79c94baf546d7de5 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb" 1215737283 139826 9213617a7cb78635fc326b859c0b2273 ""
+  "/usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfcc1440.pfb" 1215737283 110032 35e0196b03e20c9bc327f34ecd2026f9 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb" 1215737283 164227 3df942b4ff2124425d8fb1b6d3e01c7a ""
   "/usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb" 1215737283 138258 6525c253f16cededa14c7fd0da7f67b2 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb" 1215737283 145929 f25e56369a345c4ff583b067cd87ce8e ""
   "/usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb" 1215737283 136101 f533469f523533d38317ab5729d00c8a ""
-  "/usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb" 1215737283 131078 d96015a2fa5c350129e933ca070b2484 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb" 1215737283 198221 ca5aa71411090ef358a6cc78b7458365 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb" 1215737283 167085 68de377d2744a68a88fa40a1f610615a ""
   "/usr/local/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii" 1461363279 71627 94eb9990bed73c364d7f53f960cc8c5b ""
@@ -158,11 +160,11 @@
   "figures/ch5/sm-qam-256-low.png" 1770639961.21563 24847 567aac0a66b123cc286192ad56f159b0 ""
   "figures/ch5/sm-qam-256cp.png" 1770639961.21583 17442 e367aea0142dff9e142c6d92bca2ed5b ""
   "figures/ch5/sm-qam-32cp.png" 1770639961.21632 26033 b38141434c05587eef73bc48be7202fe ""
-  "thesis.aux" 1770645342.66719 31688 10a7ab8c4355cb752509b0761d063cf6 "pdflatex"
-  "thesis.bbl" 1770644183.29779 2516 2d1ac517431ce12fc14914f19e16c879 "bibtex thesis"
-  "thesis.out" 1770645342.66943 21264 20a6a3e3b31f5fdb05509fc9fa55cbe4 "pdflatex"
-  "thesis.tex" 1770564911.25152 3738 531fa63d128293543730051b6aec7c57 ""
-  "thesis.toc" 1770645342.66965 9477 af55bfa154ae6b982c916e5be7e3c9cd "pdflatex"
+  "thesis.aux" 1770646153.752 31688 10a7ab8c4355cb752509b0761d063cf6 "pdflatex"
+  "thesis.bbl" 1770646074.5739 2516 2d1ac517431ce12fc14914f19e16c879 "bibtex thesis"
+  "thesis.out" 1770646153.75423 21264 20a6a3e3b31f5fdb05509fc9fa55cbe4 "pdflatex"
+  "thesis.tex" 1770646152.46122 3436 38a6bb1c2f9c33ea3eb065066a864415 ""
+  "thesis.toc" 1770646153.75443 9477 af55bfa154ae6b982c916e5be7e3c9cd "pdflatex"
   (generated)
   "thesis.aux"
   "thesis.log"
