@@ -247,7 +247,7 @@ As a result, the GUI functions not merely as a user interface, but as an integra
 
 Objective~3 consolidates the receiver-side PHY chain into a reproducible, inspectable workflow that turns a recorded multi-channel audio frame into a decoded ASCII text payload and a structured set of intermediate observables. The implementation is intentionally organized around a single data interface: the App Designer GUI assembles all required parameters and the recorded waveform into \texttt{procParam}, and the backend returns one analysis structure (\texttt{data}) that serves both payload reconstruction and teaching-oriented visualization.
 
-\subsubsection{Processing contract and data interface (\texttt{procParam} $\rightarrow$ \texttt{data})}
+\subsubsection{Processing contract and data interface (\texorpdfstring{\texttt{procParam} $\rightarrow$ \texttt{data}}{procParam -> data})}
 \label{sec:phy_contract_final}
 
 The PHY backend is entered through \texttt{Signalverarbeitung\_app(procParam)}. In the current build, the payload type is text-only: the function explicitly checks \texttt{procParam.DatenTyp == "Text"} and processes the recording accordingly. All parameters needed by the receiver (OFDM dimensions, antenna counts, frequencies, framing metadata) are passed explicitly through \texttt{procParam} and mapped into the local structures \texttt{params} and \texttt{channel}. The receiver output is returned as a single structure \texttt{data}, which contains both decoded payload results and intermediate PHY data needed for analysis plots (synchronization metrics, CTF/CIR, equalized symbols).
