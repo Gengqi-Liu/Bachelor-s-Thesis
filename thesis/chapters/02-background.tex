@@ -27,7 +27,7 @@ If the signal bandwidth $B$ is much smaller than $B_{\mathrm{c}}$, the channel c
 
 In the time domain, frequency-selective channels give rise to inter-symbol interference (ISI), since delayed replicas of previously transmitted symbols overlap with the current symbol. In single-carrier transmission systems, the mitigation of ISI typically requires sophisticated time-domain equalization techniques whose complexity increases significantly with the channel delay spread \cite{proakis2008digital}. This complexity motivates the use of alternative transmission schemes that can more efficiently cope with frequency-selective channels.
 
-The fundamental idea of multicarrier transmission is to decompose a wideband frequency-selective channel into a set of narrowband subchannels, each of which experiences approximately flat fading. Orthogonal Frequency Division Multiplexing (OFDM) represents a practical and efficient realization of this concept. By transmitting data symbols in parallel over a large number of orthogonal subcarriers, OFDM significantly increases the symbol duration on each subcarrier and thereby reduces the impact of ISI \cite{nee2000ofdm}.
+The fundamental idea of multicarrier transmission is to decompose a wideband, frequency-selective channel into a set of narrowband subchannels, each experiencing approximately flat fading. Orthogonal Frequency Division Multiplexing (OFDM) represents a practical and efficient realization of this concept. By transmitting data symbols in parallel over a large number of orthogonal subcarriers, OFDM significantly increases the symbol duration on each subcarrier and thereby reduces the impact of ISI \cite{nee2000ofdm}.
 
 In OFDM systems, the subcarrier spacing $\Delta f$ is chosen as
 \begin{equation}
@@ -35,7 +35,7 @@ In OFDM systems, the subcarrier spacing $\Delta f$ is chosen as
 \end{equation}
 where $T_s$ denotes the useful OFDM symbol duration. This choice ensures orthogonality among the subcarriers under ideal synchronization conditions. To preserve subcarrier orthogonality in the presence of multipath propagation, a cyclic prefix (CP) is inserted at the beginning of each OFDM symbol. If the CP length is greater than or equal to the maximum channel delay spread, linear convolution with the channel impulse response is transformed into circular convolution. As a result, the frequency-domain channel matrix becomes diagonal, enabling simple one-tap equalization on each subcarrier \cite{haring_ofdm_lecture,nee2000ofdm}.
 
-For discrete-time baseband modeling, the multipath channel is commonly represented as a finite impulse response (FIR) filter, also referred to as a tapped delay line model. This discrete-time representation provides the mathematical foundation for the implementation of OFDM systems using inverse discrete Fourier transform (IDFT) and discrete Fourier transform (DFT) operations, and it forms the basis for most practical OFDM transmitters and receivers.
+In discrete-time baseband modeling, the multipath channel is commonly represented as a finite-impulse-response (FIR) filter, also known as a tapped-delay-line model. This discrete-time representation provides the mathematical foundation for implementing OFDM systems using inverse discrete Fourier transform (IDFT) and discrete Fourier transform (DFT) operations, and it serves as the basis for most practical OFDM transmitters and receivers.
 
 \begin{figure}[t]
     \centering
@@ -50,7 +50,7 @@ Figure~\ref{fig:ofdm_blockdiagram} illustrates a generic block diagram of an OFD
 
 Orthogonal Frequency Division Multiplexing (OFDM) is a multicarrier transmission technique whose fundamental idea is to decompose a wideband frequency-selective channel into a set of mutually orthogonal narrowband subchannels. By doing so, each subchannel can be approximated as a frequency-flat channel, which significantly reduces the complexity of receiver-side equalization.
 
-In practical systems, the implementation of OFDM relies on discrete-time signal processing, in particular on the discrete Fourier transform (DFT) and its fast algorithm (FFT). Compared to early multicarrier schemes based on analog oscillators, OFDM enables the realization of orthogonal subcarriers through digital signal processing, making it highly suitable for practical communication systems \cite{nee2000ofdm,haring_ofdm_lecture}.
+In practical systems, the implementation of OFDM relies on discrete-time signal processing, in particular on the discrete Fourier transform (DFT) and the fast Fourier transform (FFT). Compared to early multicarrier schemes based on analog oscillators, OFDM enables the realization of orthogonal subcarriers through digital signal processing, making it highly suitable for practical communication systems \cite{nee2000ofdm,haring_ofdm_lecture}.
 
 \subsubsection{Discrete-Time OFDM Signal Model}
 
@@ -66,7 +66,7 @@ x[n] = \frac{1}{\sqrt{N}} \sum_{k=0}^{N-1} X[k]\,\mathrm{e}^{\mathrm{j}2\pi kn/N
 
 The normalization factor $1/\sqrt{N}$ ensures that the average signal power is preserved during the transformation. In practice, the IDFT operation is efficiently implemented using the inverse fast Fourier transform (IFFT).
 
-The orthogonality of the subcarriers is guaranteed by an appropriate choice of the subcarrier spacing. Let $T_s$ denote the useful OFDM symbol duration. The subcarrier spacing is then defined as
+An appropriate choice of subcarrier spacing ensures orthogonality among the subcarriers. Let $T_s$ denote the useful OFDM symbol duration. The subcarrier spacing is then defined as
 \begin{equation}
 \Delta f = \frac{1}{T_s}.
 \end{equation}
@@ -76,7 +76,7 @@ Under ideal synchronization conditions, this choice ensures that the demodulatio
 
 When an OFDM signal is transmitted over a multipath channel, the transmitted signal undergoes linear convolution with the channel impulse response. Without further measures, this linear convolution destroys the orthogonality among subcarriers and leads to inter-symbol and inter-carrier interference.
 
-To avoid this effect, a cyclic prefix (CP) is inserted at the beginning of each OFDM symbol. The CP is generated by copying the last $N_{\mathrm{CP}}$ samples of the OFDM symbol and appending them to its front.
+To avoid this effect, a cyclic prefix (CP) is inserted at the beginning of each OFDM symbol. The CP is generated by copying the last $N_{\mathrm{CP}}$ samples of the OFDM symbol and appending them to the front of the OFDM symbol.
 
 If the CP length satisfies
 \begin{equation}

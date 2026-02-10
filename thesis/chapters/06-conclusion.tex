@@ -5,7 +5,9 @@
 \section{Conclusion}
 \label{sec:conclusion}
 
-This thesis addressed the development of a MIMO-OFDM audio demonstrator with the dual purpose of enabling hands-on experimentation and supporting teaching-oriented analysis of modern physical-layer concepts. Starting from an existing software framework, the work focused on adapting the system to new hardware constraints, restructuring the user interface, and extending the receiver processing chain to expose meaningful and interpretable intermediate results.
+The work presented in this thesis culminates in a fully functional and extensible acoustic MIMO--OFDM demonstrator that bridges theoretical physical-layer concepts and practical experimentation. Through systematic design choices and implementation-oriented refinement, the developed system enables controlled transmission experiments while preserving visibility into the internal signal-processing stages.
+
+Rather than aiming at performance optimization in an abstract sense, the demonstrator emphasizes interpretability, reproducibility, and configurability. These characteristics make it suitable both as an experimental platform for studying MIMO--OFDM behavior under realistic acoustic conditions and as a teaching-oriented tool for exploring the impact of design parameters and algorithmic decisions.
 
 \subsection{Summary of achieved objectives}
 \label{sec:conclusion_objectives}
@@ -19,7 +21,7 @@ The demonstrator was successfully adapted to operate with a modern multi-channel
 The legacy GUIDE-based GUI was migrated to MATLAB App Designer and restructured to clearly separate user interaction from signal-processing logic. The resulting application provides intuitive configuration of physical-layer parameters, mode selection, and execution control, while exposing a rich set of visualization and analysis tools. This modular design improves maintainability and extensibility, and aligns the software structure with current MATLAB development practices.
 
 \paragraph{Objective 3: Implementation and analysis of a MIMO-OFDM receiver chain.}
-A configurable receiver processing pipeline was implemented, including timing synchronization, carrier-frequency-offset compensation, channel estimation, MIMO equalization/detection, symbol demapping, and payload reconstruction. The receiver supports spatial multiplexing operation with multiple estimation and equalization strategies and exposes intermediate quantities such as synchronization metrics, CIR/CTF estimates, equalized symbols, channel rank, and EVM. These outputs allow systematic evaluation of MIMO-OFDM behavior and form the core analytical contribution of the demonstrator.
+A configurable receiver processing pipeline was implemented, including timing synchronization, carrier-frequency-offset compensation, channel estimation, MIMO equalization, symbol demapping, and payload reconstruction. The receiver supports spatial multiplexing operation with multiple estimation and equalization strategies and exposes intermediate quantities such as synchronization metrics, CIR/CTF estimates, equalized symbols, channel rank, and EVM. These outputs allow systematic evaluation of MIMO-OFDM behavior and form the core analytical contribution of the demonstrator.
 
 \subsection{Key outcomes and insights}
 \label{sec:conclusion_outcomes}

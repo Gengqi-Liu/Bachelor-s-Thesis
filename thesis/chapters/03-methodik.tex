@@ -155,7 +155,7 @@ As a result, the GUI does not merely provide access to functionality, but acts a
 \subsubsection{Global parameter management and state consistency}
 \label{sec:gui_state_management}
 
-All system and PHY parameters are maintained as properties of the app object. These include OFDM parameters (FFT length, cyclic prefix length, number of blocks and sub-blocks), MIMO configuration (number of transmit and receive channels, transmission mode), modulation and coding settings, and frequency-related parameters.
+All system and PHY parameters are maintained as properties of the app object. These include OFDM parameters (FFT length, cyclic prefix length, number of blocks and sub-blocks), MIMO configuration (number of transmit and receive channels, transmission mode), modulation settings, and frequency-related parameters.
 
 Each GUI control element is connected to a dedicated \path{ValueChangedFcn} callback that performs basic input validation and immediately updates the corresponding internal property. As a result, the internal application state remains consistent at all times, and parameter changes are propagated deterministically throughout the system.
 
@@ -178,7 +178,6 @@ Feature group & Implemented functionality \\
 \hline
 System parameters & FFT size, CP length, $N_{\mathrm{T}}/N_{\mathrm{R}}$, carrier and sampling rate \\
 Transmission modes & Spatial multiplexing, Alamouti, EigenMode, V-BLAST \\
-Receiver options & Channel estimation and equalization selection \\
 Execution control & Separate triggers for transmission and receiver processing \\
 Analysis tools & Channel responses, constellations, EVM, BER, rank metrics \\
 \hline
@@ -209,7 +208,7 @@ Field & Description \\
 \texttt{iModOrd} & Modulation order (bits per symbol) \\
 \texttt{mimoMode} & Selected MIMO transmission scheme \\
 \texttt{channelEstimator} & Channel estimation method \\
-\texttt{equalizerMode} & Equalization/detection method \\
+\texttt{equalizerMode} & Equalization method \\
 \texttt{DatenTyp,SendeDatei} & Payload type and original data \\
 \hline
 \end{tabular}
@@ -236,6 +235,7 @@ As a result, the GUI functions not merely as a user interface, but as an integra
     \State Ensure that the precoder/decoder matrices from channel sounding are available
     \State Attach $\mathbf{V}_1$ (and optionally $\mathbf{U}_1,\mathbf{S}_1$) to \texttt{procParam}
 \EndIf
+\State Call the generated waveform and audio I/O function to perform transmission and recording, storing the recorded signal in \texttt{procParam.rxSignal}
 \State Call the backend processing function \texttt{Signalverarbeitung\_app(procParam)}
 \State Store returned results in \texttt{app.RxAnalysisData}
 \State Update GUI elements (text preview, BER, and analysis buttons) based on the stored results
@@ -398,25 +398,8 @@ Throughout the chain, the receiver retains intermediate observables in the analy
 \subsection{Chapter summary}
 \label{sec:method_summary}
 
-This chapter has described how the demonstrator is realized as a reproducible end-to-end acoustic MIMO--OFDM link: a structured GUI-to-PHY interface, a shared OFDM front-end, and mode-specific MIMO processing stages with training-based channel estimation and per-subcarrier detection. Beyond recovering the text payload, the implementation deliberately preserves intermediate results—synchronization traces, channel responses, equalized symbols, and derived quality indicators—so that each processing decision remains explainable and visually inspectable.
+This chapter has described the realization of the demonstrator as a reproducible end-to-end acoustic MIMO--OFDM link. The presentation covered the system-level software architecture, the GUI-to-PHY parameter interface, and the detailed design of the transmit and receive processing chains, including training-based channel estimation and per-subcarrier detection for different MIMO modes.
 
-These stored observables form the basis of the experimental chapter that follows. Chapter~4 reports representative measurements obtained with the implemented system and presents the corresponding plots (synchronization metrics, CIR/CTF, constellation/EVM, and rank-related measures) without interpretation, establishing a clean separation between \emph{how the system is built} (this chapter) and \emph{what it produces} (next chapter).
+In addition to enabling reliable text payload recovery, the implementation intentionally exposes and stores intermediate physical-layer observables, such as synchronization metrics, estimated channel impulse and transfer functions, equalized symbols, and derived quality indicators. These observables provide direct insight into the internal behavior of the system and form the empirical basis for subsequent evaluation.
 
-% ======================================================================
-% Suggested figure placeholders you can add to your project:
-% ======================================================================
-% Figure: software call graph (optional)
-% \begin{figure}[t]
-% \centering
-% \includegraphics[width=0.95\linewidth]{figures/software_callgraph.pdf}
-% \caption{Software call graph from GUI callbacks to Tx generation, audio I/O, and Rx processing.}
-% \label{fig:callgraph}
-% \end{figure}
-%
-% Figure: GUI overview screenshot (optional)
-% \begin{figure}[t]
-% \centering
-% \includegraphics[width=0.95\linewidth]{figures/gui_overview.png}
-% \caption{MATLAB App Designer GUI used for configuration, execution, and visualization.}
-% \label{fig:gui_overview}
-% \end{figure}
+Building on this implementation, Chapter~4 presents representative measurement results obtained with the developed demonstrator. The reported results visualize the behavior of the acoustic MIMO--OFDM link under practical operating conditions and serve as the foundation for the in-depth discussion and interpretation presented in Chapter~5.

@@ -19,7 +19,7 @@
 % Cover page
 % =======================
 \begin{titlepage}
-\thispagestyle{empty}
+
 \begin{center}
 \vspace*{1cm}
 \textbf{\Large Bachelorarbeit}\\[1,0cm]
@@ -47,30 +47,32 @@ Studiengang Electrical and Electronic Engineering (ISE)(B.Sc.)\\
     \end{center}
 \end{titlepage}
 
-
-% =======================
-% Abstract + TOC + Chapters
 % =======================
 \begin{abstract}
-This thesis presents the design and implementation of a multi-channel MIMO-OFDM audio demonstrator intended for teaching and experimental analysis of physical-layer communication concepts. The work focuses on adapting an existing software framework to a modern multi-channel audio interface, restructuring the graphical user interface using MATLAB App Designer, and implementing a configurable MIMO-OFDM receiver chain that exposes relevant intermediate processing results.
+This thesis presents the design, implementation, and experimental evaluation of an audio-based MIMO-OFDM demonstrator intended for education-oriented analysis of physical-layer communication principles. Building on an existing software framework, the system is adapted to a modern multi-channel audio interface, restructured using MATLAB App Designer, and extended with a transparent and configurable receiver-side signal-processing chain.
 
-The demonstrator enables end-to-end transmission of payload data, such as text, over an acoustic multi-input multi-output channel using spatial multiplexing and OFDM modulation. Frame-based audio playback and recording are employed to ensure stable operation, while receiver processing includes timing synchronization, carrier-frequency-offset compensation, channel estimation, MIMO equalization, symbol demapping, and payload reconstruction.
+The demonstrator enables end-to-end transmission of text payloads over an acoustic multi-input multi-output channel using spatial multiplexing and OFDM modulation. Synchronous multi-channel audio playback and recording are employed to ensure reproducible operation. At the same time, receiver processing includes timing synchronization based on a Schmidl--Cox preamble, training-based channel estimation using a least-squares / zero-forcing approach, and per-subcarrier linear MMSE detection.
 
-Beyond payload recovery, the system provides access to a range of physical-layer observables, including synchronization metrics, estimated channel impulse and transfer functions, equalized symbol constellations, channel rank measures, and error vector magnitude (EVM). These quantities allow systematic evaluation of system behavior and facilitate intuitive visualization of MIMO-OFDM principles.
+Beyond payload reconstruction, the system exposes a comprehensive set of physical-layer observables, including synchronization metrics, estimated channel impulse and transfer functions, equalized symbol constellations, channel rank and conditioning measures, and error vector magnitude (EVM). These quantities enable detailed inspection of the interaction between channel characteristics, receiver algorithms, and symbol-level performance in a real acoustic MIMO environment.
 
-Experimental results obtained with a 4-transmit, 8-receive spatial multiplexing configuration using 4-QAM modulation demonstrate stable operation and reproducible analysis outputs. While channel coding is not yet integrated at the receiver side, the implemented framework provides a solid basis for further extensions and serves as an effective platform for education-oriented experimentation and analysis of MIMO-OFDM systems.
-
+Experimental results obtained with a $4\times8$ spatial multiplexing configuration using 4-QAM modulation demonstrate stable and repeatable operation with reliable payload recovery, despite non-ideal constellation quality under certain parameter settings. The developed demonstrator thus provides a structured and extensible platform that bridges communication theory and hands-on experimentation, and is well suited for both teaching and exploratory analysis of MIMO-OFDM systems.
 \end{abstract}
+
 \newpage
 \tableofcontents
 \newpage
 
 % Chapters (each file should start with \section{...} etc.)
 \input{chapters/01-introduction.tex}
+\newpage
 \input{chapters/02-background.tex}
+\newpage
 \input{chapters/03-methodik.tex}
+\newpage
 \input{chapters/04-results.tex}
+\newpage
 \input{chapters/05-diskussion.tex}
+\newpage
 \input{chapters/06-conclusion.tex}
 \newpage
 

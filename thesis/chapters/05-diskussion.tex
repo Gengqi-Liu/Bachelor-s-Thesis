@@ -5,45 +5,24 @@
 \section{Discussion}
 \label{sec:discussion}
 
-Chapter~4 presented the observable results obtained with the implemented
-acoustic MIMO--OFDM demonstrator, including constellation diagrams, channel
-impulse and frequency responses, synchronization metrics, and end-to-end
-decoding performance. The results demonstrate that reliable text transmission
-is achievable under practical acoustic conditions, while at the same time
-revealing several non-ideal effects at the symbol and channel level.
+Chapter~4 presented the observable results obtained with the implemented acoustic MIMO--OFDM demonstrator, including constellation diagrams, channel impulse and frequency responses, synchronization metrics, and end-to-end decoding performance. The results demonstrate that reliable text transmission is achievable under practical acoustic conditions, while at the same time revealing several non-ideal effects at the symbol and channel level.
 
-The purpose of this chapter is not to benchmark theoretical limits, but to
-interpret the observed phenomena in the context of the \emph{actual
-implementation}. Each discussion point is therefore explicitly linked to
-the receiver algorithms, parameter choices, and synchronization strategy
-used in the system.
+The purpose of this chapter is not to benchmark theoretical limits, but to interpret the observed phenomena in the context of the \emph{actual implementation}. Each discussion point is therefore explicitly linked to the receiver algorithms, parameter choices, and synchronization strategy used in the system.
 
 % ----------------------------------------------------------------------
 
 \subsection{Reliable decoding despite dispersed constellations}
 \label{sec:discussion_ber_constellation}
 
-A first striking observation is shown in Fig.~\ref{fig:cp32_cloud_ber0}. Although the
-constellation exhibits pronounced spreading and appears as a ``cloud'' rather
-than compact clusters, the measured bit error rate is zero. This behavior is
-not accidental, but a direct consequence of the modulation, detection, and
-equalization strategy used in the demonstrator.
+A first striking observation is shown in Fig.~\ref{fig:cp32_cloud_ber0}. Although the constellation exhibits pronounced spreading and appears as a ``cloud'' rather than compact clusters, the measured bit error rate is zero. This behavior is not accidental, but a direct consequence of the modulation, detection, and equalization strategy used in the demonstrator.
 
-The system operates with uncoded 4-QAM modulation and hard-decision
-nearest-neighbor demapping. As long as the equalized symbols remain within
-their correct decision regions, even substantial amplitude and phase
-distortion does not necessarily lead to bit errors. Consequently, BER may
-remain zero even when constellation quality is clearly non-ideal.
+The system operates with uncoded 4-QAM modulation and hard-decision nearest-neighbor demapping. As long as the equalized symbols remain within their correct decision regions, even substantial amplitude and phase distortion does not necessarily lead to bit errors. Consequently, BER may remain zero even when constellation quality is clearly non-ideal.
 
-This effect is reinforced by MMSE equalization. Unlike zero-forcing,
-MMSE explicitly trades residual interference for reduced noise enhancement.
-As a result, equalized symbols are not forced onto ideal constellation points,
-which manifests as increased dispersion in the constellation even when the
-hard decisions remain correct.
+This effect is reinforced by MMSE equalization. Unlike zero-forcing, MMSE explicitly trades residual interference for reduced noise enhancement. As a result, equalized symbols are not forced onto ideal constellation points, which manifests as increased dispersion in the constellation even when the hard decisions remain correct.
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.3\linewidth]{figures/ch5/sm-qam-32cp.png}
+    \includegraphics[width=0.5\linewidth]{figures/ch5/sm-qam-32cp.png}
     \caption{Short cyclic prefix ($N_{\mathrm{FFT}}=128$, $N_g=32$): dispersed constellation cloud despite reliable decoding (BER $\approx 0$).}
     \label{fig:cp32_cloud_ber0}
 \end{figure}
@@ -53,59 +32,36 @@ hard decisions remain correct.
 \subsection{Influence of cyclic prefix length on constellation quality}
 \label{sec:discussion_cp}
 
-A clear improvement in constellation compactness is observed when the cyclic
-prefix length is increased from 32 to 256 samples, as shown in
-Fig.~\ref{fig:cp256_normal}. This effect is consistent with the measured
-channel impulse responses: in several microphone channels, the effective
-multipath tail extends beyond 32 samples. When the cyclic prefix is shorter
-than the channel delay spread, residual inter-symbol interference leaks into
-the FFT window, violating the circular convolution assumption of OFDM and
-introducing subcarrier-dependent distortion.
+A clear improvement in constellation compactness is observed when the cyclic prefix length is increased from 32 to 256 samples, as shown in Fig.~\ref{fig:cp256_normal}. This effect is consistent with the measured channel impulse responses: in several microphone channels, the effective multipath tail extends beyond 32 samples. When the cyclic prefix is shorter than the channel delay spread, residual inter-symbol interference leaks into the FFT window, violating the circular convolution assumption of OFDM and introducing subcarrier-dependent distortion.
 
-With a longer cyclic prefix, the dominant part of the impulse response is
-contained inside the prefix, and the OFDM demodulation assumptions are
-restored. The result is a noticeably tighter constellation, even without
-changing the equalizer or estimator.
+With a longer cyclic prefix, the dominant part of the impulse response is contained inside the prefix, and the OFDM demodulation assumptions are restored. The result is a noticeably tighter constellation, even without changing the equalizer or estimator.
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.3\linewidth]{figures/ch5/sm-qam-256cp.png}
+    \includegraphics[width=0.5\linewidth]{figures/ch5/sm-qam-256cp.png}
     \caption{Long cyclic prefix ($N_{\mathrm{FFT}}=128$, $N_g=256$) at nominal volume: constellation clusters become significantly more compact, indicating reduced ISI.}
     \label{fig:cp256_normal}
 \end{figure}
 
 % ----------------------------------------------------------------------
-
 \subsection{Global frame start selection and CIR structure}
 \label{sec:discussion_sync_window}
 
-Figures~\ref{fig:cir_margin10} and~\ref{fig:cir_margin0} highlight the impact of the
-global frame-start selection strategy on the estimated channel impulse
-responses (CIR). In the current implementation, synchronization is performed
-independently on each receive channel using the Schmidl--Cox metric
-(\texttt{EstFrameStart\_app}). The receiver then selects the earliest detected
-peak across microphones as a \emph{global} reference start index, followed by
-a fixed safety margin:
+Figures~\ref{fig:cir_margin10} and~\ref{fig:cir_margin0} illustrate the influence of the global frame-start selection strategy on the estimated channel impulse responses (CIR). In the implemented receiver, frame synchronization is performed independently on each receive channel using the Schmidl--Cox metric (\texttt{EstFrameStart\_app}). The individual peak locations $\hat{i}_i$ are then combined into a single global reference according to
 \[
-i_{\text{start}}=\min_i \{\hat{i}_i\} + N_{\mathrm{FFT}} - \texttt{safetyMargin}.
+i_{\text{start}}=\min_i \{\hat{i}_i\} + N_{\mathrm{FFT}} - \texttt{safetyMargin},
 \]
-In the provided code, \texttt{safetyMargin = 10}. This choice favors robust
-global operation: shifting slightly earlier reduces the risk that noisy peak
-differences across microphones cause the FFT window to start too late and cut
-into useful signal energy.
+with a fixed \texttt{safetyMargin} applied to all channels. In the reported experiments, \texttt{safetyMargin = 10} is used by default.
 
-The trade-off is visible in the CIR tails. With \texttt{safetyMargin=10}
-(Fig.~\ref{fig:cir_margin10}), some channels show small residual components
-toward the end of the impulse response. These are consistent with window
-misalignment artifacts caused by using a single global FFT window for all
-microphones rather than optimizing the window per channel.
+This design reflects a conservative synchronization strategy. Because the earliest detected peak is selected across microphones, the resulting global start index already tends to be early for most channels. Introducing a positive safety margin shifts the FFT window slightly \emph{earlier}, ensuring that the useful channel response of all receive channels remains well contained within the cyclic-prefix interval.
 
-When \texttt{safetyMargin=0} (Fig.~\ref{fig:cir_margin0}), the CIR tails of
-some channels appear cleaner and decay more smoothly. However, this comes with
-reduced robustness against synchronization uncertainty: even small timing
-errors can shift the FFT window into a less favorable region, which may
-increase distortion in other runs or environments.
+This effect is clearly visible in Fig.~\ref{fig:cir_margin10}. With \texttt{safetyMargin=10}, the estimated CIRs exhibit a compact structure: the dominant taps are concentrated at the beginning of the impulse response, and the tails decay rapidly toward zero. This behavior is consistent with correct FFT window placement, where the circular convolution assumption of OFDM is largely preserved across all receive channels.
 
+In contrast, when the safety margin is removed (\texttt{safetyMargin=0}, Fig.~\ref{fig:cir_margin0}), more pronounced residual components appear toward the end of the CIR for several microphones. These late taps do not correspond to physical multipath components, but instead indicate window misalignment effects. Because the global FFT window is now placed slightly later, small channel-dependent timing differences cause parts of the linear convolution to leak beyond the cyclic prefix. This leakage manifests itself as scattered energy in the CIR tail.
+
+Importantly, this observation highlights a fundamental trade-off inherent in global synchronization for multi-channel reception. While using a single global frame start ensures consistent OFDM block alignment across all receive channels, it cannot simultaneously optimize the FFT window position for every individual channel. The fixed safety margin therefore acts as a practical safeguard: it sacrifices a small amount of nominal timing optimality in favor of improved robustness and cleaner channel impulse responses.
+
+More advanced approaches could refine this strategy by adapting the safety margin dynamically, or by introducing per-channel fine timing adjustment after coarse global synchronization. However, for the purposes of a stable and teaching-oriented demonstrator, the chosen fixed-margin approach provides a transparent and reliable compromise.
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{figures/ch5/sm-qam-10.png}
@@ -125,49 +81,39 @@ increase distortion in other runs or environments.
 \subsection{Constellation contraction at low transmit amplitude}
 \label{sec:discussion_low_amp}
 
-Figure~\ref{fig:cp256_low_amp} shows the constellation obtained when the transmit
-amplitude is reduced while using a long cyclic prefix. The symbol clusters
-clearly contract toward the origin.
+Figure~\ref{fig:cp256_low_amp} shows the constellation obtained when the transmit amplitude is reduced while using a long cyclic prefix. The symbol clusters clearly contract toward the origin.
 
-This effect should not be attributed to carrier-frequency offset. Because
-transmit and receive run on the same multi-channel audio interface, both sides
-share a common hardware clock; thus, true CFO is expected to be negligible.
-In this operating regime, the more plausible explanation is reduced effective
-SNR combined with MMSE equalization. As the transmit amplitude is lowered, the
-noise contribution becomes more dominant. The MMSE equalizer then increasingly
-regularizes the inversion of the channel, resulting in an effective gain
-reduction that pulls equalized symbols toward the origin.
+This effect should not be attributed to carrier-frequency offset. Because transmit and receive run on the same multi-channel audio interface, both sides share a common hardware clock; thus, true CFO is expected to be negligible. In this operating regime, the more plausible explanation is reduced effective SNR combined with MMSE equalization. As the transmit amplitude is lowered, the noise contribution becomes more dominant. The MMSE equalizer then increasingly regularizes the inversion of the channel, resulting in an effective gain reduction that pulls equalized symbols toward the origin.
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.3\linewidth]{figures/ch5/sm-qam-256-low.png}
+    \includegraphics[width=0.5\linewidth]{figures/ch5/sm-qam-256-low.png}
     \caption{Low transmit amplitude ($N_{\mathrm{FFT}}=128$, $N_g=256$): constellation clusters contract toward the origin, consistent with reduced SNR and MMSE regularization.}
     \label{fig:cp256_low_amp}
 \end{figure}
 
 % ----------------------------------------------------------------------
+\subsection{Text payload encoding constraints}
+\label{sec:discussion_text_encoding}
 
-\subsection{Engineering implications and refinement options}
-\label{sec:discussion_implications}
+During experimentation, it was observed that transmission fails for text payloads containing certain characters, even though the physical-layer processing chain is otherwise fully operational. This behavior is not related to OFDM framing, block allocation, or MIMO processing, but originates from the text-to-bit mapping implemented at the transmitter.
 
-The observed non-idealities are consistent with the implementation choices
-of the demonstrator, which prioritizes robust and reproducible operation over
-per-channel optimality. The results also indicate clear refinement options
-that would mainly improve symbol-domain interpretability:
+In the current demonstrator, text payloads are converted into a binary stream by mapping character values to fixed-length 8-bit representations. This implicitly assumes that all transmitted characters lie within the 8-bit ASCII range. While this assumption holds for basic English text, it is violated when the payload contains characters with Unicode code points larger than 255, such as accented characters, non-Latin symbols, or special punctuation.
 
-\begin{itemize}
-    \item \textbf{Per-channel fine timing after global start:} keep the global
-    start for consistency, but apply a small per-microphone timing refinement
-    (within a limited search window) to maximize CIR energy concentration
-    inside the cyclic prefix.
-    \item \textbf{Adaptive safety margin:} replace the fixed
-    \texttt{safetyMargin} by an adaptive value derived from the observed metric
-    peak width or from CIR energy distribution.
-    \item \textbf{Post-equalization gain normalization:} apply a stream-wise
-    complex gain correction after MMSE equalization to reduce amplitude
-    contraction and improve constellation comparability across runs.
-\end{itemize}
+When such characters are encountered, the bit-mapping stage fails before waveform generation, preventing the construction of a valid transmit signal. From a system perspective, this behavior represents an explicit implementation constraint of the demonstrator rather than a limitation of the underlying MIMO--OFDM transmission scheme. The physical-layer synchronization, channel estimation, equalization, and detection stages remain unaffected.
 
-These adjustments would strengthen the didactic value of constellation/CIR/CTF
-visualizations while maintaining the stable end-to-end behavior demonstrated
-in Chapter~4.
+Supporting arbitrary text payloads would require the introduction of an explicit byte-oriented encoding scheme (e.g., UTF-8) prior to bit mapping, together with the corresponding inverse operation at the receiver. 
+
+% ----------------------------------------------------------------------
+\subsection{System-level perspective and educational value}
+\label{sec:discussion_system_level}
+
+Beyond the analysis of individual signal impairments, the results in Chapter~4 allow a broader system-level perspective on the implemented demonstrator. Rather than being optimized for maximum physical-layer performance, the system is deliberately designed as an \emph{explorable} MIMO--OFDM platform in which algorithmic behavior, parameter sensitivity, and practical trade-offs can be observed directly.
+
+A key strength of the demonstrator lies in the tight coupling between implementation transparency and visual feedback. Parameters such as cyclic prefix length, FFT size, transmission power, and MIMO mode can be adjusted interactively, while their impact becomes immediately visible in synchronization metrics, CIR/CTF plots, constellation diagrams, and EVM curves. This makes the system particularly suitable for teaching-oriented experimentation, where understanding \emph{why} performance changes is often more important than achieving optimal performance itself.
+
+At the same time, the discussion in this chapter highlights several intentional simplifications and constraints. Global synchronization decisions, fixed safety margins, and linear equalization strategies favor robustness and reproducibility across runs and environments, but they also expose non-ideal effects such as residual ISI, constellation spreading, and amplitude distortion. From an educational standpoint, these effects are not drawbacks; instead, they provide concrete examples of how theoretical assumptions break down in practical acoustic channels and how design choices propagate through the signal-processing chain.
+
+Importantly, the demonstrator supports multiple ``entry points'' for further exploration. Students or researchers can experiment with alternative window placement strategies, compare short and long cyclic prefixes, study the interaction between transmit power and equalization behavior, or extend the receiver with additional post-processing stages. Because intermediate results are preserved and visualized, such modifications can be evaluated in a controlled and interpretable manner.
+
+In this sense, the current implementation should be understood less as a closed communication system and more as a configurable experimental framework. Its primary contribution is not peak performance, but the ability to expose the dynamics of MIMO--OFDM transmission in a tangible and reproducible way, bridging the gap between abstract theory and hands-on experimentation.

@@ -204,7 +204,7 @@ Besides intermediate PHY observables, the demonstrator also provides an end-to-e
 
 In text mode, the reconstructed payload is formed by converting the recovered bitstream back to ASCII characters. In the current implementation, this includes (i) optional removal of control/header bits when such a header is configured, (ii) truncation to the known payload length when available, (iii) enforcing byte alignment, and (iv) mapping bytes to characters. The decoded string is displayed directly in the GUI after receiver processing, providing immediate qualitative confirmation of successful reconstruction.
 
-\subsubsection{Bit error count and BER (GUI indicators)}
+\subsubsection{Bit error count and BER}
 \label{sec:results_ber}
 
 When a reference payload is available (i.e., the transmitted text is stored alongside the run), the demonstrator computes the bit error count and BER using \texttt{bitFehlerRaten\_app}. For text payloads, the function converts both the transmitted and reconstructed strings to 8-bit ASCII sequences via \texttt{de2bi(.,8)}, reshapes them into a linear bitstream, and then applies \texttt{biterr} on the common prefix length:
@@ -220,34 +220,33 @@ The resulting values are presented in the GUI via two numeric indicators (bit er
     \label{fig:results_ber_ui}
 \end{figure}
 
-\textit{Implementation note (to be reconciled):} Channel coding is currently not enabled in the receiver chain. While a coding mode parameter exists on the transmitter side in the broader project, the reported BER is therefore an uncoded BER. A coded BER evaluation requires consistent integration of receiver-side channel decoding.
 
-\subsection{Key metrics summary (tool-reported snapshot)}
+\subsection{Key metrics summary}
 \label{sec:results_keymetrics}
 
 For rapid inspection and teaching-oriented demonstrations, the GUI provides a consolidated ``Key Metrics'' view that lists selected parameters and computed metrics from the receiver processing. Typical entries include FFT and CP sizes, modulation order, the number of transmit/receive channels, the selected frame start index, and (when stored) SNR-related quantities, EVM per stream, and rank summary statistics.
 
 \begin{table}[t]
     \centering
-    \caption{Placeholder for the key-metrics snapshot exported from the demonstrator for one representative run.}
+    \caption{Examples of Key Metrics Exported from the Demonstrator.}
     \label{tab:results_keymetrics}
     \begin{tabular}{lc}
         \hline
         Metric & Value \\
         \hline
-        $N_{\mathrm{FFT}}$ & (to be inserted) \\
-        $N_g$ (CP length) & (to be inserted) \\
-        Modulation ($M$) & (to be inserted) \\
-        $N_{\mathrm{T}}$ / $N_{\mathrm{R}}$ & (to be inserted) \\
-        Frame start used & (to be inserted) \\
-        $i\mathrm{SNR}$ (Average SNR) & (to be inserted) \\
-        EVM per stream (if stored) & (to be inserted) \\
-        Rank mean/min/max (if stored) & (to be inserted) \\
+        $N_{\mathrm{FFT}}$ & 128 \\
+        $N_g$ (CP length) & 256 \\
+        Modulation ($M$) & 2 \\
+        $N_{\mathrm{T}}$ / $N_{\mathrm{R}}$ & 4T8R \\
+        Frame start used & 1304 \\
+        $i\mathrm{SNR}$ (Average SNR) & 45db \\
+        EVM per stream (if stored) & -18.0201 \\
+        Rank mean/min/max (if stored) & 4 \\
         \hline
     \end{tabular}
 \end{table}
 
-\textit{Implementation note (to be reconciled):} Some metrics are mode-dependent and may be stored under different field names or only in specific receiver branches. The ``Key Metrics'' view therefore reports available quantities for the selected mode and run.
+\textit{Implementation note:} Some metrics are mode-dependent and may be stored under different field names or only in specific receiver branches. The ``Key Metrics'' view therefore reports available quantities for the selected mode and run.
 
 \subsection{From results to discussion}
 \label{sec:results_transition}
